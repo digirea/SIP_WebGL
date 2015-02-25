@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>STLBLOADER</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <link    rel="stylesheet" type="text/css" href="css/index.css" media="all">
+  <script type="text/javascript" src="./js/math.js"></script>
+  <script type="text/javascript" src="./js/stlloader.js"></script>
+  <script type="text/javascript" src="./js/scene.js"></script>
+  <script type="text/javascript" src="./js/camera.js"></script>
+  <script type="text/javascript" src="./js/ctrl.js"></script>
+  <script type="text/javascript" src="./js/wglrender.js"></script>
+  <script type="text/javascript" src="./js/meshobj.js"></script>
+  <script type="text/javascript" src="./js/shaderobj.js"></script>
+  <script id="vs_mesh" type="x-shader/x-vertex">
+      attribute vec3  position;
+      attribute vec3  normal;
+      uniform   mat4  mvpMatrix;
+      uniform   float pointSize;
+      varying   vec4  vColor;
+
+      void main(void)
+      {
+        vec3       L = normalize(vec3(1, -2, 3));
+        vColor       = vec4(1,2,3,4) * max(0.0, dot(normal, -L));
+        gl_PointSize = pointSize;
+        gl_Position  = mvpMatrix * vec4(position, 1.0);
+      }
+  </script>
+  <script id="fs_mesh" type="x-shader/x-fragment">
+      precision mediump float;
+      varying vec4      vColor;
+      void main(void)
+      {
+        gl_FragColor = vec4(vColor);
+      }
+  </script>
+
+  <script id="vs_line" type="x-shader/x-vertex">
+      attribute vec3  position;
+      attribute vec4  color;
+      uniform   mat4  mvpMatrix;
+      uniform   float pointSize;
+      varying   vec4  vColor;
+
+      void main(void)
+      {
+        vColor       = vec4(color);
+        gl_Position  = mvpMatrix * vec4(position, 1.0);
+        gl_PointSize = pointSize;
+      }
+  </script>
+
+  <script id="fs_line" type="x-shader/x-fragment">
+      precision mediump float;
+      varying vec4      vColor;
+      void main(void)
+      {
+        gl_FragColor = vec4(vColor);
+      }
+  </script>
+</head>
+
+<body>
+  <input  id="openfile" type="file" ><br>
+  <canvas id="canvas"   style="z-index:-1;background-color:black;" ></canvas>
+  <div    id="info"     class="proparty"></div>
+</body>
+</html>
+

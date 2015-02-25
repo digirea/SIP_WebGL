@@ -1,0 +1,10 @@
+.proparty  {
+  font-family      : "Times New Roman", Times, serif;
+  font-size        : 32px;
+  position         : absolute;
+  background       : rgba(0, 0, 0, 0.5);
+  z-index          : 2;
+  left             : 20px;
+  top              : 50px;
+}
+
