@@ -446,10 +446,12 @@ var WGLRender;
 				buf.push(temp[1] + y1);
 				buf.push(temp[2] + z1);
 				
+				/*
+				*/
 				invlen = 1.0 / Math.sqrt(temp[0] * temp[0] + temp[1] * temp[1] + temp[2] * temp[2]);
-				temp[0] *= invlen
-				temp[1] *= invlen
-				temp[2] *= invlen
+				temp[0] *= invlen;
+				temp[1] *= invlen;
+				temp[2] *= invlen;
 				
 				//normal0
 				normal.push(temp[0]);
@@ -460,11 +462,44 @@ var WGLRender;
 				normal.push(temp[0]);
 				normal.push(temp[1]);
 				normal.push(temp[2]);
-				
 			}
 			linenum = linenum + 1;
 		}
-		
+
+/*
+		for(i = 0 ; i < buf.length; i = i + 3) {
+			x0  = buf[i + 0 + i0];
+			x1  = buf[i + 0 + i1];
+			x2  = buf[i + 0 + i2];
+			y0  = buf[i + 1 + i0];
+			y1  = buf[i + 1 + i1];
+			y2  = buf[i + 1 + i2];
+			z0  = buf[i + 2 + i0];
+			z1  = buf[i + 2 + i1];
+			z2  = buf[i + 2 + i2];
+			vx0 = x2 - x0;
+			vy0 = y2 - y0;
+			vz0 = z2 - z0;
+			vx1 = x1 - x0;
+			vy1 = y1 - y0;
+			vz1 = z1 - z0;
+			
+			//cross
+			cx  = vy0 * vz1 - vz0 * y1;
+			cy  = vz0 * vx1 - vx0 * z1;
+			cz  = vx0 * vy1 - vy0 * x1;
+			invlen = 1.0 / Math.sqrt(cx * cx + cy * cy + cz * cz);
+			
+			//normalize
+			cx *= invlen;
+			cy *= invlen;
+			cz *= invlen;
+			normal.push(cx);
+			normal.push(cy);
+			normal.push(cz);
+		}
+		*/
+
 		//---------------------------------------------------------------------
 		//create triangle index buffer per vertex
 		//---------------------------------------------------------------------

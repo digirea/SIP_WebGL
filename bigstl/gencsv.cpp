@@ -39,7 +39,7 @@ struct stlbindata {
 
 
 
-void WriteRandomSTLB(const char *name, int num, float scale = 2) {
+void WriteRandomSTLB(const char *name, int num, float scale = 2, float mult = 1.0) {
     std::vector<stlbindata> vdata;
     printf("Start Generate facet num=%d\n", num);
     for(int i = 0 ; i < num; i++) {
@@ -52,9 +52,9 @@ void WriteRandomSTLB(const char *name, int num, float scale = 2) {
             static float x = 0.0;
             static float y = 0.0;
             static float z = 0.0;
-            static float dx = 1.4;
-            static float dy = 1.7;
-            static float dz = 1.5;
+            static float dx = 0.4 * mult;
+            static float dy = 0.7 * mult;
+            static float dz = 0.5 * mult;
             
             
             if( (p % 3) == 0) data.p[p] =  cos(x);
@@ -89,7 +89,7 @@ void WriteRandomSTLB(const char *name, int num, float scale = 2) {
 
 int main(int argc, char *argv[])
 {
-    WriteRandomSTLB(argv[1], atoi(argv[2]));
+    WriteRandomSTLB(argv[1], atoi(argv[2]), atoi(argv[3]), atof(argv[4]));
     return 0;
 }
 

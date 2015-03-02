@@ -22,44 +22,34 @@
   <script type="text/javascript" src="./js/animtab.js"></script>
   
   <script id="vs_mesh" type="x-shader/x-vertex">
+      precision mediump float;
       attribute vec3  position;
       attribute vec3  normal;
       uniform   mat4  mvpMatrix;
       uniform   float pointSize;
-      varying   vec4  baseColor;
       varying   vec4  vColor;
-
       void main(void)
       {
         vec3       L = normalize(vec3(1, 7, 3));
-        vColor       = normal.xyzz;//vec4(1,1,1,1) * max(0.0, dot(normal, L)) + normal.xyzz * 0.3;
+        vColor       = normal.xyzz;//vec4(1,1,1,1) * max(0.0, dot(normal, L));
         vColor.a     = pointSize;
-        baseColor    = normal.xyzz;
         gl_PointSize = pointSize;
         gl_Position  = mvpMatrix * vec4(position, 1.0);
       }
   </script>
   <script id="fs_mesh" type="x-shader/x-fragment">
       precision mediump float;
-      varying vec4      vColor;
-      varying   vec4  baseColor;
+      varying vec4  vColor;
       void main(void)
       {
           vec4 col = vec4(0,0,0,0);
-          if(vColor.a > 2.0)
-          {
-	          vec2 uv = gl_PointCoord * 2.0 - 1.0;
-	          float g = 1.0 - dot(uv, uv);
-	          float a = 0.0;
-	          if(g > 0.2) a = 1.0;
-	          col = vec4(g, g, g, a);
-	      }
-	      else
-	      {
-	          //col = vec4(vColor.xyz, 1.0);
-	          col = baseColor;
-	      }
-	      gl_FragColor = col;
+          vec2 uv = gl_PointCoord * 2.0 - 1.0;
+          float g = 1.0 - dot(uv, uv);
+          float a = 0.0;
+          if(g > 0.2) a = 1.0;
+          else        discard;
+          col = vec4(g, g, g, a);
+          gl_FragColor = col;
       }
   </script>
 
@@ -84,6 +74,32 @@
       void main(void)
       {
         gl_FragColor = vColor;
+      }
+  </script>
+
+  <script id="vs_linemesh" type="x-shader/x-vertex">
+      precision mediump float;
+      attribute vec3  position;
+      attribute vec3  normal;
+      uniform   mat4  mvpMatrix;
+      uniform   mat4  vpMatrix;
+      varying   vec4  vColor;
+      void main(void)
+      {
+        vec3       L = normalize(vec3(1, 7, 3));
+        //vec4       N = vpMatrix * vec4(normal, 1.0);
+        vec4       N = vec4(normal, 1.0);
+        vColor       = vec4(1,1,1,1) * max(0.0, dot(normal, L));
+        vColor.a     = 1.0;
+        gl_Position  = mvpMatrix * vec4(position, 1.0);
+      }
+  </script>
+  <script id="fs_linemesh" type="x-shader/x-fragment">
+      precision mediump float;
+      varying vec4  vColor;
+      void main(void)
+      {
+          gl_FragColor = vColor;//
       }
   </script>
 </head>
