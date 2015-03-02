@@ -1,0 +1,154 @@
+body
+{
+  background : #808080;
+  color      : #111111;
+  /*
+  font       : small "Trebuchet MS", Trebuchet, Verdana, Sans-serif;
+  */
+  font       : "ＭＳ Ｐゴシック", Trebuchet, Verdana, Sans-serif;
+  font-size  : 16px;
+  //margin-left: 30px;
+}
+
+img {
+    border-style:none;
+}
+
+.no_border {
+    border-style:none;
+}
+
+.contents {
+  margin-bottom: 20px;
+}
+
+img_gray {
+  filter: gray();
+}
+
+
+#canvas1{
+  position:absolute;
+  top:0px;
+  left:0px;
+  z-index:1;
+}
+.button {
+  background-color       : #FFFFFF;
+  /*
+  border-top             : 2px solid;
+  border-bottom          : 2px solid;
+  border-left            : 2px solid;
+  border-right           : 2px solid;
+  font-size              : 12pt;
+  font-family            : small "Trebuchet MS", Trebuchet, Verdana, Sans-serif;
+  font                   : "ＭＳ Ｐゴシック", Trebuchet, Verdana, Sans-serif;
+  */
+  font-size              : 16px;
+  text-decoration        : none;
+  font-weight            : bold;
+  color                  : #000000
+}
+
+.button2 {
+  background-color       : #FF0000;
+  /*
+  border-top             : 2px solid;
+  border-bottom          : 2px solid;
+  border-left            : 2px solid;
+  border-right           : 2px solid;
+  font-size              : 12pt;
+  font-family            : small "Trebuchet MS", Trebuchet, Verdana, Sans-serif;
+  font                   : "ＭＳ Ｐゴシック", Trebuchet, Verdana, Sans-serif;
+  */
+  font-size              : 16px;
+  text-decoration        : none;
+  font-weight            : bold;
+  color                  : #FFFFFF
+}
+
+
+.button3 {
+  background-color       : #FF0000;
+  /*
+  border-top             : 2px solid;
+  border-bottom          : 2px solid;
+  border-left            : 2px solid;
+  border-right           : 2px solid;
+  font-size              : 12pt;
+  font-family            : small "Trebuchet MS", Trebuchet, Verdana, Sans-serif;
+  font                   : "ＭＳ Ｐゴシック", Trebuchet, Verdana, Sans-serif;
+  */
+  font-size              : 16px;
+  text-decoration        : none;
+  font-weight            : bold;
+  color                  : #000000
+}
+
+
+.viewregion {
+  background-color       : #FFFFFF;
+  border-top             : 3px double;
+  border-bottom          : 3px double;
+  border-left            : 3px double;
+  border-right           : 3px double;
+  /*
+  font-size              : 12pt;
+  font-family            : small "Trebuchet MS", Trebuchet, Verdana, Sans-serif;
+  font                   : "ＭＳ Ｐゴシック", Trebuchet, Verdana, Sans-serif;
+  */
+  text-decoration        : none;
+  //font-weight            : bold;
+  color                  : #000000
+}
+
+a         { color:#0000FF;}
+a:link    { text-decoration: none; }
+a:active  { text-decoration: none; }
+a:visited { text-decoration: none; }
+a:hover   { text-decoration: underline; }
+
+span.menu1 { font-size: 1em; }
+span.menu2 { font-size: 2em; }
+span.menu3 { font-size: 3em; }
+span.menu4 { font-size: 4em; }
+span.menu5 { font-size: 5em; }
+span.menu6 { font-size: 6em; }
+span.menu7 { font-size: 7em; }
+span.menu8 { font-size: 8em; }
+span.menu9 { font-size: 9em; }
+
+div {
+  text-align:left
+}
+
+table {
+  font-size: 1em; 
+}
+
+table.contents  {
+  border       : solid 1px #000000;
+  border-style : solid;
+  border-width : 1px;
+  color        : white;
+}
+
+tr.contents  {
+  border       : solid 1px #000000;
+  border-style : solid;
+  border-width : 1px;
+}
+
+td.contents  {
+  border       : solid 1px #000000;
+  border-style : solid;
+  border-width : 1px;
+}
+
+hr {
+  color        : #C0C4F0;
+  background-color : #FFFFFF;
+  border-style : dashed;
+  margin-top   : 30px;
+  margin-bottom: 30px;
+}

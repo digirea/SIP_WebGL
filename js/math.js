@@ -244,7 +244,6 @@ function MatIV() {
 		return dest;
 	};
 
-	//https://code.google.com/p/glmatrix/source/browse/glMatrix.js : あとでこれにしたいな
 	this.frust = function (left, right, bottom, top, near, far, dest) {
 		var rl   =  (right - left),
 			tb   =  (top - bottom),

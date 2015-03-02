@@ -5,6 +5,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
   <link    rel="stylesheet" type="text/css" href="css/index.css" media="all">
+  <link    rel="stylesheet" type="text/css" href="css/style.css" media="all">
+  <link    rel="stylesheet" type="text/css" href="css/datastyle.css" media="all">
+  <link    rel="stylesheet" type="text/css" href="./css/handsontable.full.css" media="screen">
+  <script type="text/javascript" src="./js/jquery-1.11.2.min.js"></script>
+  <script type="text/javascript" src="./js/handsontable.full.js"></script>
+  <script type="text/javascript" src="./js/qatrix-1.1.js"></script>
   <script type="text/javascript" src="./js/math.js"></script>
   <script type="text/javascript" src="./js/stlloader.js"></script>
   <script type="text/javascript" src="./js/scene.js"></script>
@@ -13,17 +19,22 @@
   <script type="text/javascript" src="./js/wglrender.js"></script>
   <script type="text/javascript" src="./js/meshobj.js"></script>
   <script type="text/javascript" src="./js/shaderobj.js"></script>
+  <script type="text/javascript" src="./js/animtab.js"></script>
+  
   <script id="vs_mesh" type="x-shader/x-vertex">
       attribute vec3  position;
       attribute vec3  normal;
       uniform   mat4  mvpMatrix;
       uniform   float pointSize;
+      varying   vec4  baseColor;
       varying   vec4  vColor;
 
       void main(void)
       {
-        vec3       L = normalize(vec3(1, -2, 3));
-        vColor       = vec4(1,2,3,4) * max(0.0, dot(normal, -L));
+        vec3       L = normalize(vec3(1, 7, 3));
+        vColor       = normal.xyzz;//vec4(1,1,1,1) * max(0.0, dot(normal, L)) + normal.xyzz * 0.3;
+        vColor.a     = pointSize;
+        baseColor    = normal.xyzz;
         gl_PointSize = pointSize;
         gl_Position  = mvpMatrix * vec4(position, 1.0);
       }
@@ -31,9 +42,24 @@
   <script id="fs_mesh" type="x-shader/x-fragment">
       precision mediump float;
       varying vec4      vColor;
+      varying   vec4  baseColor;
       void main(void)
       {
-        gl_FragColor = vec4(vColor);
+          vec4 col = vec4(0,0,0,0);
+          if(vColor.a > 2.0)
+          {
+	          vec2 uv = gl_PointCoord * 2.0 - 1.0;
+	          float g = 1.0 - dot(uv, uv);
+	          float a = 0.0;
+	          if(g > 0.2) a = 1.0;
+	          col = vec4(g, g, g, a);
+	      }
+	      else
+	      {
+	          //col = vec4(vColor.xyz, 1.0);
+	          col = baseColor;
+	      }
+	      gl_FragColor = col;
       }
   </script>
 
@@ -57,15 +83,19 @@
       varying vec4      vColor;
       void main(void)
       {
-        gl_FragColor = vec4(vColor);
+        gl_FragColor = vColor;
       }
   </script>
 </head>
 
 <body>
-  <input  id="openfile" type="file" ><br>
+  <input  id="openfile" type="file" style="position:absolute;overflow:hidden;left:0px">
+  <input  id="LoadText" type="file" style="position:absolute;overflow:hidden;left:100px"><br>
   <canvas id="canvas"   style="z-index:-1;background-color:black;" ></canvas>
-  <div    id="info"     class="proparty"></div>
+  <div id="DataView" class="DataView">
+  </div>
+  <input type="button" id="DataViewButton"  class="DataViewButton" value="V">
+
 </body>
 </html>
 

@@ -69,13 +69,12 @@ var WGLRender;
 	}
 	
 	render.prototype.setBlend = function (mode) {
-		//this.gl.enable(this.gl.DEPTH_TEST);
+		this.gl.enable(this.gl.DEPTH_TEST);
 		this.gl.depthFunc(this.gl.LEQUAL);
 		//this.gl.disable(this.gl.BLEND);
 		this.gl.enable(this.gl.BLEND);
 		this.gl.blendFuncSeparate(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA, this.gl.ONE, this.gl.ONE);	
 		//this.gl.blendFuncSeparate(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA, this.gl.ONE, this.gl.ONE);
-		//this.gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 	};
 	
 	render.prototype.DisableBlend = function () {
@@ -387,8 +386,8 @@ var WGLRender;
 		vertical = [0, 1, 0];
 		tangent  = [0, 0, 0];
 		
-		//console.log('base length = ' + base.position.length);
-		//console.log(base.position);
+		console.log('base length = ' + base.position.length);
+		console.log(base.position);
 		
 		qt = new QtnIV();
 
@@ -424,9 +423,9 @@ var WGLRender;
 			tangent[1] = dz * vertical[0] - dx * vertical[2];
 			tangent[2] = dx * vertical[1] - dy * vertical[0];
 			
-			tangent[0] *= radius;
-			tangent[1] *= radius;
-			tangent[2] *= radius;
+			tangent[0] *= 2.0;
+			tangent[1] *= 2.0;
+			tangent[2] *= 2.0;
 			
 			
 			//create triangle vertex
@@ -446,11 +445,6 @@ var WGLRender;
 				buf.push(temp[1] + y1);
 				buf.push(temp[2] + z1);
 				
-				invlen = 1.0 / Math.sqrt(temp[0] * temp[0] + temp[1] * temp[1] + temp[2] * temp[2]);
-				temp[0] *= invlen
-				temp[1] *= invlen
-				temp[2] *= invlen
-				
 				//normal0
 				normal.push(temp[0]);
 				normal.push(temp[1]);
@@ -465,6 +459,40 @@ var WGLRender;
 			linenum = linenum + 1;
 		}
 		
+		/*
+		for(i = 0 ; i < buf.length; i = i + 3) {
+			x0  = buf[i + 0 + i0];
+			x1  = buf[i + 0 + i1];
+			x2  = buf[i + 0 + i2];
+			y0  = buf[i + 1 + i0];
+			y1  = buf[i + 1 + i1];
+			y2  = buf[i + 1 + i2];
+			z0  = buf[i + 2 + i0];
+			z1  = buf[i + 2 + i1];
+			z2  = buf[i + 2 + i2];
+			vx0 = x2 - x0,
+			vy0 = y2 - y0,
+			vz0 = z2 - z0,
+			vx1 = x1 - x0,
+			vy1 = y1 - y0,
+			vz1 = z1 - z0,
+			
+			//cross
+			cx  = vy0 * vz1 - vz0 * y1,
+			cy  = vz0 * vx1 - vx0 * z1,
+			cz  = vx0 * vy1 - vy0 * x1,
+			invlen = 1.0 / Math.sqrt(cx * cx + cy * cy + cz * cz);
+			
+			//normalize
+			cx *= invlen;
+			cy *= invlen;
+			cz *= invlen;
+			normal.push(cx);
+			normal.push(cy);
+			normal.push(cz);
+		}
+		*/
+
 		//---------------------------------------------------------------------
 		//create triangle index buffer per vertex
 		//---------------------------------------------------------------------
