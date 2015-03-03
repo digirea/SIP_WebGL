@@ -8,6 +8,7 @@ var MeshObj;
 		this.position      = null;
 		this.normal        = null;
 		this.color         = null;
+
 		this.index         = null;
 		this.attrnames     = [];
 		this.mode          = 'Triangles';

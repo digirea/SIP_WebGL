@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>testreq</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <script type="text/javascript" src="reqfile.js"></script>
+  <script>
+  
+  function onbutton(e) {
+    var url = new ReqFile();
+    console.log(url);
+    url.getURL('test.txt', function() {
+      if(url.text) {
+        var e = document.getElementById('shader');
+        e.innerHTML = url.text;
+      }
+    });
+  }
+  
+  function oninit() {
+    console.log('initialize');
+  }
+  
+  window.onload = oninit;
+  
+  </script>
+<body>
+  <input type="button" id="DataViewButton" onClick=onbutton() value="おしてね">
+  <div id="shader"></div>
+</body>
+</html>
+
