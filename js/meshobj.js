@@ -14,13 +14,9 @@ var MeshObj;
 		this.vbo_position  = null;
 		this.vbo_normal    = null;
 		this.vbo_color     = null;
-		this.ibo           = null;
 		this.vbo_list      = [];
 		this.stride        = [];
 		this.attlocation   = [];
-		this.faces         = 0;
-		this.divide        = 0;
-		this.linenum       = 0;
 		this.shader        = null;
 	};
 

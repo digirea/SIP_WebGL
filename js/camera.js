@@ -12,7 +12,7 @@ var Camera;
 	};
 
 	camera.prototype.resetView = function () {
-		this.camPos   = [0, 0, -100];
+		this.camPos   = [0, 10, -100];
 		this.camAt    = [0, 0, 0];
 		this.camUp    = [0, 1, 0];
 		this.tranRot  = [0, 0, 0];

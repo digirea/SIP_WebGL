@@ -17,7 +17,7 @@
 		vertex_num  = 0,
 		line_shader = null,
 		mesh_shader = null,
-		mesh_line_shader = null;
+		global_time = 0;
 
 	function resetView() {
 		qtn        = new QtnIV();
@@ -27,7 +27,6 @@
 	function reloadShader() {
 		mesh_shader        = render.createShaderObj('vs_mesh', 'fs_mesh');
 		line_shader        = render.createShaderObj('vs_line', 'fs_line');
-		mesh_line_shader   = render.createShaderObj('vs_linemesh', 'fs_linemesh');
 	}
 
 	function callbackResetView(e) {
@@ -36,7 +35,7 @@
 	}
 
 	function updateInfo(vnum, nnum) {
-		var info = document.getElementById('info'),
+		var info = document.getElementById('Info'),
 			html = '';
 		info.style.color = 'white';
 		html += 'VertexNum:' + vnum + '<br>';
@@ -48,9 +47,10 @@
 		var point_p = data.pos,
 			point_n = data.normal;
 		stlmesh     = render.createMeshObj(point_p, point_n, null);
-		//linemesh    = render.createLineMesh(stlmesh, 32, 2.0);
-		linemesh    = render.createLineMesh(stlmesh, 32, 0.3);
-		pointmesh   = render.createPointMesh(stlmesh, 1.0, 32, 32);  // GLdouble radius, GLint slices, GLint stacks
+		/*
+		linemesh    = render.createLineMesh(stlmesh, 8, 0.3);
+		pointmesh   = render.createPointMesh(stlmesh, 1.0, 16, 16);  // GLdouble radius, GLint slices, GLint stacks
+		*/
 		updateInfo(point_p.length / 3 / 3, point_n.length / 3 / 3);
 	}
 
@@ -116,6 +116,7 @@
 				cylMatrix     = mtx.identity(mtx.create()),
 				attStrideMesh = [],
 				uniLocation   = [],
+				gridcolor     = [0.1, 0.1, 0.1, 1.0],
 				camPos,
 				camAt,
 				tranRot,
@@ -155,70 +156,61 @@
 			render.clearDepth(1.0);
 			render.getContext().frontFace(render.getContext().CCW);
 
-		    /*
+			//Grid Mesh
 			if (gridmesh) {
 				render.setupShader(gridmesh, line_shader);
-				render.setBlend();
+				render.Blend(true);
 				gridmesh.setMode('Lines');
 				mtx.identity(mMatrix);
 				mtx.scale(mMatrix, [1.0, 1.0, 1.0], mMatrix);
 				mtx.multiply(tmpMatrix, mMatrix, mvpMatrix);
-				uniLocation = render.getShaderUniformList(line_shader, ['mvpMatrix', 'pointSize']);
+				uniLocation = render.getShaderUniformList(line_shader, ['mvpMatrix', 'color']);
 				render.setUniform('Matrix4fv', uniLocation[0], mvpMatrix);
-				render.setUniform('1f',        uniLocation[1], pointSize);
+				render.setUniform('4fv',       uniLocation[1], gridcolor);
 				render.drawMesh(gridmesh);
 			}
-		    */
-
 			
-			if(linemesh) {
-				//Line Cylinnder
-				render.setupShader(linemesh, mesh_line_shader);
+			//STL Mesh
+			if(stlmesh) {
+				render.setupShader(stlmesh, mesh_shader);
 				mtx.identity(mMatrix);
 				mtx.scale(mMatrix, [1.0, 1.0, 1.0], mMatrix);
 				mtx.multiply(tmpMatrix, mMatrix, mvpMatrix);
-				uniLocation = render.getShaderUniformList(mesh_line_shader, ['mvpMatrix', 'vpMatrix']);
+				uniLocation = render.getShaderUniformList(mesh_shader, ['mvpMatrix', 'vpMatrix']);
 				render.setUniform('Matrix4fv', uniLocation[0], mvpMatrix);
 				render.setUniform('Matrix4fv', uniLocation[1], tmpMatrix);
-				render.EnableDepth();
-				//render.drawMeshIndexed(linemesh);
+				render.Depth(true);
+				render.drawMesh(stlmesh);
+			}
+			
+			/*
+			
+			//Line(Cylinder)
+			if(linemesh) {
+				render.setupShader(linemesh, mesh_shader);
+				mtx.identity(mMatrix);
+				mtx.scale(mMatrix, [1.0, 1.0, 1.0], mMatrix);
+				mtx.multiply(tmpMatrix, mMatrix, mvpMatrix);
+				uniLocation = render.getShaderUniformList(mesh_shader, ['mvpMatrix', 'vpMatrix']);
+				render.setUniform('Matrix4fv', uniLocation[0], mvpMatrix);
+				render.setUniform('Matrix4fv', uniLocation[1], tmpMatrix);
+				render.Depth(true);
 				render.drawMesh(linemesh);
 			}
 
+			//Point(Sphere)
 			if(pointmesh) {
-				//Line Cylinnder
-				render.setupShader(pointmesh, mesh_line_shader);
+				render.setupShader(pointmesh, mesh_shader);
 				mtx.identity(mMatrix);
 				mtx.scale(mMatrix, [1.0, 1.0, 1.0], mMatrix);
 				mtx.multiply(tmpMatrix, mMatrix, mvpMatrix);
-				uniLocation = render.getShaderUniformList(mesh_line_shader, ['mvpMatrix', 'vpMatrix']);
+				uniLocation = render.getShaderUniformList(mesh_shader, ['mvpMatrix', 'vpMatrix']);
 				render.setUniform('Matrix4fv', uniLocation[0], mvpMatrix);
 				render.setUniform('Matrix4fv', uniLocation[1], tmpMatrix);
-				render.EnableDepth();
+				render.Depth(true);
 				render.drawMesh(pointmesh);
 			}
-			
-			
-
-		    /*
-			if (stlmesh) {
-				render.clearDepth(1.0);
-				render.setupShader(stlmesh, mesh_shader);
-				stlmesh.setMode('Points');
-				mtx.identity(mMatrix);
-				mtx.scale(mMatrix, [1.0, 1.0, 1.0], mMatrix);
-				mtx.multiply(tmpMatrix, mMatrix, mvpMatrix);
-				uniLocation = render.getShaderUniformList(mesh_shader, ['mvpMatrix', 'pointSize']);
-
-				pointSize = 25.0;
-				render.setUniform('Matrix4fv', uniLocation[0], mvpMatrix);
-				render.setUniform('1f',        uniLocation[1], pointSize);
-				render.setBlend();
-				render.DisableDepth();
-				render.drawMesh(stlmesh);
-				render.EnableDepth();
-			}
-		    */
+			*/
 
 			render.swapBuffer()(updateFrame);
 		}

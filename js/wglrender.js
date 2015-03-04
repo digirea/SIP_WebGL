@@ -60,29 +60,28 @@ var WGLRender;
 		return this.rAF;
 	};
 
-	render.prototype.EnableDepth = function () {
-		this.gl.enable(this.gl.DEPTH_TEST);
+	render.prototype.Depth = function (enable) {
+		if(enable == true) {
+			this.gl.enable(this.gl.DEPTH_TEST);
+		} else {
+			this.gl.disable(this.gl.DEPTH_TEST);
+		}
 	}
+	
+	render.prototype.Blend = function (enable) {
+		if(enable === true) {
+			//this.gl.enable(this.gl.DEPTH_TEST);
+			this.gl.depthFunc(this.gl.LEQUAL);
+			//this.gl.disable(this.gl.BLEND);
+			this.gl.enable(this.gl.BLEND);
+			this.gl.blendFuncSeparate(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA, this.gl.ONE, this.gl.ONE);	
+			//this.gl.blendFuncSeparate(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA, this.gl.ONE, this.gl.ONE);
+			//this.gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+		} else {
+			this.gl.disable(this.gl.BLEND);
+		}
+	};
 
-	render.prototype.DisableDepth = function () {
-		this.gl.disable(this.gl.DEPTH_TEST);
-	}
-	
-	render.prototype.setBlend = function (mode) {
-		//this.gl.enable(this.gl.DEPTH_TEST);
-		this.gl.depthFunc(this.gl.LEQUAL);
-		//this.gl.disable(this.gl.BLEND);
-		this.gl.enable(this.gl.BLEND);
-		this.gl.blendFuncSeparate(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA, this.gl.ONE, this.gl.ONE);	
-		//this.gl.blendFuncSeparate(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA, this.gl.ONE, this.gl.ONE);
-		//this.gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-	};
-	
-	render.prototype.DisableBlend = function () {
-		this.gl.disable(this.gl.BLEND);
-	};
-	
-	
 	render.prototype.createShader = function (type, text) {
 		var shader,
 			shader_type;
@@ -187,8 +186,8 @@ var WGLRender;
 		case '1f':
 			this.gl.uniform1f(location, data);
 			break;
-		case '4vf':
-			this.gl.uniform4f(location, data);
+		case '4fv':
+			this.gl.uniform4fv(location, data);
 			break;
 		case '1i':
 			this.gl.uniform1i(location, data);
@@ -312,10 +311,9 @@ var WGLRender;
 				
 		return mesh;
 	};
-	
 
 	//------------------------------------------------------------------------------
-	// createLineMesh
+	// createLineMesh (Cylinder)
 	//------------------------------------------------------------------------------
 	render.prototype.createLineMesh = function (base, divide, radius) {
 		var mesh,
@@ -323,12 +321,6 @@ var WGLRender;
 			qt  = qtn.identity(qtn.create()),
 			i,
 			deg,
-			x   = 0,
-			y   = 1,
-			z   = 2,
-			i0  = 0,
-			i1  = 3,
-			i2  = 6,
 			x0  = 0,
 			x1  = 0,
 			x2  = 0,
@@ -352,17 +344,19 @@ var WGLRender;
 			linenum        = 0,
 			restrip        = 0,
 			restrip_offset = 0,
+
 			buf            = [],
 			index          = [],
 			inum           = 0,
 			tangent        = [],
 			normal         = [];
-		
+
 		if(divide <= 0 || radius <= 0) {
 			console.log('Error divide or radius is less then 0\n');
 			console.log(divide, radius);
 			return null;
 		}
+
 
 		//Create degreee delta
 		degdelta = 360.0 / divide;
@@ -516,7 +510,11 @@ var WGLRender;
 			nor = [],
 			idx = [];
 		
-		//Create Base Mesh
+
+		//---------------------------------------------------------------------
+		// Create Base Mesh
+		//---------------------------------------------------------------------
+		console.log('START : Create Base Mesh');
 		for(i = 0; i <= stacks; i++) {
 			r =  Math.PI / stacks * i;
 			ry = Math.cos(r);
@@ -540,22 +538,21 @@ var WGLRender;
 				idx.push(r, r + slices + 2, r + slices + 1);
 			}
 		}
+		console.log('END : Create Base Mesh');
 
 		//---------------------------------------------------------------------
-		// Create Mesh
+		// Create Mesh per Point
 		//---------------------------------------------------------------------
 		mesh = new MeshObj();
-		//reconstruct mesh
 
+		//reconstruct mesh
+		console.log('START : Create Mesh per Point');
 		for(i = 0 ; i < base.position.length; i = i + 3) {
 			//get vertex per line.
 			x0 = base.position[i + 0];
 			y0 = base.position[i + 1];
 			z0 = base.position[i + 2];
 
-			//console.log(x0);
-			//console.log(y0);
-			//console.log(z0);
 			//reconstruct triangle and normal.
 			for(ii = 0 ; ii < idx.length; ii = ii + 1) {
 				inum = idx[ii];
@@ -567,7 +564,7 @@ var WGLRender;
 				mesh.normal.push(nor[inum * 3 + 2]);
 			}
 		}
-		//console.log(mesh.position.length, mesh.position);
+		console.log('DONE : Create Mesh per Point');
 
 		mesh.vbo_position  = this.createVBO(mesh.position);
 		mesh.vbo_normal    = this.createVBO(mesh.normal);
@@ -595,17 +592,5 @@ var WGLRender;
 		this.gl.useProgram(null);
 	};
 
-	render.prototype.drawMeshIndexed = function (mesh) {
-		var vertex_num = mesh.position.length / 2;
-		if (mesh.shader) {
-			this.setShader(mesh, mesh.shader);
-		}
-		this.setAttribute(mesh.vbo_list, mesh.attlocation, mesh.stride);
-		this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, mesh.ibo);
-		//this.gl.drawElements(this.gl.TRIANGLES, vertex_num, this.gl.UNSIGNED_SHORT, 0);
-		this.gl.drawElements(this.gl.TRIANGLES, mesh.linenum * mesh.divide * 3 * 2, this.gl.UNSIGNED_SHORT, 0);
-		this.gl.useProgram(null);
-	};
-	
 	WGLRender = render;
 }());
