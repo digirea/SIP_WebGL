@@ -5,6 +5,7 @@
 	"use strict";
 	var camera      = null,
 		ctrl        = {},
+		prevEvent   = null,
 		keycallback = null,
 		mouseState  = {"Left": false, "Center": false, "Right": false };
 		
@@ -63,34 +64,43 @@
 	}
 
 	function mouseMove(e) {
-		var mult   = 0.5,
-			multrotate = 1.0;
+		var mult       = 0.5,
+			multrotate = 1.0,
+			movementX  = 0,
+			movementY  = 0;
+
+		if(prevEvent) {
+			movementX = e.clientX - prevEvent.clientX;
+			movementY = e.clientY - prevEvent.clientY;
+		}
 		if (!camera) {
 			return;
 		}
 
 		if (mouseState.Right && mouseState.Left) {
-			//camera.addRotate(-e.movementX * multrotate, e.movementY * multrotate, 0);
+			//camera.addRotate(-movementX * multrotate, movementY * multrotate, 0);
 			return;
 		}
 
 		if (mouseState.Left) {
-			camera.addRotate(-e.movementX * multrotate, e.movementY * multrotate, 0);
+			camera.addRotate(-movementX * multrotate, movementY * multrotate, 0);
 		}
 
 		if (mouseState.Center) {
-			camera.addPos(0, 0, -e.movementY * mult);
-			camera.addAt(0, 0, -e.movementY * mult);
+			camera.addPos(0, 0, -movementY * mult);
+			camera.addAt(0, 0, -movementY * mult);
 		}
 
 		if (mouseState.Right) {
-			//camera.addPos(0, 0, -e.movementY * mult);
-			//camera.addAt(0, 0, -e.movementY * mult);
-			camera.addPos(e.movementX * mult, 0, 0);
-			camera.addAt(e.movementX * mult, 0, 0);
-			camera.addPos(0, e.movementY * mult, 0);
-			camera.addAt(0,  e.movementY * mult, 0);
+			//camera.addPos(0, 0, -movementY * mult);
+			//camera.addAt(0, 0, -movementY * mult);
+			camera.addPos(movementX * mult, 0, 0);
+			camera.addAt(movementX * mult, 0, 0);
+			camera.addPos(0, movementY * mult, 0);
+			camera.addAt(0,  movementY * mult, 0);
 		}
+		
+		prevEvent = e;
 	}
 
 	function mouseWheel(e) {
@@ -120,7 +130,7 @@
 		} else {
 			mousewheelevent = 'DOMMouseScroll';
 		}
-		document.addEventListener('mouseout', mouseOut, true);
+		document.addEventListener('mouseout',  mouseOut, true);
 		document.addEventListener('mousemove', mouseMove, true);
 		document.addEventListener('mouseup',   mouseUp, true);
 		document.addEventListener('mousedown', mouseDown, true);
