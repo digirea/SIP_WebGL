@@ -104,8 +104,18 @@
 	}
 
 	function mouseWheel(e) {
+		console.log(e);
+		
 		if (camera) {
-			camera.addPos(0, 0, e.wheelDelta * 0.05);
+			//http://hakuhin.jp/js/mouse.html#MOUSE_02
+			if(e.wheelDelta)
+			{
+				camera.addPos(0, 0, e.wheelDelta * 0.05);
+			}
+			else
+			{
+				camera.addPos(0, 0, -e.detail * 0.05 * 40.0);
+			}
 		}
 		e.preventDefault();
 		return false;
