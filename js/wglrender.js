@@ -13,7 +13,7 @@ var WGLRender;
 	};
 
 	render.prototype.init = function (canvas, window) {
-		this.gl     = canvas.getContext('webgl')      || canvas.getContext('experimental-webgl');
+		this.gl     = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
 		this.rAF    = window.requestAnimationFrame;
 		if (!this.rAF) {
 			this.rAF = window.mozRequestAnimationFrame;
@@ -313,7 +313,7 @@ var WGLRender;
 		return mesh;
 	};
 	
-	
+
 	//------------------------------------------------------------------------------
 	// createLineMesh
 	//------------------------------------------------------------------------------
@@ -322,6 +322,7 @@ var WGLRender;
 			qtn = new QtnIV(),
 			qt  = qtn.identity(qtn.create()),
 			i,
+			deg,
 			x   = 0,
 			y   = 1,
 			z   = 2,
@@ -337,58 +338,38 @@ var WGLRender;
 			z0  = 0,
 			z1  = 0,
 			z2  = 0,
-			vx0 = 0,
-			vy0 = 0,
-			vz0 = 0,
-			vx1 = 0,
-			vy1 = 0,
-			vz1 = 0,
 			cx  = 0,
 			cy  = 0,
 			cz  = 0,
-			invlen,
 			dx,
 			dy,
 			dz,
+			invlen,
 			vertical,
-			tangent,
-			deg = 0,
 			degdelta,
 			temp,
 			len,
-			x   = 0,
-			y   = 1,
-			z   = 2,
-			i0  = 0,
-			i1  = 3,
-			i2  = 6,
 			linenum        = 0,
-			faces          = 0, 
 			restrip        = 0,
 			restrip_offset = 0,
-			indexcof       = 0,
 			buf            = [],
 			index          = [],
-			indexref       = [],
+			inum           = 0,
+			tangent        = [],
 			normal         = [];
 		
 		if(divide <= 0 || radius <= 0) {
 			console.log('Error divide or radius is less then 0\n');
 			console.log(divide, radius);
-			
 			return null;
 		}
-		
-		
+
 		//Create degreee delta
 		degdelta = 360.0 / divide;
 		
 		//tangent
 		vertical = [0, 1, 0];
 		tangent  = [0, 0, 0];
-		
-		//console.log('base length = ' + base.position.length);
-		//console.log(base.position);
 		
 		qt = new QtnIV();
 
@@ -423,12 +404,13 @@ var WGLRender;
 			tangent[0] = dy * vertical[2] - dz * vertical[1];
 			tangent[1] = dz * vertical[0] - dx * vertical[2];
 			tangent[2] = dx * vertical[1] - dy * vertical[0];
-			
-			tangent[0] *= radius;
-			tangent[1] *= radius;
-			tangent[2] *= radius;
-			
-			
+
+			//normalize
+			invlen = 1.0 / Math.sqrt(tangent[0] * tangent[0] + tangent[1] * tangent[1] + tangent[2] * tangent[2]);
+			tangent[0] *= invlen;
+			tangent[1] *= invlen;
+			tangent[2] *= invlen;
+
 			//create triangle vertex
 			for(deg = 0; deg <= 360; deg += degdelta) {
 				temp = [];
@@ -437,17 +419,15 @@ var WGLRender;
 				qtn.toVecIII(tangent, qt, temp);
 				
 				//v0
-				buf.push(temp[0] + x0);
-				buf.push(temp[1] + y0);
-				buf.push(temp[2] + z0);
+				buf.push(radius * temp[0] + x0);
+				buf.push(radius * temp[1] + y0);
+				buf.push(radius * temp[2] + z0);
 				
 				//v1
-				buf.push(temp[0] + x1);
-				buf.push(temp[1] + y1);
-				buf.push(temp[2] + z1);
+				buf.push(radius * temp[0] + x1);
+				buf.push(radius * temp[1] + y1);
+				buf.push(radius * temp[2] + z1);
 				
-				/*
-				*/
 				invlen = 1.0 / Math.sqrt(temp[0] * temp[0] + temp[1] * temp[1] + temp[2] * temp[2]);
 				temp[0] *= invlen;
 				temp[1] *= invlen;
@@ -466,40 +446,6 @@ var WGLRender;
 			linenum = linenum + 1;
 		}
 
-/*
-		for(i = 0 ; i < buf.length; i = i + 3) {
-			x0  = buf[i + 0 + i0];
-			x1  = buf[i + 0 + i1];
-			x2  = buf[i + 0 + i2];
-			y0  = buf[i + 1 + i0];
-			y1  = buf[i + 1 + i1];
-			y2  = buf[i + 1 + i2];
-			z0  = buf[i + 2 + i0];
-			z1  = buf[i + 2 + i1];
-			z2  = buf[i + 2 + i2];
-			vx0 = x2 - x0;
-			vy0 = y2 - y0;
-			vz0 = z2 - z0;
-			vx1 = x1 - x0;
-			vy1 = y1 - y0;
-			vz1 = z1 - z0;
-			
-			//cross
-			cx  = vy0 * vz1 - vz0 * y1;
-			cy  = vz0 * vx1 - vx0 * z1;
-			cz  = vx0 * vy1 - vy0 * x1;
-			invlen = 1.0 / Math.sqrt(cx * cx + cy * cy + cz * cz);
-			
-			//normalize
-			cx *= invlen;
-			cy *= invlen;
-			cz *= invlen;
-			normal.push(cx);
-			normal.push(cy);
-			normal.push(cz);
-		}
-		*/
-
 		//---------------------------------------------------------------------
 		//create triangle index buffer per vertex
 		//---------------------------------------------------------------------
@@ -515,9 +461,44 @@ var WGLRender;
 				restrip_offset = restrip_offset + 2;
 				restrip = 0;
 			}
-			faces = faces + 2;
 		}
 		
+		//---------------------------------------------------------------------
+		// Create Mesh
+		//---------------------------------------------------------------------
+		mesh = new MeshObj();
+		
+		//reconstruct triangle and normal.
+		for(i = 0 ; i < index.length; i = i + 1) {
+			inum = index[i];
+			mesh.position.push(buf[inum * 3 + 0]);
+			mesh.position.push(buf[inum * 3 + 1]);
+			mesh.position.push(buf[inum * 3 + 2]);
+			mesh.normal.push(normal[inum * 3 + 0]);
+			mesh.normal.push(normal[inum * 3 + 1]);
+			mesh.normal.push(normal[inum * 3 + 2]);
+			
+		}
+		console.log(mesh.position.length, mesh.position);
+		mesh.vbo_position  = this.createVBO(mesh.position);
+		mesh.vbo_normal    = this.createVBO(mesh.normal);
+		mesh.vbo_list.push(mesh.vbo_position);
+		mesh.vbo_list.push(mesh.vbo_normal);
+		mesh.attrnames.push('position');
+		mesh.attrnames.push('normal');
+		mesh.stride.push(3);
+		mesh.stride.push(3);
+
+		return mesh;
+	};
+	
+	//------------------------------------------------------------------------------
+	// createPointMesh
+	//------------------------------------------------------------------------------
+	render.prototype.createPointMesh = function (base, radius, slices, stacks) {
+	    /*
+		var mesh;
+
 		//Create Line Mesh
 		mesh               = new MeshObj();
 		
@@ -532,17 +513,10 @@ var WGLRender;
 		mesh.vbo_list.push(mesh.vbo_normal);
 		mesh.stride.push(3);
 		mesh.attrnames.push('normal');
-
-		//Create IBO and setup misc data.
-		mesh.index   = index;
-		mesh.ibo     = this.createIBO(mesh.index);
-		mesh.faces   = faces;
-		mesh.divide  = divide;
-		mesh.linenum = linenum;
-		return mesh;
-	};
-	
-	
+	    
+	    */
+	}
+    
 	render.prototype.drawMesh = function (mesh) {
 		var primnum = 0;
 		if (mesh.shader) {
@@ -554,6 +528,7 @@ var WGLRender;
 		} else {
 			primnum = mesh.position.length / 3;
 		}
+		console.log(primnum);
 		this.drawArrays(mesh.mode, 0, primnum);
 		this.gl.useProgram(null);
 	};

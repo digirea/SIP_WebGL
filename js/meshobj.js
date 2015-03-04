@@ -5,11 +5,10 @@ var MeshObj;
 (function () {
 	"use strict";
 	var mesh = function () {
-		this.position      = null;
-		this.normal        = null;
-		this.color         = null;
-
-		this.index         = null;
+		this.position      = [];
+		this.normal        = [];
+		this.color         = [];
+		this.index         = [];
 		this.attrnames     = [];
 		this.mode          = 'Triangles';
 		this.vbo_position  = null;
