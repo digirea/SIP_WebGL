@@ -75,22 +75,21 @@
 		}
 
 		if (mouseState.Left) {
-			camera.addPos(e.movementX * mult, 0, 0);
-			camera.addAt(e.movementX * mult, 0, 0);
-			camera.addPos(0, 0, -e.movementY * mult);
-			camera.addAt(0, 0, -e.movementY * mult);
+			camera.addRotate(-e.movementX * multrotate, e.movementY * multrotate, 0);
 		}
 
 		if (mouseState.Center) {
-			camera.addPos(0, e.movementY * mult, 0);
-			camera.addAt(0, e.movementY * mult, 0);
-
+			camera.addPos(0, 0, -e.movementY * mult);
+			camera.addAt(0, 0, -e.movementY * mult);
 		}
 
 		if (mouseState.Right) {
 			//camera.addPos(0, 0, -e.movementY * mult);
 			//camera.addAt(0, 0, -e.movementY * mult);
-			camera.addRotate(-e.movementX * multrotate, e.movementY * multrotate, 0);
+			camera.addPos(e.movementX * mult, 0, 0);
+			camera.addAt(e.movementX * mult, 0, 0);
+			camera.addPos(0, e.movementY * mult, 0);
+			camera.addAt(0,  e.movementY * mult, 0);
 		}
 	}
 
