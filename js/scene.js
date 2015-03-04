@@ -13,7 +13,9 @@
 		pointmesh   = null,
 		camera      = null,
 		qtn         = new QtnIV(),
+		mtx         = new MatIV(),
 		qt          = qtn.identity(qtn.create()),
+		ModelMatrixXY = mtx.identity(mtx.create()),
 		vertex_num  = 0,
 		line_shader = null,
 		mesh_shader = null,
@@ -21,7 +23,8 @@
 
 	function resetView() {
 		qtn        = new QtnIV();
-		qt         = qtn.identity(qtn.create());
+		qt         = qtn.identity(qtn.create()),
+		ModelMatrixXY = mtx.identity(mtx.create());
 	}
 
 	function reloadShader() {
@@ -74,7 +77,6 @@
 			gridcol      = 0.5,
 			position     = [],
 			color        = [],
-			mtx          = new MatIV(),
 			vMatrix      = mtx.identity(mtx.create()),
 			pMatrix      = mtx.identity(mtx.create()),
 			mMatrix      = mtx.identity(mtx.create()),
@@ -84,7 +86,6 @@
 			qMatrixY     = mtx.identity(mtx.create()),
 			qMatrixX     = mtx.identity(mtx.create()),
 			qMatrixXY    = mtx.identity(mtx.create()),
-			ModelMatrixXY = mtx.identity(mtx.create()),
 			prevX        = 0.0,
 			prevY        = 0.0,
 			time         = 0.0,
