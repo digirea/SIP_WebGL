@@ -67,21 +67,27 @@
 	function startGL() {
 		onResize();
 		var attLocation = [],
-			attStride   = [],
-			gridmesh    = null,
-			gridsize    = 300.0,
-			gridshift   = 10.0,
-			gridcol     = 0.5,
-			position    = [],
-			color       = [],
-			mtx         = new MatIV(),
-			vMatrix     = mtx.identity(mtx.create()),
-			pMatrix     = mtx.identity(mtx.create()),
-			mMatrix     = mtx.identity(mtx.create()),
-			tmpMatrix   = mtx.identity(mtx.create()),
-			mvpMatrix   = mtx.identity(mtx.create()),
-			qMatrix     = mtx.identity(mtx.create()),
-			time        = 0.0,
+			attStride    = [],
+			gridmesh     = null,
+			gridsize     = 300.0,
+			gridshift    = 10.0,
+			gridcol      = 0.5,
+			position     = [],
+			color        = [],
+			mtx          = new MatIV(),
+			vMatrix      = mtx.identity(mtx.create()),
+			pMatrix      = mtx.identity(mtx.create()),
+			mMatrix      = mtx.identity(mtx.create()),
+			tmpMatrix    = mtx.identity(mtx.create()),
+			mvpMatrix    = mtx.identity(mtx.create()),
+			qMatrix      = mtx.identity(mtx.create()),
+			qMatrixY     = mtx.identity(mtx.create()),
+			qMatrixX     = mtx.identity(mtx.create()),
+			qMatrixXY    = mtx.identity(mtx.create()),
+			ModelMatrixXY = mtx.identity(mtx.create()),
+			prevX        = 0.0,
+			prevY        = 0.0,
+			time         = 0.0,
 			i;
 
 		//-------------------------------------------------------------------
@@ -104,8 +110,7 @@
 		console.log(cyl);
 
 		function updateFrame() {
-			var qMatrix       = mtx.identity(mtx.create()),
-				cw            = canvas.width,
+			var cw            = canvas.width,
 				ch            = canvas.height,
 				wh            = 1 / Math.sqrt(cw * cw + ch * ch),
 				x             = 0,
@@ -131,8 +136,10 @@
 			camPos   = viewInfo.Pos;
 			camAt    = viewInfo.At;
 			tranRot  = viewInfo.Rotate;
-			x        = tranRot[0];
-			y        = tranRot[1];
+			x        = tranRot[0] - prevX;
+			y        = tranRot[1] - prevY;
+			prevX    = tranRot[0];
+			prevY    = tranRot[1];
 			sq       = Math.sqrt(x * x + y * y);
 			r        = sq * 2.0 * Math.PI * wh;
 			if (sq !== 1) {
@@ -141,11 +148,19 @@
 				y *= sq;
 			}
 
+			if(isNaN(x)) x = 0;
+			if(isNaN(y)) y = 0;
+			console.log(x, y);
+
+			qt = qtn.identity(qtn.create()),
 			qtn.rotate(r, [y, x, 0.0], qt);
-			qtn.toMatIV(qt, qMatrix);
+			qtn.toMatIV(qt, qMatrixXY);
+			
+			mtx.multiply(qMatrixXY, ModelMatrixXY, ModelMatrixXY);
 
 			mtx.lookAt(camPos, camAt, [0, 1, 0], vMatrix);
-			mtx.multiply(vMatrix, qMatrix, vMatrix);
+			mtx.multiply(vMatrix, ModelMatrixXY, vMatrix);
+			
 			mtx.perspective(60, canvas.width / canvas.height, 0.1, 1000, pMatrix);
 			mtx.multiply(pMatrix, vMatrix, tmpMatrix);
 			

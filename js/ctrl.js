@@ -104,7 +104,7 @@
 	}
 
 	function mouseWheel(e) {
-		console.log(e);
+		//console.log(e);
 		
 		if (camera) {
 			//http://hakuhin.jp/js/mouse.html#MOUSE_02
