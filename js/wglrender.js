@@ -477,9 +477,9 @@ var WGLRender;
 			mesh.normal.push(normal[inum * 3 + 0]);
 			mesh.normal.push(normal[inum * 3 + 1]);
 			mesh.normal.push(normal[inum * 3 + 2]);
-			
 		}
-		console.log(mesh.position.length, mesh.position);
+		//console.log(mesh.position.length, mesh.position);
+
 		mesh.vbo_position  = this.createVBO(mesh.position);
 		mesh.vbo_normal    = this.createVBO(mesh.normal);
 		mesh.vbo_list.push(mesh.vbo_position);
@@ -495,26 +495,89 @@ var WGLRender;
 	//------------------------------------------------------------------------------
 	// createPointMesh
 	//------------------------------------------------------------------------------
-	render.prototype.createPointMesh = function (base, radius, slices, stacks) {
-	    /*
-		var mesh;
+	render.prototype.createPointMesh = function (base, rad, slices, stacks) {
+		var mesh,
+			i,
+			ii,
+			tr,
+			tx,
+			ty,
+			tz,
+			rx,
+			ry,
+			rz,
+			rr,
+			r,
+			x0,
+			y0,
+			z0,
+			inum,
+			pos = [],
+			nor = [],
+			idx = [];
+		
+		//Create Base Mesh
+		for(i = 0; i <= stacks; i++) {
+			r =  Math.PI / stacks * i;
+			ry = Math.cos(r);
+			rr = Math.sin(r);
+			for(ii = 0; ii <= slices; ii++){
+				tr = Math.PI * 2 / slices * ii;
+				tx = rr * rad * Math.cos(tr);
+				ty = ry * rad;
+				tz = rr * rad * Math.sin(tr);
+				rx = rr * Math.cos(tr);
+				rz = rr * Math.sin(tr);
+				pos.push(tx, ty, tz);
+				nor.push(rx, ry, rz);
+			}
+		}
+		r = 0;
+		for(i = 0; i < stacks; i++){
+			for(ii = 0; ii < slices; ii++){
+				r = (slices + 1) * i + ii;
+				idx.push(r, r + 1, r + slices + 2);
+				idx.push(r, r + slices + 2, r + slices + 1);
+			}
+		}
 
-		//Create Line Mesh
-		mesh               = new MeshObj();
-		
-		mesh.position      = buf;
+		//---------------------------------------------------------------------
+		// Create Mesh
+		//---------------------------------------------------------------------
+		mesh = new MeshObj();
+		//reconstruct mesh
+
+		for(i = 0 ; i < base.position.length; i = i + 3) {
+			//get vertex per line.
+			x0 = base.position[i + 0];
+			y0 = base.position[i + 1];
+			z0 = base.position[i + 2];
+
+			//console.log(x0);
+			//console.log(y0);
+			//console.log(z0);
+			//reconstruct triangle and normal.
+			for(ii = 0 ; ii < idx.length; ii = ii + 1) {
+				inum = idx[ii];
+				mesh.position.push(pos[inum * 3 + 0] + x0);
+				mesh.position.push(pos[inum * 3 + 1] + y0);
+				mesh.position.push(pos[inum * 3 + 2] + z0);
+				mesh.normal.push(nor[inum * 3 + 0]);
+				mesh.normal.push(nor[inum * 3 + 1]);
+				mesh.normal.push(nor[inum * 3 + 2]);
+			}
+		}
+		//console.log(mesh.position.length, mesh.position);
+
 		mesh.vbo_position  = this.createVBO(mesh.position);
-		mesh.vbo_list.push(mesh.vbo_position);
-		mesh.stride.push(3);
-		mesh.attrnames.push('position');
-		
-		mesh.normal        = normal;
 		mesh.vbo_normal    = this.createVBO(mesh.normal);
+		mesh.vbo_list.push(mesh.vbo_position);
 		mesh.vbo_list.push(mesh.vbo_normal);
-		mesh.stride.push(3);
+		mesh.attrnames.push('position');
 		mesh.attrnames.push('normal');
-	    
-	    */
+		mesh.stride.push(3);
+		mesh.stride.push(3);
+		return mesh;
 	}
     
 	render.prototype.drawMesh = function (mesh) {
@@ -528,7 +591,6 @@ var WGLRender;
 		} else {
 			primnum = mesh.position.length / 3;
 		}
-		console.log(primnum);
 		this.drawArrays(mesh.mode, 0, primnum);
 		this.gl.useProgram(null);
 	};

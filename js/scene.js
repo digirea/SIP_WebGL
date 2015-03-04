@@ -50,7 +50,7 @@
 		stlmesh     = render.createMeshObj(point_p, point_n, null);
 		//linemesh    = render.createLineMesh(stlmesh, 32, 2.0);
 		linemesh    = render.createLineMesh(stlmesh, 32, 0.3);
-		//pointmesh   = render.createPointMesh(stlmesh, 32, 32, 32);  // GLdouble radius, GLint slices, GLint stacks
+		pointmesh   = render.createPointMesh(stlmesh, 1.0, 32, 32);  // GLdouble radius, GLint slices, GLint stacks
 		updateInfo(point_p.length / 3 / 3, point_n.length / 3 / 3);
 	}
 
@@ -184,6 +184,21 @@
 				//render.drawMeshIndexed(linemesh);
 				render.drawMesh(linemesh);
 			}
+
+			if(pointmesh) {
+				//Line Cylinnder
+				render.setupShader(pointmesh, mesh_line_shader);
+				mtx.identity(mMatrix);
+				mtx.scale(mMatrix, [1.0, 1.0, 1.0], mMatrix);
+				mtx.multiply(tmpMatrix, mMatrix, mvpMatrix);
+				uniLocation = render.getShaderUniformList(mesh_line_shader, ['mvpMatrix', 'vpMatrix']);
+				render.setUniform('Matrix4fv', uniLocation[0], mvpMatrix);
+				render.setUniform('Matrix4fv', uniLocation[1], tmpMatrix);
+				render.EnableDepth();
+				render.drawMesh(pointmesh);
+			}
+			
+			
 
 		    /*
 			if (stlmesh) {
