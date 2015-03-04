@@ -132,6 +132,7 @@
 	}
 
 	function init(document, keycb) {
+		/*
 		var mousewheelevent = null;
 		if (document.hasOwnProperty('onwheel')) {
 			mousewheelevent = 'wheel';
@@ -140,6 +141,7 @@
 		} else {
 			mousewheelevent = 'DOMMouseScroll';
 		}
+		*/
 		document.addEventListener('mouseout',  mouseOut, true);
 		document.addEventListener('mousemove', mouseMove, true);
 		document.addEventListener('mouseup',   mouseUp, true);
@@ -150,7 +152,8 @@
 				return false;
 			}
 		}, false);
-		document.addEventListener(mousewheelevent, mouseWheel);
+		document.addEventListener('mousewheel',     mouseWheel);
+		document.addEventListener('DOMMouseScroll', mouseWheel);
 		document.addEventListener("keydown", keyEvent, false);
 		keycallback = keycb;
 		resetView();
