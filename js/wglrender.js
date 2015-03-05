@@ -61,20 +61,20 @@ var WGLRender;
 	};
 
 	render.prototype.Depth = function (enable) {
-		if(enable == true) {
+		if (enable === true) {
 			this.gl.enable(this.gl.DEPTH_TEST);
 		} else {
 			this.gl.disable(this.gl.DEPTH_TEST);
 		}
-	}
+	};
 	
 	render.prototype.Blend = function (enable) {
-		if(enable === true) {
+		if (enable === true) {
 			//this.gl.enable(this.gl.DEPTH_TEST);
 			this.gl.depthFunc(this.gl.LEQUAL);
 			//this.gl.disable(this.gl.BLEND);
 			this.gl.enable(this.gl.BLEND);
-			this.gl.blendFuncSeparate(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA, this.gl.ONE, this.gl.ONE);	
+			this.gl.blendFuncSeparate(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA, this.gl.ONE, this.gl.ONE);
 			//this.gl.blendFuncSeparate(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA, this.gl.ONE, this.gl.ONE);
 			//this.gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 		} else {
@@ -167,7 +167,7 @@ var WGLRender;
 
 	render.prototype.lineWidth = function (w) {
 		this.gl.lineWidth(w);
-	}
+	};
 	
 	render.prototype.getUniformList = function (prg, namearray) {
 		var i,
@@ -284,14 +284,17 @@ var WGLRender;
 	// MESHOBJ
 	//------------------------------------------------------------------------------
 	render.prototype.createCyl = function (divide) {
-		var mesh        = new MeshObj();
-		var d  = 0,
-		    dd = 360 / (divide),
-		    buf = [];
+		var mesh = new MeshObj(),
+			d    = 0,
+		    dd   = 360 / (divide),
+		    buf  = [],
+			i,
+			x,
+			z;
 
-		for(var i = 0; i <= divide; i = i + 1) {
-			var x = Math.cos((3.1415926536 * d) / 180.0);
-			var z = Math.sin((3.1415926536 * d) / 180.0);
+		for (i = 0; i <= divide; i = i + 1) {
+			x = Math.cos((3.1415926536 * d) / 180.0);
+			z = Math.sin((3.1415926536 * d) / 180.0);
 			buf.push(x);
 			buf.push(1.0);
 			buf.push(z);
@@ -351,7 +354,7 @@ var WGLRender;
 			tangent        = [],
 			normal         = [];
 
-		if(divide <= 0 || radius <= 0) {
+		if (divide <= 0 || radius <= 0) {
 			console.log('Error divide or radius is less then 0\n');
 			console.log(divide, radius);
 			return null;
@@ -370,9 +373,9 @@ var WGLRender;
 		//---------------------------------------------------------------------
 		//create vertex
 		//---------------------------------------------------------------------
-		for(i = 0 ; i < base.position.length; i = i + 6) {
+		for (i = 0; i < base.position.length; i = i + 6) {
 			//get vertex per line.
-			x0 = base.position[i + 0];
+			x0 = base.position[i];
 			y0 = base.position[i + 1];
 			z0 = base.position[i + 2];
 			x1 = base.position[i + 3];
@@ -384,7 +387,7 @@ var WGLRender;
 			dy  = y1 - y0;
 			dz  = z1 - z0;
 			len = Math.sqrt(dx * dx + dy * dy + dz * dz);
-			if(len < 0.0001) {
+			if (len < 0.0001) {
 				dx  = 0;
 				dy  = 0;
 				dz  = 0;
@@ -406,7 +409,7 @@ var WGLRender;
 			tangent[2] *= invlen;
 
 			//create triangle vertex
-			for(deg = 0; deg <= 360; deg += degdelta) {
+			for (deg = 0; deg <= 360; deg += degdelta) {
 				temp = [];
 				//degrees * Math.PI / 180;
 				qtn.rotate(deg * Math.PI / 180.0, [dx, dy, dz], qt);
@@ -443,15 +446,15 @@ var WGLRender;
 		//---------------------------------------------------------------------
 		//create triangle index buffer per vertex
 		//---------------------------------------------------------------------
-		for(i = 0 ; i < buf.length / 3; i = i + 2) {
-			index.push(restrip_offset + i + 0);
+		for (i = 0; i < buf.length / 3; i = i + 2) {
+			index.push(restrip_offset + i);
 			index.push(restrip_offset + i + 1);
 			index.push(restrip_offset + i + 2);
 			index.push(restrip_offset + i + 1);
 			index.push(restrip_offset + i + 3);
 			index.push(restrip_offset + i + 2);
 			restrip += 2;
-			if(restrip >= (divide * 2)) {
+			if (restrip >= (divide * 2)) {
 				restrip_offset = restrip_offset + 2;
 				restrip = 0;
 			}
@@ -463,12 +466,12 @@ var WGLRender;
 		mesh = new MeshObj();
 		
 		//reconstruct triangle and normal.
-		for(i = 0 ; i < index.length; i = i + 1) {
+		for (i = 0; i < index.length; i = i + 1) {
 			inum = index[i];
-			mesh.position.push(buf[inum * 3 + 0]);
+			mesh.position.push(buf[inum * 3]);
 			mesh.position.push(buf[inum * 3 + 1]);
 			mesh.position.push(buf[inum * 3 + 2]);
-			mesh.normal.push(normal[inum * 3 + 0]);
+			mesh.normal.push(normal[inum * 3]);
 			mesh.normal.push(normal[inum * 3 + 1]);
 			mesh.normal.push(normal[inum * 3 + 2]);
 		}
@@ -515,11 +518,11 @@ var WGLRender;
 		// Create Base Mesh
 		//---------------------------------------------------------------------
 		console.log('START : Create Base Mesh');
-		for(i = 0; i <= stacks; i++) {
+		for (i = 0; i <= stacks; i = i + 1) {
 			r =  Math.PI / stacks * i;
 			ry = Math.cos(r);
 			rr = Math.sin(r);
-			for(ii = 0; ii <= slices; ii++){
+			for (ii = 0; ii <= slices; ii = ii + 1) {
 				tr = Math.PI * 2 / slices * ii;
 				tx = rr * rad * Math.cos(tr);
 				ty = ry * rad;
@@ -531,8 +534,8 @@ var WGLRender;
 			}
 		}
 		r = 0;
-		for(i = 0; i < stacks; i++){
-			for(ii = 0; ii < slices; ii++){
+		for (i = 0; i < stacks; i = i + 1) {
+			for (ii = 0; ii < slices; ii = ii + 1) {
 				r = (slices + 1) * i + ii;
 				idx.push(r, r + 1, r + slices + 2);
 				idx.push(r, r + slices + 2, r + slices + 1);
@@ -547,19 +550,19 @@ var WGLRender;
 
 		//reconstruct mesh
 		console.log('START : Create Mesh per Point');
-		for(i = 0 ; i < base.position.length; i = i + 3) {
+		for (i = 0; i < base.position.length; i = i + 3) {
 			//get vertex per line.
-			x0 = base.position[i + 0];
+			x0 = base.position[i];
 			y0 = base.position[i + 1];
 			z0 = base.position[i + 2];
 
 			//reconstruct triangle and normal.
-			for(ii = 0 ; ii < idx.length; ii = ii + 1) {
+			for (ii = 0; ii < idx.length; ii = ii + 1) {
 				inum = idx[ii];
-				mesh.position.push(pos[inum * 3 + 0] + x0);
+				mesh.position.push(pos[inum * 3] + x0);
 				mesh.position.push(pos[inum * 3 + 1] + y0);
 				mesh.position.push(pos[inum * 3 + 2] + z0);
-				mesh.normal.push(nor[inum * 3 + 0]);
+				mesh.normal.push(nor[inum * 3]);
 				mesh.normal.push(nor[inum * 3 + 1]);
 				mesh.normal.push(nor[inum * 3 + 2]);
 			}
@@ -575,7 +578,7 @@ var WGLRender;
 		mesh.stride.push(3);
 		mesh.stride.push(3);
 		return mesh;
-	}
+	};
     
 	render.prototype.drawMesh = function (mesh) {
 		var primnum = 0;

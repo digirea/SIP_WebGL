@@ -1,4 +1,4 @@
-/*jslint. devel:true */
+/*jslint devel:true */
 /*global $, $ready, $animate, io, fs, URL, FileReader */
 
 var buttonMargin         = 16;
@@ -16,13 +16,13 @@ $ready(function () {
 	$('DataViewButton').addEventListener('click', function () {
 		//$('DataView').style.overflow = "hidden";
 
-		var SizeWidth            = window.innerWidth ;
-		var SizeHeight           = window.innerHeight;
-		var SizeHeightButton     = window.innerHeight - buttonMargin;
+		var SizeWidth            = window.innerWidth,
+			SizeHeight           = window.innerHeight,
+			SizeHeightButton     = window.innerHeight - buttonMargin,
 
-		//暫定
-		var SizeDataHeightSize   = SizeHeight - SizeDataHeightOffset;
-		var timeOfLerp           = 350;
+			//暫定
+			SizeDataHeightSize   = SizeHeight - SizeDataHeightOffset,
+			timeOfLerp           = 350;
 
 
 		//----------------------------------------------------------
@@ -30,7 +30,7 @@ $ready(function () {
 		// Close
 		//
 		//----------------------------------------------------------
-		if(DataViewState === 0) {
+		if (DataViewState === 0) {
 			//------------------------------------------------------
 			//Button
 			//------------------------------------------------------
@@ -38,9 +38,9 @@ $ready(function () {
 				'top': {
 					from: SizeHeightButton     + "px",
 					to  : SizeDataHeightOffset + "px"
-				},
+				}
 			}, timeOfLerp, function () {
-				$('DataViewButton').value="A";
+				$('DataViewButton').value = "A";
 				console.log("ブロック拡張成功");
 				DataViewState = 1;
 			});
@@ -55,11 +55,11 @@ $ready(function () {
 				},
 				'height' : {
 					from : "0px",
-					to   : SizeDataHeightSize   + "px",
-				},
+					to   : SizeDataHeightSize   + "px"
+				}
 			}, timeOfLerp, function () {
 			});
-		} else if(DataViewState === 1)  {
+		} else if (DataViewState === 1) {
 			//------------------------------------------------------
 			//Button
 			//------------------------------------------------------
@@ -70,7 +70,7 @@ $ready(function () {
 				}
 			}, timeOfLerp, function () {
 				DataViewState = 0;
-				$('DataViewButton').value="V";
+				$('DataViewButton').value = "V";
 				console.log("ブロック縮小成功");
 			});
 			
@@ -84,8 +84,8 @@ $ready(function () {
 				},
 				'height' : {
 					from : SizeDataHeightSize   + "px",
-					to   : "0px",
-				},
+					to   : "0px"
+				}
 			}, timeOfLerp, function () {
 			});
 		}
@@ -96,22 +96,21 @@ $ready(function () {
 (function () {
 	"use strict";
 	function resize() {
-		var SizeWidth            = window.innerWidth ;
-		var SizeHeight           = window.innerHeight;
-		var SizeHeightButton     = window.innerHeight - buttonMargin;
-		var SizeDataHeightSize   = SizeHeight - SizeDataHeightOffset;
-		
-		var eButton = $('DataViewButton');
-		var eView   = $('DataView');
+		var SizeWidth            = window.innerWidth,
+			SizeHeight           = window.innerHeight,
+			SizeHeightButton     = window.innerHeight - buttonMargin,
+			SizeDataHeightSize   = SizeHeight - SizeDataHeightOffset,
+			eButton = $('DataViewButton'),
+			eView   = $('DataView');
 		eButton.style.width      = SizeWidth  + "px";
 		eView.style.width        = SizeWidth  + "px";
 		eView.style.bottom       = SizeHeight + "px";
 		
-		if(DataViewState === 1) {
+		if (DataViewState === 1) {
 			eButton.style.top    = SizeDataHeightOffset + "px";
 			eView.style.top      = SizeDataHeightOffset + "px";
 			eView.style.height   = SizeDataHeightSize   + "px";
-		} else { 
+		} else {
 			eButton.style.top    = SizeHeightButton     + "px";
 			eView.style.top      = SizeHeightButton     + "px";
 			eView.style.height   = "0px";
@@ -121,9 +120,9 @@ $ready(function () {
 	function init() {
 		resize();
 		
-		$('DataViewButton').onmousedrag = function(e) {
+		$('DataViewButton').onmousedrag = function (e) {
 			console.log('aA');
-		}
+		};
 	}
 	
 

@@ -69,7 +69,7 @@
 			movementX  = 0,
 			movementY  = 0;
 
-		if(prevEvent) {
+		if (prevEvent) {
 			movementX = e.clientX - prevEvent.clientX;
 			movementY = e.clientY - prevEvent.clientY;
 		}
@@ -108,12 +108,9 @@
 		
 		if (camera) {
 			//http://hakuhin.jp/js/mouse.html#MOUSE_02
-			if(e.wheelDelta)
-			{
+			if (e.wheelDelta) {
 				camera.addPos(0, 0, e.wheelDelta * 0.05);
-			}
-			else
-			{
+			} else {
 				camera.addPos(0, 0, -e.detail * 0.05 * 40.0);
 			}
 		}
