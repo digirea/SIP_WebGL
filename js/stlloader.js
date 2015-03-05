@@ -47,8 +47,82 @@
 		return normal;
 	}
 
+	function GetMinMax(min, max, pos)
+	{
+		min[0] = Math.min(pos[0], min[0])
+		min[1] = Math.min(pos[1], min[1])
+		min[2] = Math.min(pos[2], min[2])
+		
+		max[0] = Math.max(pos[0], max[0]);
+		max[1] = Math.max(pos[1], max[1]);
+		max[2] = Math.max(pos[2], max[2]);
+	}
 
+	function loadbinSTLA(dataview) {
+		var i              = 0,
+			datalen        = dataview.byteLength,
+			lineidx        = 0,
+			linebuf        = [],
+			ch             = 0,
+			m_pos          = [],
+			m_normal       = [],
+			m_pos_idx      = 0,
+			m_normal_idx   = 0,
+			nor            = null,
+			x              = 0,
+			y              = 0,
+			z              = 0,
+			maxValue = 9999999,
+			Bmin = [maxValue, maxValue, maxValue],
+			Bmax = [-maxValue,-maxValue,-maxValue],
+			ret;
+		while(i < datalen) {
+			//read per line.
+			ch = dataview.getUint8(i);
+			i++;
+			if(ch === 10 || ch === 13) {
+				if(lineidx <= 0) {
+					continue;
+				}
+				linebuf = String.fromCharCode.apply(null, linebuf);
+				linebuf = linebuf.replace(/\s+/g, ' ');
+				if(linebuf[0] == ' ') {
+					linebuf = linebuf.slice(1);
+				}
+				linebuf = linebuf.split(' ');
 
+				if(linebuf[0] === 'facet') {
+					x = parseFloat(linebuf[2], 10);
+					y = parseFloat(linebuf[3], 10);
+					z = parseFloat(linebuf[4], 10);
+					nor = Normalize([x, y, z]);
+					m_normal.push(x, y, z);
+					m_normal.push(x, y, z);
+					m_normal.push(x, y, z);
+				}
+				
+				if(linebuf[0] === 'vertex') {
+					x = parseFloat(linebuf[1], 10);
+					y = parseFloat(linebuf[2], 10);
+					z = parseFloat(linebuf[3], 10);
+					GetMinMax(Bmin, Bmax, [x, y, z]);
+					m_pos.push(x, y, z);
+				}
+				lineidx = 0;
+				continue;
+			}
+			linebuf[lineidx] = ch;
+			lineidx++;
+		}
+		ret = {
+			"pos"    : m_pos,
+			"normal" : m_normal,
+			"min"    : Bmin,
+			"max"    : Bmax
+		};
+		return ret;
+	}
+	
 	///---------------------------------------------------------------------------
 	///
 	/// struct triData
@@ -81,7 +155,11 @@
 			nx,
 			ny,
 			nz,
-			nor;
+			nor,
+			maxValue = 9999999,
+			Bmin = [maxValue, maxValue, maxValue],
+			Bmax = [-maxValue,-maxValue,-maxValue];
+		
 		
 		triCount = dataview.getInt32(index, true);//read triangle number.
 		index += 4;
@@ -121,15 +199,18 @@
 			m_pos[i + i0 + x]     = tri[3];
 			m_pos[i + i0 + y]     = tri[3 + 1];
 			m_pos[i + i0 + z]     = tri[3 + 2];
+			GetMinMax(Bmin, Bmax, [m_pos[i + i0 + x], m_pos[i + i0 + y], m_pos[i + i0 + z]] );
 
 			m_pos[i + i1 + x]     = tri[6];
 			m_pos[i + i1 + y]     = tri[6 + 1];
 			m_pos[i + i1 + z]     = tri[6 + 2];
+			GetMinMax(Bmin, Bmax, [m_pos[i + i1 + x], m_pos[i + i1 + y], m_pos[i + i1 + z]] );
 
 			m_pos[i + i2 + x]     = tri[9];
 			m_pos[i + i2 + y]     = tri[9 + 1];
 			m_pos[i + i2 + z]     = tri[9 + 2];
-			
+			GetMinMax(Bmin, Bmax, [m_pos[i + i2 + x], m_pos[i + i2 + y], m_pos[i + i2 + z]] );
+
 			if (nx === 0 && ny === 0 && nz === 0) {
 				nor = calcNormal(m_pos, i);
 				m_normal[i]     = nor[0];
@@ -147,7 +228,9 @@
 		//todo Mesh Data
 		return {
 			"pos"    : m_pos,
-			"normal" : m_normal
+			"normal" : m_normal,
+			"min"    : Bmin,
+			"max"    : Bmax
 		};
 	}
 	
@@ -172,7 +255,7 @@
 				}
 			}
 			console.log('STL is ASCII');
-			return [];
+			return loadbinSTLA(dataview);
 		}
 		console.log('STL is BINARY');
 		return loadbinSTLB(dataview);

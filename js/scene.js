@@ -4,27 +4,28 @@
 (function (loadSTLB) {
 	"use strict";
 
-	var canvas      = null,
-		gl          = null,
-		render      = null,
-		rAF         = null,
-		stlmesh     = null,
-		linemesh    = null,
-		pointmesh   = null,
-		camera      = null,
-		qtn         = new QtnIV(),
-		mtx         = new MatIV(),
-		qt          = qtn.identity(qtn.create()),
-		ModelMatrixXY = mtx.identity(mtx.create()),
-		vertex_num  = 0,
-		line_shader = null,
-		mesh_shader = null,
-		global_time = 0;
+	var canvas         = null,
+		gl             = null,
+		render         = null,
+		rAF            = null,
+		stlmesh        = null,
+		linemesh       = null,
+		pointmesh      = null,
+		camera         = null,
+		qtn            = new QtnIV(),
+		mtx            = new MatIV(),
+		qt             = qtn.identity(qtn.create()),
+		DiffMatrixXY  = mtx.identity(mtx.create()),
+		vertex_num     = 0,
+		line_shader    = null,
+		mesh_shader    = null,
+		global_time    = 0;
+
 
 	function resetView() {
 		qtn        = new QtnIV();
 		qt         = qtn.identity(qtn.create());
-		ModelMatrixXY = mtx.identity(mtx.create());
+		DiffMatrixXY = mtx.identity(mtx.create());
 	}
 
 	function reloadShader() {
@@ -47,14 +48,20 @@
 	}
 
 	function updateMesh(data) {
-		var point_p = data.pos,
-			point_n = data.normal;
-		stlmesh     = render.createMeshObj(point_p, point_n, null);
+		var point_p  = data.pos,
+			point_n  = data.normal,
+			distance = 0;
+
+		console.log(data);
+		stlmesh     = render.createMeshObj(data);
 		//linemesh    = render.createLineMesh(stlmesh, 8, 0.3);
 		//pointmesh   = render.createPointMesh(stlmesh, 1.0, 7, 7);  // GLdouble radius, GLint slices, GLint stacks
 		//pointmesh = render.createPointMesh(stlmesh, 1.0, 16, 16);  // GLdouble radius, GLint slices, GLint stacks
 
 		updateInfo(point_p.length / 3 / 3, point_n.length / 3 / 3);
+		
+		//Start Lerp
+		camera.setupLerp(data.min, data.max);
 	}
 
 	function loadSTL(evt) {
@@ -76,8 +83,9 @@
 		var attLocation = [],
 			attStride    = [],
 			gridmesh     = null,
-			gridsize     = 300.0,
-			gridshift    = 10.0,
+			griddata,
+			gridsize     = 5000.0,
+			gridshift    = 100.0,
 			gridcol      = 0.5,
 			position     = [],
 			color        = [],
@@ -89,7 +97,6 @@
 			qMatrix      = mtx.identity(mtx.create()),
 			qMatrixY     = mtx.identity(mtx.create()),
 			qMatrixX     = mtx.identity(mtx.create()),
-			qMatrixXY    = mtx.identity(mtx.create()),
 			prevX        = 0.0,
 			prevY        = 0.0,
 			time         = 0.0,
@@ -109,12 +116,10 @@
 			color.push(gridcol, gridcol, gridcol, 1.0);
 			color.push(gridcol, gridcol, gridcol, 1.0);
 		}
-		gridmesh = render.createMeshObj(position, null, color);
+		griddata = {'pos' : position, 'color' : color};
+		gridmesh = render.createMeshObj(griddata);
 		reloadShader();
 		
-		cyl = render.createCyl(9);
-		console.log(cyl);
-
 		function updateFrame() {
 			var cw            = canvas.width,
 				ch            = canvas.height,
@@ -124,10 +129,10 @@
 				sq            = 0,
 				r             = 0,
 				pointSize     = 7.0,
-				cylMatrix     = mtx.identity(mtx.create()),
 				attStrideMesh = [],
 				uniLocation   = [],
 				gridcolor     = [0.1, 0.1, 0.1, 1.0],
+				qMatrixXY     = mtx.identity(mtx.create()),
 				camPos,
 				camAt,
 				tranRot,
@@ -162,13 +167,16 @@
 			qtn.rotate(r, [y, x, 0.0], qt);
 			qtn.toMatIV(qt, qMatrixXY);
 			
-			mtx.multiply(qMatrixXY, ModelMatrixXY, ModelMatrixXY);
+			DiffMatrixXY = camera.getDiffMatrix();
+			mtx.multiply(qMatrixXY, DiffMatrixXY, DiffMatrixXY);
 
 			mtx.lookAt(camPos, camAt, [0, 1, 0], vMatrix);
-			mtx.multiply(vMatrix, ModelMatrixXY, vMatrix);
+
 			
-			mtx.perspective(60, canvas.width / canvas.height, 0.1, 2560, pMatrix);
+			mtx.perspective(60, canvas.width / canvas.height, 0.1, 10000.0, pMatrix);
 			mtx.multiply(pMatrix, vMatrix, tmpMatrix);
+			mtx.multiply(tmpMatrix, DiffMatrixXY, tmpMatrix);
+			camera.update(DiffMatrixXY);
 			
 			//Clear
 			//render.clearColor(0.1, 0.1, 0.1, 1.0);

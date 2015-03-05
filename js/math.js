@@ -518,3 +518,40 @@ function QtnIV() {
 		return dest;
 	};
 }
+
+//http://freespace.virgin.net/hugo.elias/models/m_perlin.htm
+function CosInter(a, b, x) {
+	var ft = x * Math.PI,
+		f  = (1 - Math.cos(ft)) * .5;
+	return a * (1 - f) + b * f;
+}
+
+
+function Normalize(p) {
+	var length = Math.sqrt(p[0] * p[0] + p[1] * p[1] + p[2] * p[2]);
+	return [p[0] / length, p[1] / length, p[2] / length];
+}
+
+function Dot(p0, p1) {
+	return (p0[0] * p1[0]) + (p0[1] * p1[1]) + (p0[2] * p1[2]);
+}
+
+function Length(p) {
+	return Math.sqrt(Dot(p, p));
+}
+
+function Normalize(p) {
+	var length = Length(p);
+	return [p[0] / length, p[1] / length, p[2] / length];
+}
+
+function Cross(p0, p1)
+{
+	return [
+		(p0[1] * p1[2]) - (p0[2] * p1[1]), 
+		(p0[2] * p1[0]) - (p0[0] * p1[2]),
+		(p0[0] * p1[1]) - (p0[1] * p1[0])
+	];
+}
+
+

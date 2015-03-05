@@ -64,8 +64,8 @@
 	}
 
 	function mouseMove(e) {
-		var mult       = 0.5,
-			multrotate = 1.0,
+		var mult       = 2.5,
+			multrotate = 0.5,
 			movementX  = 0,
 			movementY  = 0;
 
@@ -109,9 +109,9 @@
 		if (camera) {
 			//http://hakuhin.jp/js/mouse.html#MOUSE_02
 			if (e.wheelDelta) {
-				camera.addPos(0, 0, e.wheelDelta * 0.05);
+				camera.addPos(0, 0, e.wheelDelta * 0.5);
 			} else {
-				camera.addPos(0, 0, -e.detail * 0.05 * 40.0);
+				camera.addPos(0, 0, -e.detail * 0.5 * 40.0);
 			}
 		}
 		e.preventDefault();

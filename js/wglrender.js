@@ -249,34 +249,43 @@ var WGLRender;
 	//------------------------------------------------------------------------------
 	// MESHOBJ
 	//------------------------------------------------------------------------------
-	render.prototype.createMeshObj = function (position, normal, color) {
+	render.prototype.createMeshObj = function (data) {
 		var mesh        = new MeshObj();
-		if (position) {
+		if (data.pos) {
 			console.log('CREATE : position');
-			mesh.position = position;
-			mesh.vbo_position = this.createVBO(position);
+			mesh.position = data.pos;
+			mesh.vbo_position = this.createVBO(mesh.position);
 			mesh.vbo_list.push(mesh.vbo_position);
 			mesh.stride.push(3);
 			mesh.attrnames.push('position');
 		}
 
-		if (normal) {
+		if (data.normal) {
 			console.log('CREATE : normal');
-			mesh.normal = normal;
-			mesh.vbo_normal = this.createVBO(normal);
+			mesh.normal = data.normal;
+			mesh.vbo_normal = this.createVBO(mesh.normal);
 			mesh.vbo_list.push(mesh.vbo_normal);
 			mesh.stride.push(3);
 			mesh.attrnames.push('normal');
 		}
 
-		if (color) {
+		if (data.color) {
 			console.log('CREATE : color');
-			mesh.color   = color;
-			mesh.vbo_col = this.createVBO(color);
+			mesh.color   = data.color;
+			mesh.vbo_col = this.createVBO(mesh.color);
 			mesh.vbo_list.push(mesh.vbo_col);
 			mesh.stride.push(4);
 			mesh.attrnames.push('color');
 		}
+		
+		if(data.min) {
+			mesh.boundmin = data.min;
+		}
+		
+		if(data.max) {
+			mesh.boundmax = data.max;
+		}
+		
 		return mesh;
 	};
 	
@@ -398,15 +407,17 @@ var WGLRender;
 			}
 
 			//cross
-			tangent[0] = dy * vertical[2] - dz * vertical[1];
-			tangent[1] = dz * vertical[0] - dx * vertical[2];
-			tangent[2] = dx * vertical[1] - dy * vertical[0];
-
-			//normalize
-			invlen = 1.0 / Math.sqrt(tangent[0] * tangent[0] + tangent[1] * tangent[1] + tangent[2] * tangent[2]);
-			tangent[0] *= invlen;
-			tangent[1] *= invlen;
-			tangent[2] *= invlen;
+			//tangent[0] = dy * vertical[2] - dz * vertical[1];
+			//tangent[1] = dz * vertical[0] - dx * vertical[2];
+			//tangent[2] = dx * vertical[1] - dy * vertical[0];
+            //
+			////normalize
+			//invlen = 1.0 / Math.sqrt(tangent[0] * tangent[0] + tangent[1] * tangent[1] + tangent[2] * tangent[2]);
+			//tangent[0] *= invlen;
+			//tangent[1] *= invlen;
+			//tangent[2] *= invlen;
+			tangent = Cross([dx, dy, dz], vertical);
+			tangent = Normalize(tangent);
 
 			//create triangle vertex
 			for (deg = 0; deg <= 360; deg += degdelta) {
