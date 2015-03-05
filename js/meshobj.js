@@ -18,6 +18,8 @@ var MeshObj;
 		this.stride        = [];
 		this.attlocation   = [];
 		this.shader        = null;
+		this.BoundMin      = [0,0,0];
+		this.BoundMax      = [0,0,0];
 	};
 
 	mesh.prototype.setMode = function (m) {

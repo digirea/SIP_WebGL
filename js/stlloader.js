@@ -48,6 +48,7 @@
 	}
 
 
+
 	///---------------------------------------------------------------------------
 	///
 	/// struct triData
@@ -60,7 +61,7 @@
 	/// };
 	///
 	///---------------------------------------------------------------------------
-	function loadbin(dataview) {
+	function loadbinSTLB(dataview) {
 		var i           = 0,
 			inner       = 0,
 			trisize     = 12,
@@ -149,7 +150,34 @@
 			"normal" : m_normal
 		};
 	}
-
+	
+	function loadSTLInternal(dataview) {
+		var i           = 0,
+			buf,
+			stlascii_header = 'solid ',
+			testlen;
+		buf =  new Uint16Array(stlascii_header.length);
+		for(i = 0 ; i < stlascii_header.length; i++) {
+			buf[i] = dataview.getUint8(i);
+		}
+		buf = String.fromCharCode.apply(null, buf);
+		console.log(buf);
+		
+		if(buf === stlascii_header) {
+			testlen = dataview.byteLength / 4;
+			for (i = 0; i < testlen; ++i) {
+				buf = dataview.getUint8(i);
+				if (buf >= 0x7F || buf == 0x00) {
+					return true;
+				}
+			}
+			console.log('STL is ASCII');
+			return [];
+		}
+		console.log('STL is BINARY');
+		return loadbinSTLB(dataview);
+	}
+	
 	function openBinary(evt, callback) {
 		var files  = evt.target.files,
 			fr     = new FileReader(),
@@ -167,7 +195,7 @@
 			if (data) {
 				dataview = new DataView(data);
 				console.log('loadSTLB ' + loadSTLB);
-				callback(loadbin(dataview));
+				callback(loadSTLInternal(dataview));
 			}
 		};
 

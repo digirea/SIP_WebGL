@@ -50,10 +50,10 @@
 		var point_p = data.pos,
 			point_n = data.normal;
 		stlmesh     = render.createMeshObj(point_p, point_n, null);
-		/*
-		linemesh    = render.createLineMesh(stlmesh, 8, 0.3);
-		pointmesh   = render.createPointMesh(stlmesh, 1.0, 16, 16);  // GLdouble radius, GLint slices, GLint stacks
-		*/
+		//linemesh    = render.createLineMesh(stlmesh, 8, 0.3);
+		//pointmesh   = render.createPointMesh(stlmesh, 1.0, 7, 7);  // GLdouble radius, GLint slices, GLint stacks
+		//pointmesh = render.createPointMesh(stlmesh, 1.0, 16, 16);  // GLdouble radius, GLint slices, GLint stacks
+
 		updateInfo(point_p.length / 3 / 3, point_n.length / 3 / 3);
 	}
 
@@ -151,7 +151,6 @@
 
 			if(isNaN(x)) x = 0;
 			if(isNaN(y)) y = 0;
-			console.log(x, y);
 
 			qt = qtn.identity(qtn.create()),
 			qtn.rotate(r, [y, x, 0.0], qt);
@@ -162,7 +161,7 @@
 			mtx.lookAt(camPos, camAt, [0, 1, 0], vMatrix);
 			mtx.multiply(vMatrix, ModelMatrixXY, vMatrix);
 			
-			mtx.perspective(60, canvas.width / canvas.height, 0.1, 1000, pMatrix);
+			mtx.perspective(60, canvas.width / canvas.height, 0.1, 2560, pMatrix);
 			mtx.multiply(pMatrix, vMatrix, tmpMatrix);
 			
 			//Clear
@@ -198,7 +197,6 @@
 				render.Depth(true);
 				render.drawMesh(stlmesh);
 			}
-			
 			/*
 			
 			//Line(Cylinder)
@@ -228,6 +226,7 @@
 			}
 			*/
 
+			global_time += 0.016666666;
 			render.swapBuffer()(updateFrame);
 		}
 		updateFrame();
