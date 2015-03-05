@@ -58,8 +58,12 @@
 	}
 
 	function loadSTL(evt) {
+		if (evt === '') {
+			return;
+		}
 		loadSTLB.openBinary(evt, function (data) {
 			updateMesh(data);
+			document.getElementById('openfile').value = ''; // clear filename
 		});
 	}
 
