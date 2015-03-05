@@ -23,7 +23,7 @@
 
 	function resetView() {
 		qtn        = new QtnIV();
-		qt         = qtn.identity(qtn.create()),
+		qt         = qtn.identity(qtn.create());
 		ModelMatrixXY = mtx.identity(mtx.create());
 	}
 
@@ -89,7 +89,8 @@
 			prevX        = 0.0,
 			prevY        = 0.0,
 			time         = 0.0,
-			i;
+			i,
+			cyl;
 
 		//-------------------------------------------------------------------
 		//CreateGrid
@@ -107,7 +108,7 @@
 		gridmesh = render.createMeshObj(position, null, color);
 		reloadShader();
 		
-		var cyl = render.createCyl(9);
+		cyl = render.createCyl(9);
 		console.log(cyl);
 
 		function updateFrame() {
@@ -149,11 +150,11 @@
 				y *= sq;
 			}
 
-			if(isNaN(x)) x = 0;
-			if(isNaN(y)) y = 0;
-			console.log(x, y);
+			if (isNaN(x)) { x = 0; }
+			if (isNaN(y)) { y = 0; }
+			//console.log(x, y);
 
-			qt = qtn.identity(qtn.create()),
+			qt = qtn.identity(qtn.create());
 			qtn.rotate(r, [y, x, 0.0], qt);
 			qtn.toMatIV(qt, qMatrixXY);
 			
@@ -187,7 +188,7 @@
 			}
 			
 			//STL Mesh
-			if(stlmesh) {
+			if (stlmesh) {
 				render.setupShader(stlmesh, mesh_shader);
 				mtx.identity(mMatrix);
 				mtx.scale(mMatrix, [1.0, 1.0, 1.0], mMatrix);
