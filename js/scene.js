@@ -133,8 +133,6 @@
 				uniLocation   = [],
 				gridcolor     = [0.1, 0.1, 0.1, 1.0],
 				qMatrixXY     = mtx.identity(mtx.create()),
-				camPos,
-				camAt,
 				tranRot,
 				viewInfo;
 
@@ -142,46 +140,14 @@
 			
 			time += 0.016666666666;
 
-			//calcCameraView
-			viewInfo = camera.getInfo();
-			camPos   = viewInfo.Pos;
-			camAt    = viewInfo.At;
-			tranRot  = viewInfo.Rotate;
-			x        = tranRot[0] - prevX;
-			y        = tranRot[1] - prevY;
-			prevX    = tranRot[0];
-			prevY    = tranRot[1];
-			sq       = Math.sqrt(x * x + y * y);
-			r        = sq * 2.0 * Math.PI * wh;
-			if (sq !== 1) {
-				sq = 1 / sq;
-				x *= sq;
-				y *= sq;
-			}
-
-			if (isNaN(x)) { x = 0; }
-			if (isNaN(y)) { y = 0; }
-			//console.log(x, y);
-
-			qt = qtn.identity(qtn.create());
-			qtn.rotate(r, [y, x, 0.0], qt);
-			qtn.toMatIV(qt, qMatrixXY);
-			
-			DiffMatrixXY = camera.getDiffMatrix();
-			mtx.multiply(qMatrixXY, DiffMatrixXY, DiffMatrixXY);
-
-			mtx.lookAt(camPos, camAt, [0, 1, 0], vMatrix);
 
 			
-			mtx.perspective(60, canvas.width / canvas.height, 0.1, 10000.0, pMatrix);
-			mtx.multiply(pMatrix, vMatrix, tmpMatrix);
-			mtx.multiply(tmpMatrix, DiffMatrixXY, tmpMatrix);
-			camera.update(DiffMatrixXY);
-			
-			//Clear
+			camera.updateMatrix(wh);
+			tmpMatrix    = camera.getViewMatrix(60, canvas.width / canvas.height, 0.1, 10000.0);
 			//render.clearColor(0.1, 0.1, 0.1, 1.0);
-			render.clearColor(0.2, 0.2, 0.2, 1.0);
-			//render.clearColor(0.0, 0.0, 0.0, 1.0);
+			//render.clearColor(0.2, 0.2, 0.2, 1.0);
+			//render.clearColor(0.01, 0.03, 0.05, 1.0);
+			render.clearColor(1.0, 1.0, 1.0, 1.0);
 			render.clearDepth(1.0);
 			render.getContext().frontFace(render.getContext().CCW);
 
@@ -211,9 +177,9 @@
 				render.Depth(true);
 				render.drawMesh(stlmesh);
 			}
-			/*
 			
 			//Line(Cylinder)
+			/*
 			if(linemesh) {
 				render.setupShader(linemesh, mesh_shader);
 				mtx.identity(mMatrix);

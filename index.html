@@ -30,7 +30,7 @@
       varying   vec4  vColor;
       void main(void)
       {
-        vec3       L = normalize(vec3(1, 7, 3));
+        vec3       L = normalize(vec3(1, 7, -3));
         vColor       = vec4(1,1,1,1) * max(0.0, dot(normal, L));
         vColor.a     = 1.0;
         gl_Position  = mvpMatrix * vec4(position, 1.0);

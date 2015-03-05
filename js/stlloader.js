@@ -61,7 +61,6 @@
 	function loadbinSTLA(dataview) {
 		var i              = 0,
 			datalen        = dataview.byteLength,
-			lineidx        = 0,
 			linebuf        = [],
 			ch             = 0,
 			m_pos          = [],
@@ -80,17 +79,21 @@
 			//read per line.
 			ch = dataview.getUint8(i);
 			i++;
-			if(ch === 10 || ch === 13) {
-				if(lineidx <= 0) {
+			if(ch === 10 || ch === 13) { //terminate -> '\r', '\n'
+				if(linebuf.length <= 0) {
 					continue;
 				}
+				linebuf.push(0);
 				linebuf = String.fromCharCode.apply(null, linebuf);
 				linebuf = linebuf.replace(/\s+/g, ' ');
+				
+				//Cue string.
 				if(linebuf[0] == ' ') {
 					linebuf = linebuf.slice(1);
 				}
 				linebuf = linebuf.split(' ');
 
+				//normal
 				if(linebuf[0] === 'facet') {
 					x = parseFloat(linebuf[2], 10);
 					y = parseFloat(linebuf[3], 10);
@@ -101,6 +104,7 @@
 					m_normal.push(x, y, z);
 				}
 				
+				//vertex
 				if(linebuf[0] === 'vertex') {
 					x = parseFloat(linebuf[1], 10);
 					y = parseFloat(linebuf[2], 10);
@@ -108,11 +112,12 @@
 					GetMinMax(Bmin, Bmax, [x, y, z]);
 					m_pos.push(x, y, z);
 				}
-				lineidx = 0;
+				
+				//reset and continue;
+				linebuf = [];
 				continue;
 			}
-			linebuf[lineidx] = ch;
-			lineidx++;
+			linebuf.push(ch);
 		}
 		ret = {
 			"pos"    : m_pos,

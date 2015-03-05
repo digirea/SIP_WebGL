@@ -526,6 +526,12 @@ function CosInter(a, b, x) {
 	return a * (1 - f) + b * f;
 }
 
+function CosInter3v(a, b, x) {
+	var x = CosInter(a[0], b[0], x),
+		y = CosInter(a[1], b[1], x),
+		z = CosInter(a[2], b[2], x);
+	return [x, y, z];
+}
 
 function Normalize(p) {
 	var length = Math.sqrt(p[0] * p[0] + p[1] * p[1] + p[2] * p[2]);
@@ -540,10 +546,20 @@ function Length(p) {
 	return Math.sqrt(Dot(p, p));
 }
 
+function Distance(p0, p1) {
+	var p = [p0[0] - p1[0], p0[1] - p1[1], p0[2] - p1[2]];
+	return Math.sqrt(Dot(p, p));
+}
+
 function Normalize(p) {
 	var length = Length(p);
 	return [p[0] / length, p[1] / length, p[2] / length];
 }
+
+function Negative(p) {
+	return [-p[0], -p[1], -p[2]];
+}
+
 
 function Cross(p0, p1)
 {

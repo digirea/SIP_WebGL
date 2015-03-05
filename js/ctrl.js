@@ -64,7 +64,7 @@
 	}
 
 	function mouseMove(e) {
-		var mult       = 2.5,
+		var mult       = 1.5,
 			multrotate = 0.5,
 			movementX  = 0,
 			movementY  = 0;
@@ -79,7 +79,7 @@
 
 		if (mouseState.Right && mouseState.Left) {
 			//camera.addRotate(-movementX * multrotate, movementY * multrotate, 0);
-			return;
+			//return;
 		}
 
 		if (mouseState.Left) {
@@ -109,9 +109,9 @@
 		if (camera) {
 			//http://hakuhin.jp/js/mouse.html#MOUSE_02
 			if (e.wheelDelta) {
-				camera.addPos(0, 0, e.wheelDelta * 0.5);
+				camera.addPos(0, 0, e.wheelDelta * 0.1);
 			} else {
-				camera.addPos(0, 0, -e.detail * 0.5 * 40.0);
+				camera.addPos(0, 0, -e.detail * 0.1 * 40.0);
 			}
 		}
 		e.preventDefault();
