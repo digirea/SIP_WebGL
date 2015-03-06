@@ -65,11 +65,6 @@
 	}
 
 	function onResize() {
-		var info = document.getElementById('consoleTextBlock');
-		//length = camera.getAtDistance();
-		info.style.width = canvas.width;
-		window.ctrl.setMoveMult(length * 0.001, length * 0.001, 1.0, length * 0.001);
-		
 		render.onResize();
 	}
 
