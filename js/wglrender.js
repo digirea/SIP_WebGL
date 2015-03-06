@@ -180,15 +180,11 @@ var WGLRender;
 			location = [];
 		for (i = 0; i < namearray.length; i = i + 1) {
 			location[i] = this.gl.getUniformLocation(prg, namearray[i]);
-			if(location[i] == null) {
-				console.log('cant create ', namearray[i]);
-			}
 		}
 		return location;
 	};
 
 	render.prototype.setUniform = function (type, location, data) {
-		console.log('SETUP : ', type);
 		switch (type) {
 		case 'Matrix4fv':
 			this.gl.uniformMatrix4fv(location, this.gl.FALSE, data);
@@ -648,13 +644,20 @@ var WGLRender;
 	//---------------------------------------------------------------------
 	// DrawMeshList
 	//---------------------------------------------------------------------
-	render.prototype.drawMeshList = function (meshlist) {
-		var primnum = 0,
-			i       = 0;
+	render.prototype.drawMeshList = function (meshlist, result) {
+		var primnum    = 0,
+			VertexNum  = 0,
+			PolygonNum = 0,
+			i          = 0;
 		for(i = 0; i < meshlist.length; i++) {
 			this.drawMesh(meshlist[i]);
+			VertexNum += meshlist[i].position.length / 3;
+			
 		}
+		PolygonNum = VertexNum / 3;
+		result.push({'VertexNum' : VertexNum, 'PolygonNum' : PolygonNum});
 	};
+
 	WGLRender = render;
 }());
 

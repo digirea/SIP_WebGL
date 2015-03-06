@@ -22,12 +22,14 @@
 		resetShader();
 	}
 
-	function updateInfo(vnum, nnum) {
+	function updateInfo(vnum, pnum) {
 		var info = document.getElementById('DataInfo'),
 			html = '';
 		info.style.color = 'black';
-		html += 'VertexNum:' + vnum + '<br>';
-		html += 'NormalNum:' + nnum + '<br>';
+		info.style.left  = '20px';
+		info.style.top   = (canvas.height - 100) + 'px';
+		html += 'VertexNum :' + vnum + '<br>';
+		html += 'PolygonNum:' + pnum + '<br>';
 		info.innerHTML = html;
 	}
 
@@ -46,9 +48,8 @@
 		meshlist.push(stlmesh);
 		//linemesh  = render.createLineMesh(stlmesh, 8, 0.3);
 		//pointmesh = render.createPointMesh(stlmesh, 1.0, 16, 16);  // GLdouble radius, GLint slices, GLint stacks
-		updateInfo(point_p.length / 3, point_n.length / 3);
-		length = Distance(data.max, data.min);
-		window.ctrl.setMoveMult(length * 0.001, length * 0.001, 1.0, length * 0.001);
+		//length = Distance(data.max, data.min);
+		//window.ctrl.setMoveMult(length * 0.001, length * 0.001, 1.0, length * 0.001);
 		//Lerp Start : todo on off
 		camera.setupLerp(data.min, data.max);
 	}
@@ -59,15 +60,21 @@
 		}
 		loadSTLB.openBinary(evt, function (data) {
 			updateMesh(data);
-			document.getElementById('openfile').value = ''; // clear filename
+			document.getElementById('Open').value = ''; // clear filename
 		});
 	}
 
 	function onResize() {
+		var info = document.getElementById('consoleTextBlock');
+		//length = camera.getAtDistance();
+		info.style.width = canvas.width;
+		window.ctrl.setMoveMult(length * 0.001, length * 0.001, 1.0, length * 0.001);
+		
 		render.onResize();
 	}
 
 	function startGL() {
+		console.log('startGL');
 		onResize();
 		var gridmesh     = null,
 			prevX        = 0.0,
@@ -93,21 +100,26 @@
 				ch            = canvas.height,
 				wh            = 1 / Math.sqrt(cw * cw + ch * ch),
 				uniLocation   = [],
-				gridcolor     = [0.1, 0.1, 0.1, 1.0];
+				gridcolor     = [0.1, 0.1, 0.1, 1.0],
+			    result        = [];
+
 			onResize();
 			global_time = time;
 			camera.updateMatrix(wh);
 			vpMatrix = camera.getViewMatrix(60, canvas.width / canvas.height, 0.1, 10000.0);
 			//render.clearColor(0.1, 0.1, 0.1, 1.0);
-			render.clearColor(0.2, 0.3, 0.5, 1.0);
+			//render.clearColor(0.2, 0.3, 0.5, 1.0);
 			//render.clearColor(0.01, 0.03, 0.05, 1.0);
-			//render.clearColor(1.0, 1.0, 1.0, 1.0);
+			render.clearColor(1.0, 1.0, 1.0, 1.0);
 			render.clearDepth(1.0);
 			render.frontFace(true);
 			render.Depth(true);
 			render.Blend(true);
 			render.setViewProjection(vpMatrix);
-			render.drawMeshList(meshlist);
+			render.drawMeshList(meshlist, result);
+			
+			updateInfo(result[0].VertexNum, result[0].PolygonNum);
+			
 			render.swapBuffer()(updateFrame);
 		}
 		updateFrame();
@@ -121,8 +133,23 @@
 		camera.init();
 		window.ctrl.init(document, callbackResetView);
 		window.ctrl.setCamera(camera);
-		document.getElementById('openfile').addEventListener('change', loadSTL, false);
-		startGL();
+		document.getElementById('Open').addEventListener('change', loadSTL, false);
+		
+		// Create Tab
+		var consoleTab = window.animtab.create('bottom', {
+			'bottomTab' : { min : '10px', max : '400' }
+		}, {
+			'consoleOutput' : { min : '0px', max : '400px' }
+		}, 'console');
+
+		var propertyTab = window.animtab.create('right', {
+			'rightTab' : { min : '0px', max : 'auto' }
+		}, {
+			'menuTab' : { min : '0px', max : '300px' }
+		}, 'Property');
+
+		setTimeout(startGL, 250);
+		
 	}
 
 	window.onload   = init;

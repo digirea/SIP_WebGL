@@ -32,7 +32,7 @@
 
       void main(void)
       {
-        vec3       L = normalize(vec3(-5, 9, -1));
+        vec3       L = normalize(vec3(2, 9, -3));
         vColor       = uColor * max(0.0, dot(normal, L));
         vColor.a     = 1.0;
         gl_Position  = mvpMatrix * vec4(position, 1.0);
@@ -80,13 +80,24 @@
 
 
 <body>
-  <div id="DataTree"      class="DataTree">
-    <input  id="openfile" class="openfile" type="file">
-    <div    id="DataInfo" class="DataInfo">
+  <canvas id="canvas"      class="canvas"></canvas>
+  <div class="menuTab" id="menuTab">
+	<input type="file"    value="Open"    id="Open">
+	<div id="Clear" class="menuButtonClass noneselect">AddGroup</div>
+	<div class="spacer"></div>
+	<div id="Render" class="menuButtonClass noneselect">DeleteGroup</div>
+	<div class="spacer"></div>
+	<div id="NodeListBox" class="nodeListBox noneselect"></div>
+	<div class="spacer"></div>
+  <div id="DataInfo" class="DataInfo"></div>
+	<div id="property"    class="nodeProperty"></div>
   </div>
-  <canvas id="canvas"   class="canvas"></canvas>
-  <div id="DataPropatry"  class="DataPropatry">
-  </div>
+	<div id="consoleOutput" class="consoleOutput">
+		<span id="consoleTextBlock" class="consoleTextBlock">
+		</span>
+	</div>
+	
+</div>
 </body>
 </html>
 

@@ -10,7 +10,7 @@
 		multX       = 0.5,
 		multY       = 0.5,
 		multrotate  = 0.5,
-		multWheel   = 0.001,
+		multWheel   = 0.1,
 		mouseState  = {"Left": false, "Center": false, "Right": false };
 	
 	function resetMouseState() {
@@ -95,8 +95,8 @@
 		}
 
 		if (mouseState.Center) {
-			camera.addPos(0, 0, -movementY * multY);
-			camera.addAt(0, 0, -movementY * multY);
+			camera.addPos(0, 0, -movementY * multY );
+			camera.addAt(0,  0, -movementY * multY );
 		}
 
 		if (mouseState.Right) {

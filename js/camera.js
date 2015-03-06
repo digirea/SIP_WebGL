@@ -110,6 +110,10 @@ var Camera;
 		mtx.multiply(vpMatrix, tMatrix,           vpMatrix);
 		return vpMatrix;
 	}
+	
+	camera.prototype.getAtDistance = function () { 
+		return Distance(this.camAtStart - this.camPosStart);
+	}
 
 	camera.prototype.updateMatrix = function (wh) {
 		if(this.lerpState === false) {
