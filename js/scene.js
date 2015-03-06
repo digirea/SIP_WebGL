@@ -48,7 +48,7 @@
 		//pointmesh = render.createPointMesh(stlmesh, 1.0, 16, 16);  // GLdouble radius, GLint slices, GLint stacks
 		updateInfo(point_p.length / 3, point_n.length / 3);
 		length = Distance(data.max, data.min);
-		window.ctrl.setMoveMult(length * 0.001, length * 0.001, 1.0);
+		window.ctrl.setMoveMult(length * 0.001, length * 0.001, 1.0, length * 0.001);
 		//Lerp Start : todo on off
 		camera.setupLerp(data.min, data.max);
 	}

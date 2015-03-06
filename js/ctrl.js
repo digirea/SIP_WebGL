@@ -112,11 +112,15 @@
 	}
 
 	function mouseWheel(e) {
+		var info;
 		if (camera) {
 			if (e.wheelDelta) {
 				camera.addPos(0, 0, e.wheelDelta * multWheel);
 			} else {
 				camera.addPos(0, 0, -e.detail    * multWheel * 40.0);
+			}
+			if(camera.camPos[2] >= 0.0) {
+				camera.camPos[2] = -0.05;
 			}
 		}
 		e.preventDefault();
