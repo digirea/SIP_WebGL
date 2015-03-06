@@ -10,7 +10,13 @@ var WGLRender;
 		this.window = null;
 		this.canvas = null;
 		this.rAF    = null;
+		this.mtx    = new MatIV(),
+		this.vpMat  = this.mtx.identity(this.mtx.create());
 	};
+
+	render.prototype.setViewProjection = function (m) {
+		this.vpMat = m;
+	}
 
 	render.prototype.init = function (canvas, window) {
 		this.gl     = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
@@ -174,11 +180,15 @@ var WGLRender;
 			location = [];
 		for (i = 0; i < namearray.length; i = i + 1) {
 			location[i] = this.gl.getUniformLocation(prg, namearray[i]);
+			if(location[i] == null) {
+				console.log('cant create ', namearray[i]);
+			}
 		}
 		return location;
 	};
 
 	render.prototype.setUniform = function (type, location, data) {
+		console.log('SETUP : ', type);
 		switch (type) {
 		case 'Matrix4fv':
 			this.gl.uniformMatrix4fv(location, this.gl.FALSE, data);
@@ -246,6 +256,10 @@ var WGLRender;
 		mesh.attlocation = this.getAttribList(shader.program, mesh.attrnames);
 	};
 
+	render.prototype.frontFace = function (isccw) {
+		this.gl.frontFace(this.gl.CCW);
+	};
+
 	//------------------------------------------------------------------------------
 	// MESHOBJ
 	//------------------------------------------------------------------------------
@@ -253,7 +267,7 @@ var WGLRender;
 		var mesh        = new MeshObj();
 		if (data.pos) {
 			console.log('CREATE : position');
-			mesh.position = data.pos;
+			mesh.position     = data.pos;
 			mesh.vbo_position = this.createVBO(mesh.position);
 			mesh.vbo_list.push(mesh.vbo_position);
 			mesh.stride.push(3);
@@ -262,7 +276,7 @@ var WGLRender;
 
 		if (data.normal) {
 			console.log('CREATE : normal');
-			mesh.normal = data.normal;
+			mesh.normal     = data.normal;
 			mesh.vbo_normal = this.createVBO(mesh.normal);
 			mesh.vbo_list.push(mesh.vbo_normal);
 			mesh.stride.push(3);
@@ -279,10 +293,12 @@ var WGLRender;
 		}
 		
 		if(data.min) {
+			console.log(mesh.boundmin);
 			mesh.boundmin = data.min;
 		}
 		
 		if(data.max) {
+			console.log(mesh.boundmax);
 			mesh.boundmax = data.max;
 		}
 		
@@ -314,22 +330,14 @@ var WGLRender;
 			
 			d += dd;
 		}
-
-		mesh.position = buf;
-		mesh.vbo_position = this.createVBO(mesh.position);
-		mesh.vbo_list.push(mesh.vbo_position);
-		mesh.stride.push(3);
-		mesh.attrnames.push('position');
-				
-		return mesh;
+		return this.createMeshObj({'pos':buf});
 	};
 
 	//------------------------------------------------------------------------------
 	// createLineMesh (Cylinder)
 	//------------------------------------------------------------------------------
 	render.prototype.createLineMesh = function (base, divide, radius) {
-		var mesh,
-			qtn = new QtnIV(),
+		var qtn = new QtnIV(),
 			qt  = qtn.identity(qtn.create()),
 			i,
 			deg,
@@ -356,12 +364,13 @@ var WGLRender;
 			linenum        = 0,
 			restrip        = 0,
 			restrip_offset = 0,
-
 			buf            = [],
 			index          = [],
 			inum           = 0,
 			tangent        = [],
-			normal         = [];
+			normal         = [],
+			position       = [],
+			reconstnoremal = [];
 
 		if (divide <= 0 || radius <= 0) {
 			console.log('Error divide or radius is less then 0\n');
@@ -378,6 +387,9 @@ var WGLRender;
 		tangent  = [0, 0, 0];
 		
 		qt = new QtnIV();
+
+		//var sasaki = new ArrayBuffer(1024);
+		//var dv     = new DataView(sasaki);
 
 		//---------------------------------------------------------------------
 		//create vertex
@@ -406,16 +418,6 @@ var WGLRender;
 				dz  = dz / len;
 			}
 
-			//cross
-			//tangent[0] = dy * vertical[2] - dz * vertical[1];
-			//tangent[1] = dz * vertical[0] - dx * vertical[2];
-			//tangent[2] = dx * vertical[1] - dy * vertical[0];
-            //
-			////normalize
-			//invlen = 1.0 / Math.sqrt(tangent[0] * tangent[0] + tangent[1] * tangent[1] + tangent[2] * tangent[2]);
-			//tangent[0] *= invlen;
-			//tangent[1] *= invlen;
-			//tangent[2] *= invlen;
 			tangent = Cross([dx, dy, dz], vertical);
 			tangent = Normalize(tangent);
 
@@ -471,41 +473,44 @@ var WGLRender;
 			}
 		}
 		
-		//---------------------------------------------------------------------
-		// Create Mesh
-		//---------------------------------------------------------------------
-		mesh = new MeshObj();
-		
 		//reconstruct triangle and normal.
 		for (i = 0; i < index.length; i = i + 1) {
 			inum = index[i];
-			mesh.position.push(buf[inum * 3]);
-			mesh.position.push(buf[inum * 3 + 1]);
-			mesh.position.push(buf[inum * 3 + 2]);
-			mesh.normal.push(normal[inum * 3]);
-			mesh.normal.push(normal[inum * 3 + 1]);
-			mesh.normal.push(normal[inum * 3 + 2]);
+			position.push(buf[inum * 3]);
+			position.push(buf[inum * 3 + 1]);
+			position.push(buf[inum * 3 + 2]);
+			reconstnoremal.push(normal[inum * 3]);
+			reconstnoremal.push(normal[inum * 3 + 1]);
+			reconstnoremal.push(normal[inum * 3 + 2]);
 		}
-		//console.log(mesh.position.length, mesh.position);
+		return this.createMeshObj({'pos': position, 'normal' : reconstnoremal});
+	};
+	//------------------------------------------------------------------------------
+	// createLineMesh (Cylinder)
+	//------------------------------------------------------------------------------
+	render.prototype.createGridMesh = function (gridsize, gridshift, gridcol) {
+		var i,
+			position     = [],
+			color        = [];
 
-		mesh.vbo_position  = this.createVBO(mesh.position);
-		mesh.vbo_normal    = this.createVBO(mesh.normal);
-		mesh.vbo_list.push(mesh.vbo_position);
-		mesh.vbo_list.push(mesh.vbo_normal);
-		mesh.attrnames.push('position');
-		mesh.attrnames.push('normal');
-		mesh.stride.push(3);
-		mesh.stride.push(3);
-
-		return mesh;
+		for (i = -gridsize; i <= gridsize; i += gridshift) {
+			position.push(gridsize, 0, i);
+			position.push(-gridsize, 0, i);
+			position.push(i, 0, gridsize);
+			position.push(i, 0, -gridsize);
+			color.push(gridcol, gridcol, gridcol, 1.0);
+			color.push(gridcol, gridcol, gridcol, 1.0);
+			color.push(gridcol, gridcol, gridcol, 1.0);
+			color.push(gridcol, gridcol, gridcol, 1.0);
+		}
+		return this.createMeshObj({'pos' : position, 'color' : color});
 	};
 	
 	//------------------------------------------------------------------------------
 	// createPointMesh
 	//------------------------------------------------------------------------------
 	render.prototype.createPointMesh = function (base, rad, slices, stacks) {
-		var mesh,
-			i,
+		var i,
 			ii,
 			tr,
 			tx,
@@ -520,9 +525,11 @@ var WGLRender;
 			y0,
 			z0,
 			inum,
-			pos = [],
-			nor = [],
-			idx = [];
+			pos      = [],
+			nor      = [],
+			idx      = [],
+			position = [],
+			normal   = [];
 		
 
 		//---------------------------------------------------------------------
@@ -557,8 +564,6 @@ var WGLRender;
 		//---------------------------------------------------------------------
 		// Create Mesh per Point
 		//---------------------------------------------------------------------
-		mesh = new MeshObj();
-
 		//reconstruct mesh
 		console.log('START : Create Mesh per Point');
 		for (i = 0; i < base.position.length; i = i + 3) {
@@ -570,33 +575,67 @@ var WGLRender;
 			//reconstruct triangle and normal.
 			for (ii = 0; ii < idx.length; ii = ii + 1) {
 				inum = idx[ii];
-				mesh.position.push(pos[inum * 3] + x0);
-				mesh.position.push(pos[inum * 3 + 1] + y0);
-				mesh.position.push(pos[inum * 3 + 2] + z0);
-				mesh.normal.push(nor[inum * 3]);
-				mesh.normal.push(nor[inum * 3 + 1]);
-				mesh.normal.push(nor[inum * 3 + 2]);
+				position.push(pos[inum * 3] + x0);
+				position.push(pos[inum * 3 + 1] + y0);
+				position.push(pos[inum * 3 + 2] + z0);
+				normal.push(nor[inum * 3]);
+				normal.push(nor[inum * 3 + 1]);
+				normal.push(nor[inum * 3 + 2]);
 			}
 		}
 		console.log('DONE : Create Mesh per Point');
-
-		mesh.vbo_position  = this.createVBO(mesh.position);
-		mesh.vbo_normal    = this.createVBO(mesh.normal);
-		mesh.vbo_list.push(mesh.vbo_position);
-		mesh.vbo_list.push(mesh.vbo_normal);
-		mesh.attrnames.push('position');
-		mesh.attrnames.push('normal');
-		mesh.stride.push(3);
-		mesh.stride.push(3);
-		return mesh;
+		return this.createMeshObj({'pos' : position, 'normal' : normal});
 	};
     
+	
+	
+	//---------------------------------------------------------------------
+	// DrawMesh
+	//---------------------------------------------------------------------
 	render.prototype.drawMesh = function (mesh) {
-		var primnum = 0;
-		if (mesh.shader) {
-			this.setShader(mesh, mesh.shader);
-		}
-		this.setAttribute(mesh.vbo_list, mesh.attlocation, mesh.stride);
+		var primnum     = 0,
+			lMatrix     = this.mtx.identity(this.mtx.create()),
+			tMatrix     = this.mtx.identity(this.mtx.create()),
+			sMatrix     = this.mtx.identity(this.mtx.create()),
+			rMatrixX    = this.mtx.identity(this.mtx.create()),
+			rMatrixY    = this.mtx.identity(this.mtx.create()),
+			rMatrixZ    = this.mtx.identity(this.mtx.create()),
+			rMatrix     = this.mtx.identity(this.mtx.create()),
+			program     = mesh.shader.program,
+			shader      = mesh.shader,
+			uniformname = ['mvpMatrix', 'uColor'],
+			attLocation = [],
+			uniLocation = [];
+
+		//create translate matrix
+		this.mtx.translate(tMatrix,  mesh.trans, tMatrix);
+
+		//create scalling matrix
+		this.mtx.scale(sMatrix,      mesh.scale, sMatrix);
+
+		//create rotate matrix
+		this.mtx.rotate(rMatrixX,    mesh.rotate[0], [1, 0, 0], rMatrixX);
+		this.mtx.rotate(rMatrixY,    mesh.rotate[1], [0, 1, 0], rMatrixY);
+		this.mtx.rotate(rMatrixZ,    mesh.rotate[2], [0, 0, 1], rMatrixZ);
+		this.mtx.multiply(rMatrixX,  rMatrix, rMatrix);
+		this.mtx.multiply(rMatrixY,  rMatrix, rMatrix);
+		this.mtx.multiply(rMatrixZ,  rMatrix, rMatrix);
+
+		//scale rotate transform
+		this.mtx.multiply(sMatrix,  lMatrix, lMatrix);
+		this.mtx.multiply(rMatrix,  lMatrix, lMatrix);
+		this.mtx.multiply(tMatrix,  lMatrix, lMatrix);
+
+		//create trasnfrom matrix
+		this.mtx.multiply(this.vpMat, lMatrix, lMatrix);
+
+		//setup shader parameter
+		this.gl.useProgram(program);
+		uniLocation = this.getShaderUniformList(shader, uniformname);
+		attLocation = this.getAttribList(program, mesh.attrnames);
+		if(uniLocation[0] !== null) this.setUniform('Matrix4fv', uniLocation[0], lMatrix);
+		if(uniLocation[1] !== null) this.setUniform('4fv',       uniLocation[1], mesh.diffColor);
+		this.setAttribute(mesh.vbo_list, attLocation, mesh.stride);
 		if (mesh.mode === 'Points') {
 			primnum = mesh.position.length / 3;
 		} else {
@@ -605,6 +644,17 @@ var WGLRender;
 		this.drawArrays(mesh.mode, 0, primnum);
 		this.gl.useProgram(null);
 	};
-
+	
+	//---------------------------------------------------------------------
+	// DrawMeshList
+	//---------------------------------------------------------------------
+	render.prototype.drawMeshList = function (meshlist) {
+		var primnum = 0,
+			i       = 0;
+		for(i = 0; i < meshlist.length; i++) {
+			this.drawMesh(meshlist[i]);
+		}
+	};
 	WGLRender = render;
 }());
+

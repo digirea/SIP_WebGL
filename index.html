@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>STLBLOADER</title>
+  <title>WebGL View</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
   <link    rel="stylesheet" type="text/css" href="css/index.css" media="all">
   <link    rel="stylesheet" type="text/css" href="css/style.css" media="all">
   <link    rel="stylesheet" type="text/css" href="css/datastyle.css" media="all">
-  <link    rel="stylesheet" type="text/css" href="./css/handsontable.full.css" media="screen">
-  <script type="text/javascript" src="./js/jquery-1.11.2.min.js"></script>
-  <script type="text/javascript" src="./js/handsontable.full.js"></script>
-  <script type="text/javascript" src="./js/qatrix-1.1.js"></script>
+  <link    rel="stylesheet" type="text/css" href="css/handsontable.full.css" media="screen">
+  <script type="text/javascript" src="./js/3rd/jquery-1.11.2.min.js"></script>
+  <script type="text/javascript" src="./js/3rd/handsontable.full.js"></script>
+  <script type="text/javascript" src="./js/3rd/qatrix-1.1.js"></script>
   <script type="text/javascript" src="./js/math.js"></script>
   <script type="text/javascript" src="./js/stlloader.js"></script>
   <script type="text/javascript" src="./js/scene.js"></script>
@@ -25,17 +25,20 @@
       precision mediump float;
       attribute vec3  position;
       attribute vec3  normal;
+      attribute vec4  color;
       uniform   mat4  mvpMatrix;
-      uniform   vec4  color;
+      uniform   vec4  uColor;
       varying   vec4  vColor;
+
       void main(void)
       {
-        vec3       L = normalize(vec3(1, 7, -3));
-        vColor       = vec4(1,1,1,1) * max(0.0, dot(normal, L));
+        vec3       L = normalize(vec3(-5, 9, -1));
+        vColor       = uColor * max(0.0, dot(normal, L));
         vColor.a     = 1.0;
         gl_Position  = mvpMatrix * vec4(position, 1.0);
       }
   </script>
+
   <script id="fs_mesh" type="x-shader/x-fragment">
       precision mediump float;
       varying vec4      vColor;
@@ -45,20 +48,23 @@
       }
   </script>
 
+
+
   <script id="vs_line" type="x-shader/x-vertex">
+      precision mediump float;
       attribute vec3  position;
       attribute vec3  normal;
+      attribute vec4  color;
       uniform   mat4  mvpMatrix;
-      uniform   vec4  color;
+      uniform   vec4  uColor;
       varying   vec4  vColor;
 
       void main(void)
       {
-        vColor       = vec4(color);
+        vColor       = vec4(uColor) * color;
         gl_Position  = mvpMatrix * vec4(position, 1.0);
       }
   </script>
-
   <script id="fs_line" type="x-shader/x-fragment">
       precision mediump float;
       varying vec4      vColor;
@@ -67,13 +73,19 @@
         gl_FragColor = vColor;
       }
   </script>
+
 </head>
 
+
+
+
 <body>
-  <input  id="openfile" class="openfile" type="file" style="position:absolute;overflow:hidden;left:0px">
-  <canvas id="canvas"   class="canvas"   style="position:absolute;overflow:hidden;left:0px;right:0px;top:0px;bottom:0px;z-index:-1;background-color:black;" ></canvas>
-  <div id="Info" class="proparty"></div>
-  <div id="DataView" class="DataView">
+  <div id="DataTree"      class="DataTree">
+    <input  id="openfile" class="openfile" type="file">
+    <div    id="DataInfo" class="DataInfo">
+  </div>
+  <canvas id="canvas"   class="canvas"></canvas>
+  <div id="DataPropatry"  class="DataPropatry">
   </div>
 </body>
 </html>

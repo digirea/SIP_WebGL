@@ -7,11 +7,22 @@
 		ctrl        = {},
 		prevEvent   = null,
 		keycallback = null,
+		multX       = 0.5,
+		multY       = 0.5,
+		multrotate  = 0.5,
+		multWheel   = 0.001,
 		mouseState  = {"Left": false, "Center": false, "Right": false };
-		
-		
+	
 	function resetMouseState() {
 		mouseState  = {"Left": false, "Center": false, "Right": false };
+	}
+	
+	function setMoveMult(x, y, r, w)
+	{
+		multX       = x;
+		multY       = y;
+		multrotate  = r;
+		multWheel   = w;
 	}
 
 	function setCamera(cam) {
@@ -31,7 +42,6 @@
 		}
 		camera.getInfo();
 	}
-	
 	
 	function mouseOut(e) {
 		resetMouseState();
@@ -64,9 +74,7 @@
 	}
 
 	function mouseMove(e) {
-		var mult       = 1.5,
-			multrotate = 0.5,
-			movementX  = 0,
+		var movementX  = 0,
 			movementY  = 0;
 
 		if (prevEvent) {
@@ -87,31 +95,28 @@
 		}
 
 		if (mouseState.Center) {
-			camera.addPos(0, 0, -movementY * mult);
-			camera.addAt(0, 0, -movementY * mult);
+			camera.addPos(0, 0, -movementY * multY);
+			camera.addAt(0, 0, -movementY * multY);
 		}
 
 		if (mouseState.Right) {
 			//camera.addPos(0, 0, -movementY * mult);
 			//camera.addAt(0, 0, -movementY * mult);
-			camera.addPos(movementX * mult, 0, 0);
-			camera.addAt(movementX * mult, 0, 0);
-			camera.addPos(0, movementY * mult, 0);
-			camera.addAt(0,  movementY * mult, 0);
+			camera.addPos(movementX * multX, 0, 0);
+			camera.addPos(0, movementY * multY, 0);
+			camera.addAt(movementX * multX, 0, 0);
+			camera.addAt(0,  movementY * multY, 0);
 		}
 		
 		prevEvent = e;
 	}
 
 	function mouseWheel(e) {
-		//console.log(e);
-		
 		if (camera) {
-			//http://hakuhin.jp/js/mouse.html#MOUSE_02
 			if (e.wheelDelta) {
-				camera.addPos(0, 0, e.wheelDelta * 0.1);
+				camera.addPos(0, 0, e.wheelDelta * multWheel);
 			} else {
-				camera.addPos(0, 0, -e.detail * 0.1 * 40.0);
+				camera.addPos(0, 0, -e.detail    * multWheel * 40.0);
 			}
 		}
 		e.preventDefault();
@@ -122,23 +127,12 @@
 		//F5
 		if (e.keyCode === 116) {
 			resetView();
-			console.log('resetView');
 			e.preventDefault();
 		}
 		keycallback(e);
 	}
 
 	function init(document, keycb) {
-		/*
-		var mousewheelevent = null;
-		if (document.hasOwnProperty('onwheel')) {
-			mousewheelevent = 'wheel';
-		} else if (document.hasOwnProperty('onmousewheel')) {
-			mousewheelevent = 'mousewheel';
-		} else {
-			mousewheelevent = 'DOMMouseScroll';
-		}
-		*/
 		document.addEventListener('mouseout',  mouseOut, true);
 		document.addEventListener('mousemove', mouseMove, true);
 		document.addEventListener('mouseup',   mouseUp, true);
@@ -158,6 +152,7 @@
 
 	window.ctrl             = ctrl;
 	window.ctrl.init        = init;
+	window.ctrl.setMoveMult = setMoveMult;
 	window.ctrl.setCamera   = setCamera;
 	window.ctrl.resetView   = resetView;
 	window.ctrl.getViewInfo = getViewInfo;

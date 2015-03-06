@@ -527,10 +527,13 @@ function CosInter(a, b, x) {
 }
 
 function CosInter3v(a, b, x) {
-	var x = CosInter(a[0], b[0], x),
-		y = CosInter(a[1], b[1], x),
-		z = CosInter(a[2], b[2], x);
-	return [x, y, z];
+	var arr = 
+	[
+		CosInter(a[0], b[0], x),
+		CosInter(a[1], b[1], x),
+		CosInter(a[2], b[2], x)
+	];
+	return arr;
 }
 
 function Normalize(p) {

@@ -91,7 +91,7 @@ var Camera;
 		
 		this.camPosEnd[2]       = -Distance(max, min) * 1.2;
 		this.lerpTime           = 0;
-		this.lerpTimeDelta      = 1.0 / 100.0;
+		this.lerpTimeDelta      = 1.0 / 30.0;
 		this.lerpState          = true;
 	}
 
