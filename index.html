@@ -69,6 +69,7 @@
         gl_Position  = mvpMatrix * vec4(position, 1.0);
       }
   </script>
+
   <script id="fs_line" type="x-shader/x-fragment">
       precision mediump float;
       varying vec4      vColor;
@@ -77,7 +78,6 @@
         gl_FragColor = vColor;
       }
   </script>
-
 </head>
 
 <body>
@@ -87,6 +87,7 @@
 	</div>
 	<div id="consoleOutput" class="consoleOutput">
 		<span id="consoleTextBlock" class="consoleTextBlock">
+		<div id="hstable" class="hstable"></div>
 		</span>
 	</div>
 	
@@ -109,7 +110,6 @@
 		</div>
 		</div>
 	</div>
-	
 </div>
   <script type="text/javascript" src="./js/propertylistview.js"></script>
   <script type="text/javascript" src="./js/grouptreeview.js"></script>

@@ -16,7 +16,7 @@
     var reader = new FileReader();
     reader.onloadend = (function(e) {
       var csvArray = csv2Array(e.target.result);
-      var tbl   = document.getElementById('consoleTextBlock');
+      var tbl   = document.getElementById('hstable');
       var style = tbl.style;
 
       grid = new Handsontable(tbl, {
@@ -33,6 +33,7 @@
       grid.loadData(csvArray);
       tbl.style = style;
       tbl.style.overflow = scroll;
+      tbl.style.zIndex = "5";
     });
     reader.readAsText(files[0], "UTF-8");
   }
