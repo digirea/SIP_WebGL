@@ -188,4 +188,5 @@
 	
 	window.propertylistview = propertylist;
 	window.propertylistview.showProperty = showProperty;
+
 }());

@@ -271,6 +271,7 @@ body {
 
 .consoleTextBlock
 {
+	margin-top: 50px;
 	bottom:30px;
 	width:1800px;
 	/*height:400px;*/

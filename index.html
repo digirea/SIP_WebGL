@@ -23,6 +23,7 @@
   <script type="text/javascript" src="./js/meshobj.js"></script>
   <script type="text/javascript" src="./js/shaderobj.js"></script>
   <script type="text/javascript" src="./js/animtab.js"></script>
+  <script type="text/javascript" src="./js/console.js"></script>
   
   <script id="vs_mesh" type="x-shader/x-vertex">
       precision mediump float;
@@ -79,28 +80,28 @@
 
 </head>
 
-
-
-
 <body>
   <canvas id="canvas"      class="canvas"></canvas>
-  <div class="menuTab" id="menuTab">
-	<input type="file"    value="Open"    id="Open">
-	<div id="Clear" class="menuButtonClass noneselect">AddGroup</div>
-	<div class="spacer"></div>
-	<div id="Render" class="menuButtonClass noneselect">DeleteGroup</div>
-	<div class="spacer"></div>
-	<div id="NodeListBox" class="nodeListBox noneselect"></div>
-	<div class="spacer"></div>
-  <div id="DataInfo" class="DataInfo"></div>
-	<div id="property"    class="nodeProperty"></div>
-  </div>
+	<div class="menuTab" id="menuTab">
+		<div id="property"    class="nodeProperty"></div>
+	</div>
 	<div id="consoleOutput" class="consoleOutput">
 		<span id="consoleTextBlock" class="consoleTextBlock">
 		</span>
 	</div>
 	
 	<div id="groupTab" class="groupTab">
+		<input type="file"    value="Open"        id="Open"><br>
+		<div class="spacer"></div>
+		<input type="file"    value="OpenText"    id="OpenText"><br>
+		<div class="spacer"></div>
+		<div id="Clear" class="menuButtonClass noneselect">AddGroup</div>
+		<div class="spacer"></div>
+		<div id="Render" class="menuButtonClass noneselect">DeleteGroup</div>
+		<div class="spacer"></div>
+		<div id="NodeListBox" class="nodeListBox noneselect"></div>
+		<div class="spacer"></div>
+		<div id="DataInfo" class="DataInfo"></div>
 		<div id="main">
 		<div id="sidetree">
 		<div id="sidetreecontrol"><a href="?#">Collapse All</a> | <a href="?#">Expand All</a></div>
