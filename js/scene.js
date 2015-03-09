@@ -143,6 +143,23 @@
 			'menuTab' : { min : '0px', max : '300px' }
 		}, 'Property');
 
+		var groups = window.animtab.create('left', {
+			'leftTab' : { min : '0px', max : 'auto' }
+		}, {
+			'groupTab' : { min : '0px', max : '280px' }
+		}, 'Groups');
+		
+		(function($) {
+			$(function() {
+				$("#tree").treeview({
+					collapsed: true,
+					animated: "fast",
+					control:"#sidetreecontrol",
+					persist: "location"
+				});
+			})
+		})(jQuery);
+		
 		setTimeout(startGL, 250);
 		
 	}

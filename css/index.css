@@ -279,6 +279,16 @@ body {
 	background:transparent;
 }
 
+.groupTab
+{
+	position: absolute;
+	width:280px;
+	top:0px;
+	bottom:430px;
+	background-color:rgba(180, 180, 180, 0.5);
+	overflow: auto;
+}
+
 .stdout
 {
 	font-size: 12px;
@@ -341,4 +351,31 @@ body {
 
 	border: solid 1px;
 	border-radius:1px;
+}
+
+.leftTab
+{
+	top : 0px;
+	left : 280px;
+	width: 80px;
+	height : 20px;
+	bottom: 0px;
+	z-index: 2;
+	background-color: rgba(100, 100, 100, 0.5);
+	color: #898989;
+	padding: 3px;
+
+	border: solid 1px;
+	border-radius:1px;
+	
+	-moz-transform-origin: 15% 50%;
+	-webkit-transform-origin: 15% 50%;
+	-o-transform-origin: 15% 50%;
+	-ms-transform-origin: 15% 50%;
+	transform-origin: 15% 50%;
+	-moz-transform: rotate(90deg);
+	-webkit-transform: rotate(90deg);
+	-o-transform: rotate(90deg);
+	-ms-transform: rotate(90deg);
+	transform: rotate(90deg);
 }
