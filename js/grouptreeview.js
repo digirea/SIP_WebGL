@@ -82,10 +82,15 @@
 	}
 	
 	function update(node) {
+		var elem;
 		if (!node) { return; }
 		if (node.child && node.child.length > 0) {
+			elem = document.getElementById(node.name);
+			elem.innerHTML = "";
 			createTree(document.getElementById(node.name), node);
 		} else if (node.length > 0) {
+			elem = treeRootElem;
+			elem.innerHTML = "";
 			createTree(treeRootElem, node);
 		}
 	}

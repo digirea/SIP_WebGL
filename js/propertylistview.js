@@ -188,27 +188,4 @@
 	
 	window.propertylistview = propertylist;
 	window.propertylistview.showProperty = showProperty;
-	
-	// test
-	showProperty({
-		name : "test",
-		varname : "test_varname",
-		input : [
-			{
-				name : "hoge",
-				type : "float",
-				value : 12345.6789
-			},
-			{
-				name : "moga",
-				type : "string",
-				value : "awesome"
-			},
-			{
-				name : "piyo",
-				type : "vec4",
-				value : [1.0, 2.0, 3.0, 4.0]
-			}
-		]
-	});
 }());
