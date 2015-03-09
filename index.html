@@ -27,19 +27,22 @@
   
   <script id="vs_mesh" type="x-shader/x-vertex">
       precision mediump float;
-      attribute vec3  position;
-      attribute vec3  normal;
-      attribute vec4  color;
-      uniform   mat4  mvpMatrix;
-      uniform   vec4  uColor;
-      varying   vec4  vColor;
+      attribute vec3   position;
+      attribute vec3   normal;
+      attribute vec4   color;
+      uniform   mat4   mvpMatrix;
+      uniform   vec4   uColor;
+      uniform   float  Radius;
+      varying   vec4   vColor;
 
       void main(void)
       {
-        vec3       L = normalize(vec3(2, 9, -3));
-        vColor       = uColor * max(0.0, dot(normal, L));
-        vColor.a     = 1.0;
-        gl_Position  = mvpMatrix * vec4(position, 1.0);
+        vec3       L = normalize(vec3(2.0, 9.0, -3.0));
+        vec3 col     = uColor.xyz * max(0.0, dot(normal, L));
+        vColor       = vec4(col, uColor.a);
+        vec3 N       = normalize(normal);
+        vec3 p       = position + (normalize(normal) * (Radius - 1.0));
+        gl_Position  = mvpMatrix * vec4(p, 1.0);
       }
   </script>
 

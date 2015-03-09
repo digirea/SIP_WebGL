@@ -82,7 +82,7 @@ var WGLRender;
 			this.gl.enable(this.gl.BLEND);
 			this.gl.blendFuncSeparate(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA, this.gl.ONE, this.gl.ONE);
 			//this.gl.blendFuncSeparate(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA, this.gl.ONE, this.gl.ONE);
-			//this.gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+			this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
 		} else {
 			this.gl.disable(this.gl.BLEND);
 		}
@@ -620,7 +620,7 @@ var WGLRender;
 			rMatrix     = this.mtx.identity(this.mtx.create()),
 			program     = mesh.shader.program,
 			shader      = mesh.shader,
-			uniformname = ['mvpMatrix', 'uColor'],
+			uniformname = ['mvpMatrix', 'uColor', 'Radius'],
 			attLocation = [],
 			uniLocation = [];
 
@@ -652,6 +652,7 @@ var WGLRender;
 		attLocation = this.getAttribList(program, mesh.attrnames);
 		if(uniLocation[0] !== null) this.setUniform('Matrix4fv', uniLocation[0], lMatrix);
 		if(uniLocation[1] !== null) this.setUniform('4fv',       uniLocation[1], mesh.diffColor);
+		if(uniLocation[2] !== null) this.setUniform('1f',        uniLocation[2], mesh.radius);
 		this.setAttribute(mesh.vbo_list, attLocation, mesh.stride);
 		if (mesh.mode === 'Points') {
 			primnum = mesh.position.length / 3;

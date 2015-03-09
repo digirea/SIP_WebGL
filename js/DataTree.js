@@ -11,7 +11,7 @@
 	};
 
 	//nameは適当な名前(仮)index = rootのindex,   select->0, 3, 4など列の数字が入る
-	function createChild(name, index, select) {
+	function createChild(name, index, data) {
 		var selectnode,
 			child,
 			i;
@@ -21,15 +21,16 @@
 		{
 			'name'  :name,
 			'index' :index,
-			'data'  :[],
+			'data'  :data,
 			'trans' :[0, 0, 0],
 			'scale' :[1, 1, 1],
 			'rotate':[0, 0, 0],
-			'color' :[1, 1, 1, 1],
+			'radius':1,
+			'color' :[1, 1, 1, 1]
 		};
-		for(i = 0; i < select.length; i = i + 1) {
-			child.data.push(selectnode.data[[select[i]]]);
-		}
+		//for(i = 0; i < select.length; i = i + 1) {
+		//	child.data.push(selectnode.data[[select[i]]]);
+		//}
 		selectnode.child.push(child);
 	};
 
@@ -59,6 +60,7 @@
 	window.datatree.getRoot     = getRoot;
 	window.datatree.getData     = getData;
 	
+	/*
 	//test data
 	addData('test1',
 		{
@@ -83,6 +85,7 @@
 	console.log('GET', getData('child1'));
 	console.log('GET', getData('child2'));
 	console.log('GET', getData('childs2')); //null
+	*/
 	
 	
 }());

@@ -11,7 +11,8 @@
 		camera         = null,
 		line_shader    = null,
 		mesh_shader    = null,
-	    scene          = {},
+		scene          = {},
+		model_id       = 0,
 		global_time    = 0;
 
 	function resetShader() {
@@ -36,9 +37,46 @@
 
 	function updateDataTree(data)
 	{
-		
+		console.log(meshlist);
+		var i;
+		var k;
+		for(i = 0; i < meshlist.length; i = i + 1) {
+			console.log(meshlist[i].name, data);
+			
+			if(meshlist[i].name === data.name) {
+				console.log(data);
+				for(k = 0 ; k < data.input.length; k = k + 1) {
+					if(data.input[k].name === 'trans')
+					{
+						meshlist[i].trans = data.input[k].value;
+					}
+					if(data.input[k].name === 'rotate')
+					{
+						meshlist[i].rotate = data.input[k].value;
+					}
+					if(data.input[k].name === 'scale')
+					{
+						meshlist[i].scale = data.input[k].value;
+					}
+					if(data.input[k].name === 'color')
+					{
+						meshlist[i].diffColor = data.input[k].value;
+					}
+					if(data.input[k].name === 'radius')
+					{
+						meshlist[i].radius = data.input[k].value;
+					}
+					
+				}
+			}
+		}
 	}
-	
+
+	function AddRootTree(data)
+	{
+		datatree.addData(data.name, data.name);
+		window.grouptreeview.update(datatree.getRoot());
+	}
 	
 	function updateMesh(data) {
 		var point_p   = data.pos,
@@ -46,30 +84,44 @@
 			stlmesh   = null,
 			linemesh  = null,
 			pointmesh = null,
+			node      = {},
 			length    = 0;
 
 		console.log(data);
 		stlmesh = render.createMeshObj(data);
+		data.name = data.name + model_id;
+		model_id++;
+		stlmesh.name = data.name;
 		stlmesh.setShader(mesh_shader);
 		meshlist.push(stlmesh);
+		datatree.createChild(data.name, 0, stlmesh);
+		window.grouptreeview.update(datatree.getRoot());
+		
 		//linemesh  = render.createLineMesh(stlmesh, 8, 0.3);
 		//pointmesh = render.createPointMesh(stlmesh, 1.0, 16, 16);  // GLdouble radius, GLint slices, GLint stacks
 		//length = Distance(data.max, data.min);
 		//window.ctrl.setMoveMult(length * 0.001, length * 0.001, 1.0, length * 0.001);
 		//Lerp Start : todo on off
+		
 		camera.setupLerp(data.min, data.max);
 	}
 
-	function updateMeshText(pos) {
+	function updateMeshText(name, pos) {
 	  var mesh = {'position':pos},
 	      linemesh,
 	      pointmesh;
-		linemesh = render.createLineMesh(mesh, 8, 0.3);
+		linemesh = render.createLineMesh(mesh, 8, 1.0);
+		linemesh.name = name + '_line';
 		pointmesh = render.createPointMesh(mesh, 1.0, 16, 16);
+		pointmesh.name = name + '_ball';
+		
 		linemesh.setShader(mesh_shader);
 		pointmesh.setShader(mesh_shader);
 		meshlist.push(linemesh);
 		meshlist.push(pointmesh);
+		datatree.createChild(linemesh.name, 0, linemesh);
+		datatree.createChild(pointmesh.name, 0, pointmesh);
+		window.grouptreeview.update(datatree.getRoot());
 	  //console.log(linemesh);
 		//camera.setupLerp(linemesh.boundmin, linemesh.boundmax);
 	}
@@ -99,6 +151,7 @@
 			prevX        = 0.0,
 			prevY        = 0.0,
 			time         = 0.0,
+			rootnode     = {},
 			vpMatrix;
 
 		//-------------------------------------------------------------------
@@ -109,10 +162,13 @@
 		//-------------------------------------------------------------------
 		//CreateGrid
 		//-------------------------------------------------------------------
-		gridmesh = render.createGridMesh(1000, 100, 0.1);
+		gridmesh = render.createGridMesh(1000, 100, 0.5);
 		gridmesh.setMode('Lines');
 		gridmesh.setShader(line_shader);
 		meshlist.push(gridmesh);
+		datatree.addData('root', ['ROOT']);
+		datatree.createChild('Grid', 0, gridmesh);
+		window.grouptreeview.update(datatree.getRoot());
 		
 		function updateFrame() {
 			var cw            = canvas.width,
@@ -120,14 +176,22 @@
 				wh            = 1 / Math.sqrt(cw * cw + ch * ch),
 				uniLocation   = [],
 				gridcolor     = [0.1, 0.1, 0.1, 1.0],
-			    result        = [];
+				result        = [],
+				camZ          = 0;
 
 			//onResize();
 			global_time = time;
 			camera.updateMatrix(wh);
-			vpMatrix = camera.getViewMatrix(60, canvas.width / canvas.height, 0.1, 10000.0);
-			//render.clearColor(0.1, 0.1, 0.1, 1.0);
-			render.clearColor(0.2, 0.3, 0.5, 1.0);
+			camZ = camera.getCamPosZ();
+			if(camZ === 0) {
+				vpMatrix = camera.getViewMatrix(60, canvas.width / canvas.height, 0.1, 2560);
+			} else {
+				console.log(camZ);
+				vpMatrix = camera.getViewMatrix(60, canvas.width / canvas.height, camZ * 0.002, camZ * 4.0);
+			}
+			//render.clearColor(0.5, 0.5, 0.5, 1.0);
+			render.clearColor(0.1, 0.1, 0.1, 1.0);
+			//render.clearColor(0.2, 0.3, 0.5, 1.0);
 			//render.clearColor(0.01, 0.03, 0.05, 1.0);
 			//render.clearColor(1.0, 1.0, 1.0, 1.0);
 			render.clearDepth(1.0);
@@ -149,6 +213,7 @@
 		var checklist = [],
 				coldata   = [],
 	      pos       = [],
+				name      = 'Group',
 	      col,
 			  i,
 			  j;
@@ -164,6 +229,7 @@
 		for(i = 0 ; i < checklist.length; i++) {
 			coldata.push(window.hstable.getCol(checklist[i]));
 		}
+		
 		console.log(coldata);
 	  for(j = 0 ; j < coldata.length; j = j + 1) {
 	    col = coldata[j];
@@ -171,7 +237,14 @@
 	    	pos[i * 3 + j] = parseFloat(col[i]);
 	    }
 	  }
-	  updateMeshText(pos);
+		
+		
+		//Create Name
+		for(i = 0 ; i < checklist.length; i++) {
+			name = name + '_' + checklist[i];
+		}
+		
+	  updateMeshText(name, pos);
 	  
 	}
 	
@@ -222,6 +295,7 @@
 	window.onresize             = onResize;
 	window.scene                = scene;
 	window.scene.updateDataTree = updateDataTree;
+	window.scene.AddRootTree    = AddRootTree;
 	
 
 }(window.loadSTLB));

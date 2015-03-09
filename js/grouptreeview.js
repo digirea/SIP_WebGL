@@ -8,9 +8,11 @@
 
 	function getPropertyValues(node) {
 		var values = [],
-			trans = {},
+			trans  = {},
 			rotate = {},
-			scale = {};
+			scale  = {},
+			radius = {},
+			color  = {};
 		if (node.trans) {
 			trans.name = "trans";
 			trans.type = "vec3";
@@ -28,6 +30,18 @@
 			scale.type = "vec3";
 			scale.value = node.scale;
 			values.push(scale);
+		}
+		if (node.color) {
+			color.name = "color";
+			color.type = "vec4";
+			color.value = node.color;
+			values.push(color);
+		}
+		if (node.radius) {
+			radius.name = "radius";
+			radius.type = "float";
+			radius.value = node.radius;
+			values.push(radius);
 		}
 		return values;
 	}

@@ -6,7 +6,8 @@
 
 (function () {
 	"use strict";
-	var loadSTLB = {};
+	var loadSTLB = {},
+			filename = '';
 
 	function calcNormal(pos, i) {
 		var normal = [0, 0, 0],
@@ -111,6 +112,7 @@
 			linebuf.push(ch);
 		}
 		ret = {
+			"name"   : filename,
 			"pos"    : m_pos,
 			"normal" : m_normal,
 			"min"    : Bmin,
@@ -223,6 +225,7 @@
 
 		//todo Mesh Data
 		return {
+			"name"   : filename,
 			"pos"    : m_pos,
 			"normal" : m_normal,
 			"min"    : Bmin,
@@ -271,6 +274,7 @@
 		fr.onloadend = function (e) {
 			var data    = e.target.result,
 				dataview;
+      console.log('LOADEND------------', e);
 			if (data) {
 				dataview = new DataView(data);
 				console.log('loadSTLB ' + loadSTLB);
@@ -284,6 +288,7 @@
 		};
 
 		for (i = 0, file = files[i]; file; i = i + 1, file = files[i]) {
+			filename = file.name;
 			fr.readAsArrayBuffer(file);
 		}
 	}

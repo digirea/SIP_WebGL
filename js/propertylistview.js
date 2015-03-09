@@ -45,9 +45,11 @@
 		
 		function valChange(data, txt) {
 			return function (e) {
-				changedValueFuncs.push(function () {
-					data.value = txt.value;
-				});
+				data.value = txt.value;
+				scene.updateDataTree(currentData);
+				//changedValueFuncs.push(function () {
+				//	data.value = txt.value;
+				//});
 			};
 		}
 		
@@ -85,6 +87,7 @@
 					}
 					//updateNode();
 				}
+				scene.updateDataTree(currentData);
 			};
 		}(node, textNode)));
 		return itemNode;
@@ -103,9 +106,11 @@
 
 		function valChange(data, txt, i) {
 			return function (e) {
-				changedValueFuncs.push(function () {
 					data.value[i] = txt.value;
-				});
+					scene.updateDataTree(currentData);
+				
+				//changedValueFuncs.push(function () {
+				//});
 			};
 		}
 		

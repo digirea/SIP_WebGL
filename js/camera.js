@@ -95,6 +95,10 @@ var Camera;
 		this.lerpState          = true;
 	}
 
+	camera.prototype.getCamPosZ = function () {
+		return Math.abs(this.camPos[2]);
+	}
+	
 	camera.prototype.getViewMatrix = function (fov, aspect, near, far) {
 		var mtx      = new MatIV(),
 			tMatrix  = mtx.identity(mtx.create()),

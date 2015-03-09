@@ -17,6 +17,7 @@ var MeshObj;
 		this.vbo_list      = [];
 		this.stride        = [];
 		this.shader        = null;
+		this.radius        = 1;
 		this.boundmin      = [0,0,0];
 		this.boundmax      = [0,0,0];
 		this.trans         = [0,0,0];
