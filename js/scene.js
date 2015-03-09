@@ -11,6 +11,7 @@
 		camera         = null,
 		line_shader    = null,
 		mesh_shader    = null,
+	    scene          = {},
 		global_time    = 0;
 
 	function resetShader() {
@@ -33,6 +34,11 @@
 		info.innerHTML = html;
 	}
 
+	function updateDataTree(data)
+	{
+		
+	}
+	
 	
 	function updateMesh(data) {
 		var point_p   = data.pos,
@@ -65,6 +71,10 @@
 	}
 
 	function onResize() {
+		document.getElementById('Open').value = ''; // clear filename
+		
+		var w = document.getElementById('consoleOutput').style.width = window.innerWidth + 'px';
+		
 		render.onResize();
 	}
 
@@ -98,7 +108,7 @@
 				gridcolor     = [0.1, 0.1, 0.1, 1.0],
 			    result        = [];
 
-			onResize();
+			//onResize();
 			global_time = time;
 			camera.updateMatrix(wh);
 			vpMatrix = camera.getViewMatrix(60, canvas.width / canvas.height, 0.1, 10000.0);
@@ -149,6 +159,7 @@
 			'groupTab' : { min : '0px', max : '280px' }
 		}, 'Groups');
 		
+		
 		(function($) {
 			$(function() {
 				$("#tree").treeview({
@@ -164,7 +175,10 @@
 		
 	}
 
-	window.onload   = init;
-	window.onresize = onResize;
+	window.onload               = init;
+	window.onresize             = onResize;
+	window.scene                = scene;
+	window.scene.updateDataTree = updateDataTree;
+	
 
 }(window.loadSTLB));
