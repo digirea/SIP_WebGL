@@ -108,7 +108,7 @@ body {
 	color:#FFF;
 }
 
-#Render {
+#AddGroup {
 	/*position:absolute;
 	right:150px;
 	top:28px;*/
@@ -119,7 +119,7 @@ body {
 	color:#FFF;
 }
 
-#Clear {
+#DeleteGroup {
 	/*position:absolute;
 	right:10px;
 	top:60px;*/

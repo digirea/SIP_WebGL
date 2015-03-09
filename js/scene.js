@@ -60,6 +60,21 @@
 		camera.setupLerp(data.min, data.max);
 	}
 
+	function updateMeshText(pos) {
+	  var mesh = {'position':pos},
+	      linemesh,
+	      pointmesh;
+		linemesh = render.createLineMesh(mesh, 8, 0.3);
+		pointmesh = render.createPointMesh(mesh, 1.0, 16, 16);
+		linemesh.setShader(mesh_shader);
+		pointmesh.setShader(mesh_shader);
+		meshlist.push(linemesh);
+		meshlist.push(pointmesh);
+	  //console.log(linemesh);
+		//camera.setupLerp(linemesh.boundmin, linemesh.boundmax);
+	}
+  
+  
 	function loadSTL(evt) {
 		if (evt === '') {
 			return;
@@ -71,10 +86,9 @@
 	}
 
 	function onResize() {
+	  var i;
 		document.getElementById('Open').value = ''; // clear filename
-		
 		var w = document.getElementById('consoleOutput').style.width = window.innerWidth + 'px';
-		
 		render.onResize();
 	}
 
@@ -113,9 +127,9 @@
 			camera.updateMatrix(wh);
 			vpMatrix = camera.getViewMatrix(60, canvas.width / canvas.height, 0.1, 10000.0);
 			//render.clearColor(0.1, 0.1, 0.1, 1.0);
-			//render.clearColor(0.2, 0.3, 0.5, 1.0);
+			render.clearColor(0.2, 0.3, 0.5, 1.0);
 			//render.clearColor(0.01, 0.03, 0.05, 1.0);
-			render.clearColor(1.0, 1.0, 1.0, 1.0);
+			//render.clearColor(1.0, 1.0, 1.0, 1.0);
 			render.clearDepth(1.0);
 			render.frontFace(true);
 			render.Depth(true);
@@ -130,7 +144,45 @@
 		updateFrame();
 	}
 	
+	
+	function addGroup() {
+		var checklist = [],
+				coldata   = [],
+	      pos       = [],
+	      col,
+			  i,
+			  j;
+	  var hstable = document.getElementById('hstable');
+	  var clonetable = hstable.getElementsByClassName('ht_clone_top');
+	  var checkboxs = clonetable[0].getElementsByClassName('colcheckbox');
+	  for(i = 0 ; i < checkboxs.length; i = i + 1) {
+			var checkbox = document.getElementById('colcheckbox' + i);
+			if(checkboxs[i].checked) {
+				checklist.push(i);
+			}
+		}
+		for(i = 0 ; i < checklist.length; i++) {
+			coldata.push(window.hstable.getCol(checklist[i]));
+		}
+		console.log(coldata);
+	  for(j = 0 ; j < coldata.length; j = j + 1) {
+	    col = coldata[j];
+	    for(i = 0 ; i < col.length - 1; i = i + 1) {
+	    	pos[i * 3 + j] = parseFloat(col[i]);
+	    }
+	  }
+	  updateMeshText(pos);
+	  
+	}
+	
+	
 	function init() {
+	  var addgroup = document.getElementById('AddGroup'),
+	     deletegroup = document.getElementById('DeleteGroup');
+	  
+	  
+	  
+	  
 		canvas = document.getElementById('canvas');
 		render = new WGLRender();
 		camera = new Camera();
@@ -139,6 +191,8 @@
 		window.ctrl.init(document, callbackResetView);
 		window.ctrl.setCamera(camera);
 		document.getElementById('Open').addEventListener('change', loadSTL, false);
+	  
+	  addgroup.onclick = addGroup;
 		
 		// Create Tab
 		var consoleTab = window.animtab.create('bottom', {

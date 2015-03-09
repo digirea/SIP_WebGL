@@ -366,7 +366,10 @@ var WGLRender;
 			tangent        = [],
 			normal         = [],
 			position       = [],
-			reconstnoremal = [];
+			reconstnoremal = [],
+			maxValue       = 9999999,
+			Bmin           = [maxValue, maxValue, maxValue],
+			Bmax           = [-maxValue,-maxValue,-maxValue];
 
 		if (divide <= 0 || radius <= 0) {
 			console.log('Error divide or radius is less then 0\n');
@@ -475,11 +478,19 @@ var WGLRender;
 			position.push(buf[inum * 3]);
 			position.push(buf[inum * 3 + 1]);
 			position.push(buf[inum * 3 + 2]);
+
 			reconstnoremal.push(normal[inum * 3]);
 			reconstnoremal.push(normal[inum * 3 + 1]);
 			reconstnoremal.push(normal[inum * 3 + 2]);
 		}
-		return this.createMeshObj({'pos': position, 'normal' : reconstnoremal});
+	  
+	  
+	  
+	  
+	  for (i = 0; i < position.length; i = i + 3) {
+		  //GetMinMax(Bmin, Bmax, position[i]);
+	  }
+		return this.createMeshObj({'pos': position, 'normal' : reconstnoremal, 'min':Bmin, 'max':Bmax});
 	};
 	//------------------------------------------------------------------------------
 	// createLineMesh (Cylinder)
@@ -521,12 +532,14 @@ var WGLRender;
 			y0,
 			z0,
 			inum,
-			pos      = [],
-			nor      = [],
-			idx      = [],
-			position = [],
-			normal   = [];
-		
+			pos            = [],
+			nor            = [],
+			idx            = [],
+			position       = [],
+			normal         = [],
+			maxValue       = 9999999,
+			Bmin           = [maxValue, maxValue, maxValue],
+			Bmax           = [-maxValue,-maxValue,-maxValue];
 
 		//---------------------------------------------------------------------
 		// Create Base Mesh
@@ -579,8 +592,16 @@ var WGLRender;
 				normal.push(nor[inum * 3 + 2]);
 			}
 		}
-		console.log('DONE : Create Mesh per Point');
-		return this.createMeshObj({'pos' : position, 'normal' : normal});
+	  
+	  //get bounding box
+	  for (i = 0; i < position.length; i = i + 3) {
+		  GetMinMax(Bmin, Bmax, position[i]);
+	  }
+		
+
+		console.log('DONE : Create Mesh per Point min->',  Bmin);
+		console.log('DONE : Create Mesh per Point max->',  Bmax);
+		return this.createMeshObj({'pos' : position, 'normal' : normal, 'min':Bmin, 'max':Bmax});
 	};
     
 	
@@ -649,6 +670,7 @@ var WGLRender;
 			VertexNum  = 0,
 			PolygonNum = 0,
 			i          = 0;
+		//console.log(meshlist);
 		for(i = 0; i < meshlist.length; i++) {
 			this.drawMesh(meshlist[i]);
 			VertexNum += meshlist[i].position.length / 3;

@@ -574,3 +574,14 @@ function Cross(p0, p1)
 }
 
 
+function GetMinMax(min, max, pos)
+{
+	min[0] = Math.min(pos[0], min[0])
+	min[1] = Math.min(pos[1], min[1])
+	min[2] = Math.min(pos[2], min[2])
+	
+	max[0] = Math.max(pos[0], max[0]);
+	max[1] = Math.max(pos[1], max[1]);
+	max[2] = Math.max(pos[2], max[2]);
+}
+

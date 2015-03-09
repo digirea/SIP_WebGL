@@ -1,5 +1,7 @@
 (function() {
-  var grid;
+  var grid = null,
+      tbl,
+      hstable = {};
 
   //http://www.hp-stylelink.com/news/2014/08/20140826.php
   function csv2Array(csvData) {
@@ -10,27 +12,50 @@
       }
       return csvArray;
   }
+  
+  function countCols() {
+    if(grid) {
+      return grid.countCols();
+    }
+    return 0;
+  }
+  
+  function getCol(index) {
+    if(grid) {
+      return grid.getDataAtCol(index);
+    }
+    return null;
+  }
 
   function handleReadText(evt) {
     var files = evt.target.files;
     var reader = new FileReader();
     reader.onloadend = (function(e) {
       var csvArray = csv2Array(e.target.result);
-      var tbl   = document.getElementById('hstable');
       var style = tbl.style;
-
-      grid = new Handsontable(tbl, {
-        rowHeaders   : true,
-        colHeaders   : true,
-        fillHandle   : false,
-        maxRows      : 10,
-        minSpareRows : 1, 
-        colHeaders: function (col) {
-          var txt = "Data : " + col + "<input type='checkbox' name='columns' class='columns'>";
-          return txt;
-        },
-      });
+      var i;
+      var header = [];
+      if(grid == null) {
+        grid = new Handsontable(tbl, {
+          rowHeaders   : true,
+          colHeaders   : true,
+          fillHandle   : false,
+          onChange: function(change, source) {
+            console.log('チェンジされました', change, source);
+            if(source === 'loadData') return;
+          }
+        });
+      }
       grid.loadData(csvArray);
+      console.log('COLS :: ', grid.countCols());
+      for(i = 0; i < grid.countCols(); i++) {
+        //header.push("<input type='checkbox' id='colcheckbox" + i + "' class='columns' checked='false'>");
+        header.push("<input type='checkbox' id='colcheckbox" + i + "' class='colcheckbox'>");
+      }
+      grid.updateSettings({
+        colHeaders: header
+      });
+      //console.log(csvArray);
       tbl.style = style;
       tbl.style.overflow = scroll;
       tbl.style.zIndex = "5";
@@ -39,10 +64,14 @@
   }
 
   function init() {
+    tbl = document.getElementById('hstable');
     document.getElementById('OpenText').addEventListener('change', handleReadText, false);
   }
-  
-  window.addEventListener('load', init, false);
 
+  window.addEventListener('load', init, false);
+  window.hstable           = hstable;
+  window.hstable.countCols = countCols;
+  window.hstable.getCol    = getCol;
+  
 })();
 
