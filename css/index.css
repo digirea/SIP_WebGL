@@ -144,6 +144,15 @@ body {
 	margin: 5px;
 	width: 200px;
 }
+
+#ApplyProperty {
+	margin: 5px;
+	width: 120px;
+	height:25px;
+	background-color:#e5923e;
+	color:#FFF;
+	display: none;
+}
 /*------------------*/
 
 .nodeListBox {

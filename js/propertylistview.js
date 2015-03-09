@@ -1,9 +1,11 @@
 /*jslint devel:true*/
 /*global */
 
-(function () {
+(function (scene) {
 	"use strict";
-	var propertylist = {};
+	var propertylist = {},
+		currentData = null,
+		changedValueFuncs = [];
 	
 	function makeItemNode(name, text, top) {
 		var itemNode = document.createElement('div'),
@@ -41,11 +43,15 @@
 		itemNode.appendChild(nameNode);
 		itemNode.appendChild(textNode);
 		
-		textNode.addEventListener('keyup', (function (data, txt) {
+		function valChange(data, txt) {
 			return function (e) {
-				data.value = txt.value;
+				changedValueFuncs.push(function () {
+					data.value = txt.value;
+				});
 			};
-		}(node, textNode)));
+		}
+		
+		textNode.addEventListener('change', valChange(node, textNode));
 		return itemNode;
 	}
 	
@@ -97,18 +103,35 @@
 
 		function valChange(data, txt, i) {
 			return function (e) {
-				data.value[i] = txt.value;
+				changedValueFuncs.push(function () {
+					data.value[i] = txt.value;
+				});
 			};
 		}
+		
 		for (i = 0; i < n; i = i + 1) {
 			valNode = document.createElement('input');
 			valNode.setAttribute('type', 'text');
 			valNode.value = vals[i];
 			valNode.classList.add('nodePropertyValue');
 			itemNode.appendChild(valNode);
-			valNode.addEventListener('keyup', valChange(node, valNode, i));
+			valNode.addEventListener('change', valChange(node, valNode, i));
 		}
 		return itemNode;
+	}
+	
+	function apply(data) {
+		var i,
+			func;
+		//console.log("Apply:", changedValueFuncs);
+		for (i = 0; i < changedValueFuncs.length; i = i + 1) {
+			func = changedValueFuncs[i];
+			func();
+		}
+		if (currentData) {
+			scene.updateDataTree(currentData);
+		}
+		changedValueFuncs = [];
 	}
 
 	// data - name, varname, 
@@ -125,8 +148,14 @@
 			ele,
 			prop = document.createElement('div'),
 			itemNode,
-			inode;
+			inode,
+			applyButton = document.getElementById('ApplyProperty');
 		
+		applyButton.style.display = "block";
+		applyButton.onclick = apply;
+		
+		currentData = data;
+		changedValueFuncs = []; // clear
 		to.innerHTML = ''; // clear
 		to.appendChild(makeItemNode('Property Name', 'Value', true));
 		to.appendChild(makeItemNode('name', data.name));
@@ -189,4 +218,4 @@
 	window.propertylistview = propertylist;
 	window.propertylistview.showProperty = showProperty;
 
-}());
+}(window.scene));
