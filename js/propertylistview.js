@@ -186,8 +186,8 @@
 		}
 	}
 	
-	window.propertylist = propertylist;
-	window.propertylist.showProperty = showProperty;
+	window.propertylistview = propertylist;
+	window.propertylistview.showProperty = showProperty;
 	
 	// test
 	showProperty({

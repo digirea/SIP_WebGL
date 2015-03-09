@@ -160,17 +160,6 @@
 		}, 'Groups');
 		
 		
-		(function($) {
-			$(function() {
-				$("#tree").treeview({
-					collapsed: true,
-					animated: "fast",
-					control:"#sidetreecontrol",
-					persist: "location"
-				});
-			})
-		})(jQuery);
-		
 		setTimeout(startGL, 250);
 		
 	}
