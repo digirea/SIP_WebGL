@@ -110,7 +110,7 @@
 	  var mesh = {'position':pos},
 	      linemesh,
 	      pointmesh;
-		linemesh = render.createLineMesh(mesh, 8, 1.0);
+		linemesh = render.createLineMesh(mesh, 8, 0.5);
 		linemesh.name = name + '_line';
 		pointmesh = render.createPointMesh(mesh, 1.0, 16, 16);
 		pointmesh.name = name + '_ball';
