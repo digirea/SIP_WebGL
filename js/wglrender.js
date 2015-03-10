@@ -289,13 +289,13 @@ var WGLRender;
 		}
 		
 		if(data.min) {
-			console.log(mesh.boundmin);
 			mesh.boundmin = data.min;
+			console.log(mesh.boundmin);
 		}
 		
 		if(data.max) {
-			console.log(mesh.boundmax);
 			mesh.boundmax = data.max;
+			console.log(mesh.boundmax);
 		}
 		
 		return mesh;
@@ -484,11 +484,8 @@ var WGLRender;
 			reconstnoremal.push(normal[inum * 3 + 2]);
 		}
 	  
-	  
-	  
-	  
 	  for (i = 0; i < position.length; i = i + 3) {
-		  //GetMinMax(Bmin, Bmax, position[i]);
+		  GetMinMax(Bmin, Bmax, [position[i + 0], position[i + 1], position[i + 2]]);
 	  }
 		return this.createMeshObj({'pos': position, 'normal' : reconstnoremal, 'min':Bmin, 'max':Bmax});
 	};
@@ -595,7 +592,8 @@ var WGLRender;
 	  
 	  //get bounding box
 	  for (i = 0; i < position.length; i = i + 3) {
-		  GetMinMax(Bmin, Bmax, position[i]);
+		  GetMinMax(Bmin, Bmax, [position[i + 0], position[i + 1], position[i + 2]]);
+	  	//console.log(Bmin, Bmax);
 	  }
 		
 

@@ -110,9 +110,10 @@
 	  var mesh = {'position':pos},
 	      linemesh,
 	      pointmesh;
-		linemesh = render.createLineMesh(mesh, 8, 0.5);
-		linemesh.name = name + '_line';
+		linemesh  = render.createLineMesh(mesh, 8, 0.5);
 		pointmesh = render.createPointMesh(mesh, 1.0, 16, 16);
+		console.log(pointmesh.boundmin, pointmesh.boundmax);
+		linemesh.name = name + '_line';
 		pointmesh.name = name + '_ball';
 		
 		linemesh.setShader(mesh_shader);
@@ -123,6 +124,7 @@
 		datatree.createChild(pointmesh.name, 0, pointmesh);
 		window.grouptreeview.update(datatree.getRoot());
 	  //console.log(linemesh);
+		
 		//camera.setupLerp(linemesh.boundmin, linemesh.boundmax);
 	}
   
@@ -212,15 +214,17 @@
 	function addGroup() {
 		var checklist = [],
 				coldata   = [],
-	      pos       = [],
+				pos       = [],
 				name      = 'Group',
-	      col,
-			  i,
-			  j;
-	  var hstable = document.getElementById('hstable');
-	  var clonetable = hstable.getElementsByClassName('ht_clone_top');
-	  var checkboxs = clonetable[0].getElementsByClassName('colcheckbox');
-	  for(i = 0 ; i < checkboxs.length; i = i + 1) {
+				colnum,
+				col,
+				temp,
+				i,
+				j;
+		var hstable = document.getElementById('hstable');
+		var clonetable = hstable.getElementsByClassName('ht_clone_top');
+		var checkboxs = clonetable[0].getElementsByClassName('colcheckbox');
+		for(i = 0 ; i < checkboxs.length; i = i + 1) {
 			var checkbox = document.getElementById('colcheckbox' + i);
 			if(checkboxs[i].checked) {
 				checklist.push(i);
@@ -231,31 +235,51 @@
 		}
 		
 		console.log(coldata);
-	  for(j = 0 ; j < coldata.length; j = j + 1) {
-	    col = coldata[j];
-	    for(i = 0 ; i < col.length - 1; i = i + 1) {
-	    	pos[i * 3 + j] = parseFloat(col[i]);
-	    }
-	  }
+		colnum = coldata.length;
+		if(colnum >= 3)
+		{
+			colnum = 3;
+		}
 		
+		for(j = 0 ; j < colnum; j = j + 1) {
+			col = coldata[j];
+			for(i = 0 ; i < col.length - 1; i = i + 1) {
+				pos[i * 3 + j] = parseFloat(col[i]);
+			}
+		}
+
+		if(colnum == 2) {
+			for(i = 0 ; i < col.length - 1; i = i + 1) {
+				temp = pos[i * 3 + 1];
+				pos[i * 3 + 1] = 0;
+				pos[i * 3 + 2] = temp;
+			}
+		}
+
+		if(colnum == 1) {
+			for(i = 0 ; i < col.length - 1; i = i + 1) {
+				pos[i * 3 + 1] = 0.0;
+				pos[i * 3 + 2] = 0.0;
+			}
+		}
 		
 		//Create Name
 		for(i = 0 ; i < checklist.length; i++) {
 			name = name + '_' + checklist[i];
 		}
 		
-	  updateMeshText(name, pos);
-	  
+		updateMeshText(name, pos);
+		
 	}
 	
 	
 	function init() {
-	  var addgroup = document.getElementById('AddGroup'),
-	     deletegroup = document.getElementById('DeleteGroup');
-	  
-	  
-	  
-	  
+		var addgroup = document.getElementById('AddGroup'),
+			 deletegroup = document.getElementById('DeleteGroup');
+		
+		
+		
+		
 		canvas = document.getElementById('canvas');
 		render = new WGLRender();
 		camera = new Camera();
