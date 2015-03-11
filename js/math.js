@@ -558,7 +558,10 @@ function Add(p0, p1) {
 
 function Sub(p0, p1) {
 	var ret = [];
-	ret.push(p0[0] - p1[0], p0[1] - p1[1], p0[2] - p1[2]);
+	ret.push(
+		p0[0] - p1[0],
+		p0[1] - p1[1],
+		p0[2] - p1[2]);
 	return ret;
 }
 
@@ -624,6 +627,7 @@ function GetMinMax(min, max, pos)
 }
 
 // Intersect Triagle
+var count = 0;
 function IntersectTriangle(org, dir, v0, v1, v2)
 {
 	var t     = 0,
@@ -637,7 +641,6 @@ function IntersectTriangle(org, dir, v0, v1, v2)
 		tvec    = [],
 		qvec    = [],
 		EPSILON = 0.000001;
-
 	edge1 = Sub(v1, v0);
 	edge2 = Sub(v2, v0);
 	pvec  = Cross(dir, edge2);
@@ -657,9 +660,8 @@ function IntersectTriangle(org, dir, v0, v1, v2)
 	}
 
 	qvec = Cross(tvec, edge1);
-	v = Dot(dir, qvec) * inv_det;
-	
-	if (v < -0.0 || u + v > 1.0)
+	v = Dot(dir, qvec) * inv_det
+	if (v < -0.0 || (u + v) > 1.0)
 	{
 		return false;
 	}
@@ -668,4 +670,56 @@ function IntersectTriangle(org, dir, v0, v1, v2)
 	return {'t':t, 'u':u, 'v':v};
 }
 
+
+	
+	//vec4 outpos = invMatrix * inpos;
+function MultMatrixVec4(a, b)
+{
+	/*
+	var ret = 
+		[a.m[0][0] * b.x + a.m[1][0] * b.y + a.m[2][0] * b.z + a.m[3][0] * b.w,
+		 a.m[0][1] * b.x + a.m[1][1] * b.y + a.m[2][1] * b.z + a.m[3][1] * b.w,
+		 a.m[0][2] * b.x + a.m[1][2] * b.y + a.m[2][2] * b.z + a.m[3][2] * b.w,
+		 a.m[0][3] * b.x + a.m[1][3] * b.y + a.m[2][3] * b.z + a.m[3][3] * b.w];
+	*/
+	
+	
+	var ret = 
+		[a[0] * b[0] + a[4 + 0] * b[1] + a[8 + 0] * b[2] + a[12 + 0] * b[3],
+		 a[1] * b[0] + a[4 + 1] * b[1] + a[8 + 1] * b[2] + a[12 + 1] * b[3],
+		 a[2] * b[0] + a[4 + 2] * b[1] + a[8 + 2] * b[2] + a[12 + 2] * b[3],
+		 a[3] * b[0] + a[4 + 3] * b[1] + a[8 + 3] * b[2] + a[12 + 3] * b[3]];
+	return ret;
+	
+}
+
+function UnProject(winpos,
+					invMatrix,
+					viewport,
+					ray)
+{
+	var i,
+		inpos  = [],
+		outpos = [];
+	inpos    = [winpos[0], winpos[1], winpos[2], 1.0];
+	inpos[0] = (inpos[0] - viewport[0]) / viewport[2];
+	inpos[1] = (inpos[1] - viewport[1]) / viewport[3];
+	
+	for(i = 0 ; i < inpos.length; i = i + 1) {
+		inpos[i] = inpos[i] * 2.0 - 1.0;
+	}
+	inpos[3] = 1.0;
+
+	outpos = MultMatrixVec4(invMatrix, inpos);
+	
+	if (outpos[3] == 0.0) {
+		console.log("UnProject failed.\n");
+		return false;
+	}
+	
+	ray[0] = outpos[0] / outpos[3];
+	ray[1] = outpos[1] / outpos[3];
+	ray[2] = outpos[2] / outpos[3];
+	//console.log(ray);
+}
 

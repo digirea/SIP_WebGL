@@ -92,7 +92,7 @@
 
 		if (mouseState.Left) {
 			var rot = camera.addRotate(-movementX * multrotate, movementY * multrotate, 0);
-			console.log( rot[1] / 3.141592 );
+			//console.log( rot[1] / 3.141592 );
 		}
 
 		if (mouseState.Center) {
@@ -149,9 +149,6 @@
 		canvas.addEventListener('mouseup',   mouseUp, true);
 		canvas.addEventListener('mousedown', mouseDown, true);
 		canvas.addEventListener('contextmenu', function (e) {
-		
-		
-			
 			if (e.button === 2) {
 				e.preventDefault();
 				return false;

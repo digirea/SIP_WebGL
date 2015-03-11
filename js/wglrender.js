@@ -488,7 +488,7 @@ var WGLRender;
 		//---------------------------------------------------------------------
 		//create triangle index buffer per vertex
 		//---------------------------------------------------------------------
-		for (i = 0; i < buf.length / 6; i = i + 2) { //2triangle push 
+		for (i = 0; i < buf.length / 4; i = i + 2) { //2triangle push 
 			index.push(
 				restrip_offset + i,
 				restrip_offset + i + 1,

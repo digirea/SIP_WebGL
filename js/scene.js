@@ -166,10 +166,10 @@
 		var gridmesh     = null,
 			rootnode     = {};
 		gridmesh = render.createGridMesh(1000, 100, 0.5);
-		Mul(gridmesh.boundmin, [0.01, 0.01, 0.01]);
-		Mul(gridmesh.boundmax, [0.01, 0.01, 0.01]);
 		gridmesh.setMode('Lines');
 		gridmesh.setShader(line_shader);
+		gridmesh.boundmin = Mul(gridmesh.boundmin, [0.5, 0.5, 0.5]);
+		gridmesh.boundmax = Mul(gridmesh.boundmax, [0.5, 0.5, 0.5]);
 		meshlist.push(gridmesh);
 		datatree.addData('root', ['ROOT']);
 		datatree.createChild('Grid', 0, gridmesh);
@@ -182,6 +182,114 @@
 		resetShader();
 		resetTree();
 	}
+	
+	function GetViewProjMatrix()
+	{
+		var camZ     = 0,
+			vpMatrix;
+		camZ = camera.getCamPosZ();
+		if(camZ === 0) {
+			vpMatrix = camera.getViewMatrix(60, canvas.width / canvas.height, 0.1, 2560);
+		} else {
+			vpMatrix = camera.getViewMatrix(60, canvas.width / canvas.height, camZ * 0.002, camZ * 4.0);
+		}
+		return vpMatrix;
+	}
+	
+	function IsHitMesh(o, d, triarray)
+	{
+		var i,
+			ishit = false,
+			pos;
+		console.log('ray parameter :', o, d);
+
+		for(i = 0 ; i < triarray.length; i = i + 9) {
+			ishit = IntersectTriangle(
+				o,
+				d,
+				[
+					triarray[i + 0], triarray[i + 1], triarray[i + 2]
+				],
+				[
+					triarray[i + 3], triarray[i + 4], triarray[i + 5]
+				],
+				[
+					triarray[i + 6], triarray[i + 7], triarray[i + 8]
+				]
+			);
+			if(ishit === false) {
+				continue;
+			}
+		}
+		
+		return ishit;
+	}
+	
+	
+	function Pick(win_x, win_y)
+	{
+		var mtx      = new MatIV(),
+		    vpM      = mtx.identity(mtx.create()),
+		    vpMI     = mtx.identity(mtx.create()),
+		    mcheck   = mtx.identity(mtx.create()),
+				nwinpos  = [win_x, canvas.height - win_y, 0.0],
+				fwinpos  = [win_x, canvas.height - win_y, 1.0],
+		
+				viewport = [0, 0, canvas.width, canvas.height],
+				ishit    = false,
+				org      = [0, 0, 0],
+				tar      = [0, 0, 0],
+				dir      = [0, 0, 0],
+				mindex   = 0,
+				tidx     = 0,
+				mesh     = 0,
+				testo    = [0, 0, 0],
+				testd    = [0, 0, 0],
+				linem    = [];
+		
+		
+		
+		vpM = GetViewProjMatrix();
+		mtx.inverse(vpM, vpMI);
+		UnProject(nwinpos, vpMI, viewport, org);
+		UnProject(fwinpos, vpMI, viewport, tar);
+
+		console.log('org', org, camera);
+		dir = Sub(tar, org);
+		dir = Normalize(dir);
+		//console.log(tar, dir, org);
+		
+		//mesh = render.createMeshObj({'pos' : [org[0], org[1], org[2], dir[0] * 1000, dir[1] * 1000, dir[2] * 1000]});
+		mesh = render.createMeshObj
+		(
+			{
+				'pos' : [org[0], org[1], org[2], dir[0] * 1000, dir[1] * 1000, dir[2] * 1000],
+				'color' : [1,0,0,1,1,0,0,1]
+			}
+		);
+		mesh.setMode('Lines');
+		mesh.setShader(line_shader);
+		meshlist.push(mesh);
+		
+		//‘“–‚½‚èBŒã‚Å•ªŠ„‚·‚é
+		for(mindex = 0 ; mindex < meshlist.length; mindex = mindex + 1) {
+			mesh = meshlist[mindex];
+			if(mesh.mode === 'Triangles') {
+				ishit = IsHitMesh(org, dir, mesh.position);
+				if(ishit === false) continue;
+				break;
+			}
+		}
+		console.log(ishit);
+	}
+	
+	
+	function MouseClickFunc(evt)
+	{
+		//console.log(evt.clientX, evt.clientY);
+		if(evt.button === 1) Pick(evt.clientX, evt.clientY);
+	}
+	
 
 	function startGL() {
 		console.log('startGL');
@@ -194,23 +302,16 @@
 				uniLocation   = [],
 				gridcolor     = [0.1, 0.1, 0.1, 1.0],
 				result        = [],
-				camZ          = 0,
 				vpMatrix;
 
 			camera.updateMatrix(wh);
-			camZ = camera.getCamPosZ();
-			if(camZ === 0) {
-				vpMatrix = camera.getViewMatrix(60, canvas.width / canvas.height, 0.1, 2560);
-			} else {
-				//console.log(camZ);
-				vpMatrix = camera.getViewMatrix(60, canvas.width / canvas.height, camZ * 0.002, camZ * 4.0);
-			}
 
 			render.clearColor(0.1, 0.1, 0.1, 1.0);
 			render.clearDepth(1.0);
 			render.frontFace(true);
 			render.Depth(true);
 			render.Blend(true);
+			vpMatrix = GetViewProjMatrix();
 			render.setViewProjection(vpMatrix);
 			render.drawMeshList(meshlist, result);
 			
@@ -352,7 +453,8 @@
 		setTimeout(startGL, 250);
 		
 	}
-
+	
+	document.addEventListener("click" , MouseClickFunc);
 	window.onload                  = init;
 	window.onresize                = onResize;
 	window.scene                   = scene;
