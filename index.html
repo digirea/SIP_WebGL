@@ -86,8 +86,9 @@
 <body>
   <canvas id="canvas"      class="canvas"></canvas>
 	<div class="menuTab" id="menuTab">
-		<div id="property"    class="nodeProperty"></div>
-		<div id="ApplyProperty" class="menuButtonClass noneselect">Apply</div>
+		<div id="property"       class="nodeProperty"></div>
+		<div id="ApplyProperty"  class="menuButtonClass noneselect">Apply</div>
+		<div id="DeleteProperty" class="menuButtonClass noneselect">Delete</div>
 	</div>
 	<div id="consoleOutput" class="consoleOutput">
 		<span id="consoleTextBlock" class="consoleTextBlock">
@@ -96,8 +97,10 @@
 	</div>
 	
 	<div id="groupTab" class="groupTab">
-		<input type="file"    value="Open"        id="Open"><br>
+		<div id="OpenSTL" class="menuButtonClass noneselect">OpenSTL</div>
+		<input type="file"    value="Open"        id="Open" style="hidden"><br>
 		<div class="spacer"></div>
+		<div id="OpenCSV" class="menuButtonClass noneselect">OpenCSV</div>
 		<input type="file"    value="OpenText"    id="OpenText"><br>
 		<div class="spacer"></div>
 		<div id="AddGroup" class="menuButtonClass noneselect">AddGroup</div>

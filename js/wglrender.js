@@ -255,7 +255,39 @@ var WGLRender;
 	render.prototype.frontFace = function (isccw) {
 		this.gl.frontFace(this.gl.CCW);
 	};
+	
+	//------------------------------------------------------------------------------
+	// getMeshBoundingBox
+	//------------------------------------------------------------------------------
+	render.prototype.getMeshBoundingBox = function (mesh, bmin, bmax) {
+		var i;
+		for(i = 0 ; i < mesh.position.length; i = i + 3) {
+			GetMinMax(bmin, bmax, [mesh.position[i + 0], mesh.position[i + 1], mesh.position[i + 2]]);
+		}
+		console.log('BB:', bmin, bmax);
+		return {'min':bmin, 'max':bmax};
+	}
 
+	//------------------------------------------------------------------------------
+	// setupMeshBoundingBox
+	//------------------------------------------------------------------------------
+	render.prototype.setupMeshBoundingBox = function (mesh) {
+		var i,
+		maxValue       = 9999999,
+		bmin           = [maxValue, maxValue, maxValue],
+		bmax           = [-maxValue,-maxValue,-maxValue],
+		ret;
+		
+		
+		//calc bb
+		ret = this.getMeshBoundingBox(mesh, bmin, bmax);
+		mesh.boundmin = bmin;
+		mesh.boundmax = bmax;
+		
+		console.log(mesh);
+		return ret;
+	}
+	
 	//------------------------------------------------------------------------------
 	// MESHOBJ
 	//------------------------------------------------------------------------------
@@ -296,6 +328,11 @@ var WGLRender;
 		if(data.max) {
 			mesh.boundmax = data.max;
 			console.log(mesh.boundmax);
+		}
+		
+		if(!data.min || !data.max) {
+			console.log('WARNING : undef min max calc BB');
+			this.setupMeshBoundingBox(mesh);
 		}
 		
 		return mesh;
@@ -361,15 +398,12 @@ var WGLRender;
 			restrip        = 0,
 			restrip_offset = 0,
 			buf            = [],
+			pos            = [],
 			index          = [],
 			inum           = 0,
 			tangent        = [],
 			normal         = [],
-			position       = [],
-			reconstnoremal = [],
-			maxValue       = 9999999,
-			Bmin           = [maxValue, maxValue, maxValue],
-			Bmax           = [-maxValue,-maxValue,-maxValue];
+			reconstnoremal = [];
 
 		if (divide <= 0 || radius <= 0) {
 			console.log('Error divide or radius is less then 0\n');
@@ -454,7 +488,7 @@ var WGLRender;
 		//---------------------------------------------------------------------
 		//create triangle index buffer per vertex
 		//---------------------------------------------------------------------
-		for (i = 0; i < buf.length / 3; i = i + 2) {
+		for (i = 0; i < buf.length / 6; i = i + 2) { //2triangle push 
 			index.push(
 				restrip_offset + i,
 				restrip_offset + i + 1,
@@ -473,16 +507,11 @@ var WGLRender;
 		//reconstruct triangle and normal.
 		for (i = 0; i < index.length; i = i + 1) {
 			inum = index[i];
-			position.push(buf[inum * 3], buf[inum * 3 + 1], buf[inum * 3 + 2]);
+			pos.push(buf[inum * 3], buf[inum * 3 + 1], buf[inum * 3 + 2]);
 			reconstnoremal.push(normal[inum * 3],  normal[inum * 3 + 1], normal[inum * 3 + 2]);
 		}
-	  
-	  for (i = 0; i < position.length; i = i + 3) {
-		  GetMinMax(Bmin, Bmax, [position[i + 0], position[i + 1], position[i + 2]]);
-	  }
-		console.log('LI E:   ', Bmin, Bmax, position);
 
-		return this.createMeshObj({'pos':position, 'normal':reconstnoremal, 'min':Bmin, 'max':Bmax});
+		return this.createMeshObj({'pos':pos, 'normal':reconstnoremal});
 	};
 	//------------------------------------------------------------------------------
 	// createLineMesh (Cylinder)
@@ -528,10 +557,7 @@ var WGLRender;
 			nor            = [],
 			idx            = [],
 			position       = [],
-			normal         = [],
-			maxValue       = 9999999,
-			Bmin           = [maxValue, maxValue, maxValue],
-			Bmax           = [-maxValue,-maxValue,-maxValue];
+			normal         = [];
 
 		//---------------------------------------------------------------------
 		// Create Base Mesh
@@ -581,16 +607,7 @@ var WGLRender;
 			}
 		}
 	  
-	  //get bounding box
-	  for (i = 0; i < position.length; i = i + 3) {
-		  GetMinMax(Bmin, Bmax, [position[i + 0], position[i + 1], position[i + 2]]);
-	  	//console.log(Bmin, Bmax);
-	  }
-		
-
-		console.log('DONE : Create Mesh per Point min->',  Bmin);
-		console.log('DONE : Create Mesh per Point max->',  Bmax);
-		return this.createMeshObj({'pos':position, 'normal':normal, 'min':Bmin, 'max':Bmax});
+		return this.createMeshObj({'pos':position, 'normal':normal});
 	};
     
 	
@@ -661,7 +678,7 @@ var WGLRender;
 			PolygonNum = 0,
 			i          = 0;
 		//console.log(meshlist);
-		for(i = 0; i < meshlist.length; i++) {
+		for(i = 0; i < meshlist.length; i = i + 1) {
 			this.drawMesh(meshlist[i]);
 			VertexNum += meshlist[i].position.length / 3;
 			

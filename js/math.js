@@ -519,6 +519,19 @@ function QtnIV() {
 	};
 }
 
+
+function saturate(x)
+{
+	return ((x < 0.0 ? 0.0 : x) > 1.0 ? 1.0 : x);
+}
+	
+function smoothstep (a, b, x)
+{
+	x = saturate((x - a) / (b - a));
+	return x * x * ( 3 - 2 * x );
+}
+
+
 //http://freespace.virgin.net/hugo.elias/models/m_perlin.htm
 function CosInter(a, b, x) {
 	var ft = x * Math.PI,
@@ -534,6 +547,31 @@ function CosInter3v(a, b, x) {
 		CosInter(a[2], b[2], x)
 	];
 	return arr;
+}
+
+
+function Add(p0, p1) {
+	var ret = [];
+	ret.push(p0[0] + p1[0], p0[1] + p1[1], p0[2] + p1[2]);
+	return ret;
+}
+
+function Sub(p0, p1) {
+	var ret = [];
+	ret.push(p0[0] - p1[0], p0[1] - p1[1], p0[2] - p1[2]);
+	return ret;
+}
+
+function Mul(p0, p1) {
+	var ret = [];
+	ret.push(p0[0] * p1[0], p0[1] * p1[1], p0[2] * p1[2]);
+	return ret;
+}
+
+function Div(p0, p1) {
+	var ret = [];
+	ret.push(p0[0] / p1[0], p0[1] / p1[1], p0[2] / p1[2]);
+	return ret;
 }
 
 function Normalize(p) {
@@ -584,4 +622,50 @@ function GetMinMax(min, max, pos)
 	max[1] = Math.max(pos[1], max[1]);
 	max[2] = Math.max(pos[2], max[2]);
 }
+
+// Intersect Triagle
+function IntersectTriangle(org, dir, v0, v1, v2)
+{
+	var t     = 0,
+		u       = 0,
+		v       = 0,
+		edge1   = [],
+		edge2   = [],
+		pvec    = [],
+		det     = 0,
+		inv_det = 0,
+		tvec    = [],
+		qvec    = [],
+		EPSILON = 0.000001;
+
+	edge1 = Sub(v1, v0);
+	edge2 = Sub(v2, v0);
+	pvec  = Cross(dir, edge2);
+	det   = Dot(edge1, pvec);
+	if (det > -EPSILON && det < EPSILON)
+	{
+		return false;
+	}
+
+	inv_det = 1.0 / det;
+	tvec    = Sub(org, v0);
+	
+	u = Dot(tvec, pvec) * inv_det;
+	if (u < 0.0 || u > 1.0)
+	{
+		return false;
+	}
+
+	qvec = Cross(tvec, edge1);
+	v = Dot(dir, qvec) * inv_det;
+	
+	if (v < -0.0 || u + v > 1.0)
+	{
+		return false;
+	}
+	
+	t = Dot(edge2, qvec) * inv_det;
+	return {'t':t, 'u':u, 'v':v};
+}
+
 

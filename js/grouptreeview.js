@@ -45,7 +45,7 @@
 		}
 		return values;
 	}
-	
+
 	function createTree(elem, root) {
 		var node,
 			i,
@@ -121,7 +121,6 @@
 			});
 		}(jQuery));
 		
-		createTree(treeRootElem, datatree.getRoot());
 		//dump(datatree.getRoot());
 	}
 	

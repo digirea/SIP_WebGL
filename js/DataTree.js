@@ -5,12 +5,11 @@
 	var datatree = {};
 	var root  = [];
 
-	function addData(name, data) { //{'0':data, '1':data, '2':data, ....} //dataは列の適当な数字だったりURLだったりします
+	function addData(name, data) {
 		var dataleaf = {'name':name, 'data':data, 'child':[]};
 		root.push(dataleaf);
 	};
 
-	//nameは適当な名前(仮)index = rootのindex,   select->0, 3, 4など列の数字が入る
 	function createChild(name, index, data) {
 		var selectnode,
 			child,
@@ -25,12 +24,9 @@
 			'trans' :[0, 0, 0],
 			'scale' :[1, 1, 1],
 			'rotate':[0, 0, 0],
-			'radius':1,
-			'color' :[1, 1, 1, 1]
+			'color' :[1, 1, 1, 1],
+			'radius':1
 		};
-		//for(i = 0; i < select.length; i = i + 1) {
-		//	child.data.push(selectnode.data[[select[i]]]);
-		//}
 		selectnode.child.push(child);
 	};
 
@@ -44,7 +40,6 @@
 			selectnode;
 		for(i = 0 ; i < root.length; i = i + 1) {
 			selectnode = root[i];
-			console.log('SELECT', selectnode);
 			for(n = 0 ; n < selectnode.child.length; n = n + 1) {
 				if(selectnode.child[n].name === name) {
 					return selectnode.child[n];
@@ -60,8 +55,8 @@
 	window.datatree.getRoot     = getRoot;
 	window.datatree.getData     = getData;
 	
-	/*
 	//test data
+	/*
 	addData('test1',
 		{
 			'0':[1,2,3,4,5,63,7,8,9],

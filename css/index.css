@@ -108,6 +108,29 @@ body {
 	color:#FFF;
 }
 
+#OpenSTL {
+	/*position:absolute;
+	right:150px;
+	top:28px;*/
+	margin: 5px;
+	width: 150px;
+	height:25px;
+	background-color:#253e78;
+	color:#FFF;
+}
+
+#OpenCSV {
+	/*position:absolute;
+	right:150px;
+	top:28px;*/
+	margin: 5px;
+	width: 150px;
+	height:25px;
+	background-color:#253e08;
+	color:#FFF;
+}
+
+
 #AddGroup {
 	/*position:absolute;
 	right:150px;
@@ -153,7 +176,32 @@ body {
 	color:#FFF;
 	display: none;
 }
+
+#DeleteProperty {
+	margin: 5px;
+	width: 120px;
+	height:25px;
+	background-color:#111111;
+	color:#FFF;
+	display: none;
+}
+
+
+
+
+
 /*------------------*/
+
+.colnames { 
+	width :80px;
+	height:24px;
+}
+
+.colcheckbox {
+	width :24px;
+	height:24px;
+}
+
 
 .nodeListBox {
 	/*position:absolute;*/

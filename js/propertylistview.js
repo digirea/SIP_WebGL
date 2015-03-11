@@ -125,7 +125,7 @@
 		return itemNode;
 	}
 	
-	function apply(data) {
+	function doApply(data) {
 		var i,
 			func;
 		//console.log("Apply:", changedValueFuncs);
@@ -138,6 +138,12 @@
 		}
 		changedValueFuncs = [];
 	}
+	
+	
+	function doDelete(data) {
+		console.log(currentData)
+	}
+	
 
 	// data - name, varname, 
 	function showProperty(data) {
@@ -154,10 +160,20 @@
 			prop = document.createElement('div'),
 			itemNode,
 			inode,
-			applyButton = document.getElementById('ApplyProperty');
+			applyButton  = document.getElementById('ApplyProperty'),
+			deleteButton = document.getElementById('DeleteProperty');
 		
-		applyButton.style.display = "block";
-		applyButton.onclick = apply;
+		if (data.name !== 'root') {
+			applyButton.style.display  = "block";
+			deleteButton.style.display = "block";
+			applyButton.onclick        = doApply;
+			deleteButton.onclick       = doDelete;
+		} else {
+			applyButton.style.display  = "none";
+			deleteButton.style.display = "none";
+			applyButton.onclick        = null;
+			deleteButton.onclick       = null;
+		}
 		
 		currentData = data;
 		changedValueFuncs = []; // clear

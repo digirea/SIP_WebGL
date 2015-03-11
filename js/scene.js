@@ -12,8 +12,7 @@
 		line_shader    = null,
 		mesh_shader    = null,
 		scene          = {},
-		model_id       = 0,
-		global_time    = 0;
+		model_id       = 0;
 
 	function resetShader() {
 		mesh_shader        = render.createShaderObj('vs_mesh', 'fs_mesh');
@@ -108,10 +107,12 @@
 
 	function updateMeshText(name, pos) {
 	  var mesh = {'position':pos},
-	      linemesh,
-	      pointmesh;
+			bb,
+			linemesh,
+			pointmesh;
 		linemesh  = render.createLineMesh(mesh, 8, 0.5);
 		pointmesh = render.createPointMesh(mesh, 1.0, 16, 16);
+		console.log(linemesh.boundmin, linemesh.boundmax);
 		console.log(pointmesh.boundmin, pointmesh.boundmax);
 		linemesh.name = name + '_line';
 		pointmesh.name = name + '_ball';
@@ -123,9 +124,9 @@
 		datatree.createChild(linemesh.name, 0, linemesh);
 		datatree.createChild(pointmesh.name, 0, pointmesh);
 		window.grouptreeview.update(datatree.getRoot());
-	  //console.log(linemesh);
-		
-		//camera.setupLerp(linemesh.boundmin, linemesh.boundmax);
+		camera.setupLerp(linemesh.boundmin, linemesh.boundmax); //line
+		//bb = render.setupMeshBoundingBox(linemesh, [], []);
+		//camera.setupLerp(pointmesh.boundmin, pointmesh.boundmax);
 	}
   
   
@@ -145,25 +146,11 @@
 		var w = document.getElementById('consoleOutput').style.width = window.innerWidth + 'px';
 		render.onResize();
 	}
-
-	function startGL() {
-		console.log('startGL');
-		onResize();
+	
+	function resetTree()
+	{
 		var gridmesh     = null,
-			prevX        = 0.0,
-			prevY        = 0.0,
-			time         = 0.0,
-			rootnode     = {},
-			vpMatrix;
-
-		//-------------------------------------------------------------------
-		// resetShader
-		//-------------------------------------------------------------------
-		resetShader();
-		
-		//-------------------------------------------------------------------
-		//CreateGrid
-		//-------------------------------------------------------------------
+			rootnode     = {};
 		gridmesh = render.createGridMesh(1000, 100, 0.5);
 		gridmesh.setMode('Lines');
 		gridmesh.setShader(line_shader);
@@ -171,7 +158,21 @@
 		datatree.addData('root', ['ROOT']);
 		datatree.createChild('Grid', 0, gridmesh);
 		window.grouptreeview.update(datatree.getRoot());
+	}
+	
+	
+	function resetAll()
+	{
+		resetShader();
+		resetTree();
+	}
+
+	function startGL() {
 		
+
+		console.log('startGL');
+		onResize();
+		resetAll();
 		function updateFrame() {
 			var cw            = canvas.width,
 				ch            = canvas.height,
@@ -179,23 +180,19 @@
 				uniLocation   = [],
 				gridcolor     = [0.1, 0.1, 0.1, 1.0],
 				result        = [],
-				camZ          = 0;
+				camZ          = 0,
+				vpMatrix;
 
-			//onResize();
-			global_time = time;
 			camera.updateMatrix(wh);
 			camZ = camera.getCamPosZ();
 			if(camZ === 0) {
 				vpMatrix = camera.getViewMatrix(60, canvas.width / canvas.height, 0.1, 2560);
 			} else {
-				console.log(camZ);
+				//console.log(camZ);
 				vpMatrix = camera.getViewMatrix(60, canvas.width / canvas.height, camZ * 0.002, camZ * 4.0);
 			}
-			//render.clearColor(0.5, 0.5, 0.5, 1.0);
+
 			render.clearColor(0.1, 0.1, 0.1, 1.0);
-			//render.clearColor(0.2, 0.3, 0.5, 1.0);
-			//render.clearColor(0.01, 0.03, 0.05, 1.0);
-			//render.clearColor(1.0, 1.0, 1.0, 1.0);
 			render.clearDepth(1.0);
 			render.frontFace(true);
 			render.Depth(true);
@@ -274,22 +271,36 @@
 	
 	
 	function init() {
-		var addgroup = document.getElementById('AddGroup'),
-			 deletegroup = document.getElementById('DeleteGroup');
+		var i,
+			openstl     = document.getElementById('OpenSTL'),
+			opencsv     = document.getElementById('OpenCSV'),
+			addgroup    = document.getElementById('AddGroup'),
+			deletegroup = document.getElementById('DeleteGroup');
 		
 		
 		
-		
+		//init
 		canvas = document.getElementById('canvas');
+		
+		//init render
 		render = new WGLRender();
+		
+		//create camera 
 		camera = new Camera();
+		
+		//initialize render
 		render.init(canvas, window);
 		camera.init();
+		
+		//initialize contorller
 		window.ctrl.init(document, callbackResetView);
 		window.ctrl.setCamera(camera);
+		
+		//
 		document.getElementById('Open').addEventListener('change', loadSTL, false);
-	  
-	  addgroup.onclick = addGroup;
+
+		openstl.onclick  = loadSTL;
+		addgroup.onclick = addGroup;
 		
 		// Create Tab
 		var consoleTab = window.animtab.create('bottom', {
