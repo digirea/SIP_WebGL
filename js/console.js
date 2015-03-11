@@ -51,7 +51,7 @@
       //console.log('COLS :: ', grid.countCols());
       for(i = 0; i < grid.countCols(); i++) {
         //header.push("<input type='checkbox' id='colcheckbox" + i + "' class='columns' checked='false'>");
-        header.push("Group " + i + " " + "<input type='checkbox' id='colcheckbox" + i + "' class='colcheckbox'>");
+        header.push("<INPUT type='text' value='Group " + i + "' class='colnames' ><input type='checkbox' id='colcheckbox" + i + "' class='colcheckbox'>");
       }
       grid.updateSettings({
         colHeaders: header
