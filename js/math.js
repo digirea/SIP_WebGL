@@ -627,7 +627,6 @@ function GetMinMax(min, max, pos)
 }
 
 // Intersect Triagle
-var count = 0;
 function IntersectTriangle(org, dir, v0, v1, v2)
 {
 	var t     = 0,
@@ -670,6 +669,30 @@ function IntersectTriangle(org, dir, v0, v1, v2)
 	return {'t':t, 'u':u, 'v':v};
 }
 
+
+function IntersectSphere(org, dir, point, radius)
+{
+	var t = 0;
+		B = 0,
+		C = 0,
+		D = 0,
+		rs = [0, 0, 0];
+
+	rs[0] = org[0] - point[0];
+	rs[1] = org[1] - point[1];
+	rs[2] = org[2] - point[2];
+
+	B = Dot(rs, dir);
+	//C = Dot(rs, rs) - radius * radius;
+	C = Dot(rs, rs) - 1;
+	D = B * B - C;
+
+	if (D > 0.0) {
+		t = -B - Math.sqrt(D);
+		return {'t' : t };
+	}
+	return false;
+}
 
 	
 	//vec4 outpos = invMatrix * inpos;

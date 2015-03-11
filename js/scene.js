@@ -220,7 +220,17 @@
 			if(ishit === false) {
 				continue;
 			}
+			break;
 		}
+		/*
+		for(i = 0 ; i < triarray.length; i = i + 3) {
+			ishit = IntersectSphere(o, d, [triarray[i + 0], triarray[i + 1], triarray[i + 2] ], 1);
+			if(ishit === false) {
+				continue;
+			}
+			break;
+		}
+		*/
 		
 		return ishit;
 	}
@@ -254,12 +264,10 @@
 		UnProject(nwinpos, vpMI, viewport, org);
 		UnProject(fwinpos, vpMI, viewport, tar);
 
-		console.log('org', org, camera);
 		dir = Sub(tar, org);
 		dir = Normalize(dir);
-		//console.log(tar, dir, org);
 		
-		//mesh = render.createMeshObj({'pos' : [org[0], org[1], org[2], dir[0] * 1000, dir[1] * 1000, dir[2] * 1000]});
+		//TEST----------------------------
 		mesh = render.createMeshObj
 		(
 			{
@@ -270,6 +278,10 @@
 		mesh.setMode('Lines');
 		mesh.setShader(line_shader);
 		meshlist.push(mesh);
+		//TEST----------------------------
+		
+		
+		
 		
 		//‘“–‚½‚èBŒã‚Å•ªŠ„‚·‚é
 		for(mindex = 0 ; mindex < meshlist.length; mindex = mindex + 1) {

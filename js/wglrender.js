@@ -10,7 +10,7 @@ var WGLRender;
 		this.window = null;
 		this.canvas = null;
 		this.rAF    = null;
-		this.mtx    = new MatIV(),
+		this.mtx    = new MatIV();
 		this.vpMat  = this.mtx.identity(this.mtx.create());
 	};
 
