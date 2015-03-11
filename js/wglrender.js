@@ -443,14 +443,10 @@ var WGLRender;
 				temp[2] *= invlen;
 				
 				//normal0
-				normal.push(temp[0]);
-				normal.push(temp[1]);
-				normal.push(temp[2]);
+				normal.push(temp[0], temp[1], temp[2]);
 
 				//normal1
-				normal.push(temp[0]);
-				normal.push(temp[1]);
-				normal.push(temp[2]);
+				normal.push(temp[0], temp[1], temp[2]);
 			}
 			linenum = linenum + 1;
 		}
@@ -459,12 +455,14 @@ var WGLRender;
 		//create triangle index buffer per vertex
 		//---------------------------------------------------------------------
 		for (i = 0; i < buf.length / 3; i = i + 2) {
-			index.push(restrip_offset + i);
-			index.push(restrip_offset + i + 1);
-			index.push(restrip_offset + i + 2);
-			index.push(restrip_offset + i + 1);
-			index.push(restrip_offset + i + 3);
-			index.push(restrip_offset + i + 2);
+			index.push(
+				restrip_offset + i,
+				restrip_offset + i + 1,
+				restrip_offset + i + 2,
+				restrip_offset + i + 1,
+				restrip_offset + i + 3,
+				restrip_offset + i + 2);
+
 			restrip += 2;
 			if (restrip >= (divide * 2)) {
 				restrip_offset = restrip_offset + 2;
@@ -475,19 +473,16 @@ var WGLRender;
 		//reconstruct triangle and normal.
 		for (i = 0; i < index.length; i = i + 1) {
 			inum = index[i];
-			position.push(buf[inum * 3]);
-			position.push(buf[inum * 3 + 1]);
-			position.push(buf[inum * 3 + 2]);
-
-			reconstnoremal.push(normal[inum * 3]);
-			reconstnoremal.push(normal[inum * 3 + 1]);
-			reconstnoremal.push(normal[inum * 3 + 2]);
+			position.push(buf[inum * 3], buf[inum * 3 + 1], buf[inum * 3 + 2]);
+			reconstnoremal.push(normal[inum * 3],  normal[inum * 3 + 1], normal[inum * 3 + 2]);
 		}
 	  
 	  for (i = 0; i < position.length; i = i + 3) {
 		  GetMinMax(Bmin, Bmax, [position[i + 0], position[i + 1], position[i + 2]]);
 	  }
-		return this.createMeshObj({'pos': position, 'normal' : reconstnoremal, 'min':Bmin, 'max':Bmax});
+		console.log('LI E:   ', Bmin, Bmax, position);
+
+		return this.createMeshObj({'pos':position, 'normal':reconstnoremal, 'min':Bmin, 'max':Bmax});
 	};
 	//------------------------------------------------------------------------------
 	// createLineMesh (Cylinder)
@@ -581,12 +576,8 @@ var WGLRender;
 			//reconstruct triangle and normal.
 			for (ii = 0; ii < idx.length; ii = ii + 1) {
 				inum = idx[ii];
-				position.push(pos[inum * 3] + x0);
-				position.push(pos[inum * 3 + 1] + y0);
-				position.push(pos[inum * 3 + 2] + z0);
-				normal.push(nor[inum * 3]);
-				normal.push(nor[inum * 3 + 1]);
-				normal.push(nor[inum * 3 + 2]);
+				position.push(pos[inum * 3] + x0, pos[inum * 3 + 1] + y0, pos[inum * 3 + 2] + z0);
+				normal.push(nor[inum * 3], nor[inum * 3 + 1], nor[inum * 3 + 2]);
 			}
 		}
 	  
@@ -599,7 +590,7 @@ var WGLRender;
 
 		console.log('DONE : Create Mesh per Point min->',  Bmin);
 		console.log('DONE : Create Mesh per Point max->',  Bmax);
-		return this.createMeshObj({'pos' : position, 'normal' : normal, 'min':Bmin, 'max':Bmax});
+		return this.createMeshObj({'pos':position, 'normal':normal, 'min':Bmin, 'max':Bmax});
 	};
     
 	
@@ -629,9 +620,9 @@ var WGLRender;
 		this.mtx.scale(sMatrix,      mesh.scale, sMatrix);
 
 		//create rotate matrix
-		this.mtx.rotate(rMatrixX,    mesh.rotate[0], [1, 0, 0], rMatrixX);
-		this.mtx.rotate(rMatrixY,    mesh.rotate[1], [0, 1, 0], rMatrixY);
-		this.mtx.rotate(rMatrixZ,    mesh.rotate[2], [0, 0, 1], rMatrixZ);
+		this.mtx.rotate(rMatrixX,    (Math.PI * mesh.rotate[0]) / 180.0, [1, 0, 0], rMatrixX);
+		this.mtx.rotate(rMatrixY,    (Math.PI * mesh.rotate[1]) / 180.0, [0, 1, 0], rMatrixY);
+		this.mtx.rotate(rMatrixZ,    (Math.PI * mesh.rotate[2]) / 180.0, [0, 0, 1], rMatrixZ);
 		this.mtx.multiply(rMatrixX,  rMatrix, rMatrix);
 		this.mtx.multiply(rMatrixY,  rMatrix, rMatrix);
 		this.mtx.multiply(rMatrixZ,  rMatrix, rMatrix);
