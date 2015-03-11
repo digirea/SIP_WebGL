@@ -75,10 +75,19 @@ var Camera;
 		return this.camRot;
 	};
 
-	camera.prototype.setupLerp = function (min, max) {
+	camera.prototype.setupLerp = function (min, max, trans) {
 		var len = 0;
 		this.camWorldPosStart   = this.camWorldPos;
 		this.camWorldPosEnd     = [(max[0] + min[0]) / 2, (max[1] + min[1]) / 2, (max[2] + min[2]) / 2];
+
+		if(trans)
+		{
+			console.log('TRANS:', trans);
+			this.camWorldPosEnd[0] += parseFloat(trans[0]);
+			this.camWorldPosEnd[1] += parseFloat(trans[1]);
+			this.camWorldPosEnd[2] += parseFloat(trans[2]);
+		}
+		
 		this.camWorldPosEnd     = Negative(this.camWorldPosEnd);
 
 		this.camPosStart[0]     = this.camPos[0];

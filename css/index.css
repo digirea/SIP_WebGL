@@ -188,6 +188,16 @@ body {
 
 
 
+#AlphaValue {
+	margin: 5px;
+	width: 120px;
+	height:25px;
+	background-color:#111111;
+	color:#FFF;
+	display: none;
+	z-index: 10;
+}
+
 
 
 /*------------------*/

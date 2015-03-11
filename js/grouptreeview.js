@@ -45,23 +45,35 @@
 		}
 		return values;
 	}
-
+	
+	function focusProperty(node) {
+		propertylistview.showProperty({
+			name : node.name,
+			varname : node.name,
+			input : getPropertyValues(node)
+		});
+	}
+	
+	
+	function clickfunc(node) {
+		return function (e) {
+			e.preventDefault();
+			propertylistview.showProperty({
+				name : node.name,
+				varname : node.name,
+				input : getPropertyValues(node)
+			});
+			scene.selectTreeNode(node);
+		};
+	};
+	
 	function createTree(elem, root) {
 		var node,
 			i,
 			li,
 			ul,
-			link,
-			clickfunc = function (node) {
-				return function (e) {
-					e.preventDefault();
-					propertylistview.showProperty({
-						name : node.name,
-						varname : node.name,
-						input : getPropertyValues(node)
-					});
-				};
-			};
+			link;
+
 		
 		for (i = 0; i < root.length; i = i + 1) {
 			node = root[i];
@@ -95,7 +107,7 @@
 		}
 	}
 	
-	function update(node) {
+	function update(node, child) {
 		var elem;
 		if (!node) { return; }
 		if (node.child && node.child.length > 0) {
@@ -106,6 +118,12 @@
 			elem = treeRootElem;
 			elem.innerHTML = "";
 			createTree(treeRootElem, node);
+		}
+
+		console.log(child);
+		if(child)
+		{
+			focusProperty(child);
 		}
 	}
 	
@@ -120,8 +138,6 @@
 				});
 			});
 		}(jQuery));
-		
-		//dump(datatree.getRoot());
 	}
 	
 	init();

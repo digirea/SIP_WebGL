@@ -45,7 +45,7 @@
 		
 		function valChange(data, txt) {
 			return function (e) {
-				data.value = txt.value;
+				data.value = parseFloat(txt.value);
 				scene.updateDataTree(currentData);
 				//changedValueFuncs.push(function () {
 				//	data.value = txt.value;
@@ -106,7 +106,7 @@
 
 		function valChange(data, txt, i) {
 			return function (e) {
-					data.value[i] = txt.value;
+					data.value[i] = parseFloat(txt.value);
 					scene.updateDataTree(currentData);
 				
 				//changedValueFuncs.push(function () {
@@ -160,17 +160,20 @@
 			prop = document.createElement('div'),
 			itemNode,
 			inode,
+			alphavalue  = document.getElementById('AlphaValue'),
 			applyButton  = document.getElementById('ApplyProperty'),
 			deleteButton = document.getElementById('DeleteProperty');
 		
 		if (data.name !== 'root') {
 			applyButton.style.display  = "block";
 			deleteButton.style.display = "block";
+			//alphavalue.style.display   = "block";
 			applyButton.onclick        = doApply;
 			deleteButton.onclick       = doDelete;
 		} else {
 			applyButton.style.display  = "none";
 			deleteButton.style.display = "none";
+			//alphavalue.style.display   = "none";
 			applyButton.onclick        = null;
 			deleteButton.onclick       = null;
 		}
@@ -236,6 +239,22 @@
 		}
 	}
 	
+	/*
+	function init() {
+		(function ($) {
+			$(function () {
+				$("#tree").treeview({
+					collapsed: true,
+					animated: "fast",
+					control: "#sidetreecontrol",
+					persist: "location"
+				});
+			});
+		}(jQuery));
+	}
+	init();
+	*/
+
 	window.propertylistview = propertylist;
 	window.propertylistview.showProperty = showProperty;
 

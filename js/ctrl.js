@@ -91,7 +91,8 @@
 		}
 
 		if (mouseState.Left) {
-			camera.addRotate(-movementX * multrotate, movementY * multrotate, 0);
+			var rot = camera.addRotate(-movementX * multrotate, movementY * multrotate, 0);
+			console.log( rot[1] / 3.141592 );
 		}
 
 		if (mouseState.Center) {
@@ -136,12 +137,21 @@
 		keycallback(e);
 	}
 
-	function init(document, keycb) {
-		document.addEventListener('mouseout',  mouseOut, true);
-		document.addEventListener('mousemove', mouseMove, true);
-		document.addEventListener('mouseup',   mouseUp, true);
-		document.addEventListener('mousedown', mouseDown, true);
-		document.addEventListener('contextmenu', function (e) {
+	function init(document, canvas, keycb) {
+		//document.addEventListener('mouseout',  mouseOut, true);
+		//document.addEventListener('mousemove', mouseMove, true);
+		//document.addEventListener('mouseup',   mouseUp, true);
+		//document.addEventListener('mousedown', mouseDown, true);
+		//document.addEventListener('contextmenu', function (e) {
+		
+		canvas.addEventListener('mouseout',  mouseOut, true);
+		canvas.addEventListener('mousemove', mouseMove, true);
+		canvas.addEventListener('mouseup',   mouseUp, true);
+		canvas.addEventListener('mousedown', mouseDown, true);
+		canvas.addEventListener('contextmenu', function (e) {
+		
+		
+			
 			if (e.button === 2) {
 				e.preventDefault();
 				return false;

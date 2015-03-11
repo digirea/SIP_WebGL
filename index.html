@@ -9,6 +9,12 @@
   <link    rel="stylesheet" type="text/css" href="css/datastyle.css" media="all">
   <link    rel="stylesheet" type="text/css" href="css/handsontable.full.css" media="screen">
   <link    rel="stylesheet" type="text/css" href="css/3rd/jquery.treeview.css" media="all">
+  
+  <!--
+  <link    rel="stylesheet" type="text/css" href="css/3rd/colorpicker.css" media="screen">
+  <link    rel="stylesheet" type="text/css" href="css/3rd/layout.css" media="screen">
+  -->
+  
   <script type="text/javascript" src="./js/3rd/jquery-1.11.2.min.js"></script>
   <script type="text/javascript" src="./js/3rd/jquery.treeview.js"></script>
   <script type="text/javascript" src="./js/3rd/handsontable.full.js"></script>
@@ -89,6 +95,9 @@
 		<div id="property"       class="nodeProperty"></div>
 		<div id="ApplyProperty"  class="menuButtonClass noneselect">Apply</div>
 		<div id="DeleteProperty" class="menuButtonClass noneselect">Delete</div>
+		<div   id="ColorPicker"></div>
+		
+		<input id="AlphaValue"   class="menuButtonClass noneselect" type="range" value="10" min="10" max="320">
 	</div>
 	<div id="consoleOutput" class="consoleOutput">
 		<span id="consoleTextBlock" class="consoleTextBlock">
@@ -118,6 +127,10 @@
 </div>
   <script type="text/javascript" src="./js/propertylistview.js"></script>
   <script type="text/javascript" src="./js/grouptreeview.js"></script>
+  
+  <script type="text/javascript" src="./js/3rd/colorpicker.js"></script>
+  <script type="text/javascript" src="./js/3rd/eye.js"></script>
+ 
 </body>
 </html>
 

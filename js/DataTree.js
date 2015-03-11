@@ -28,6 +28,7 @@
 			'radius':1
 		};
 		selectnode.child.push(child);
+		return child;
 	};
 
 	function getRoot() {

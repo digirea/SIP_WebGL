@@ -13,6 +13,13 @@
 		mesh_shader    = null,
 		scene          = {},
 		model_id       = 0;
+	
+	function GetModelId()
+	{
+		var ret = model_id;
+		model_id++;
+		return ret;
+	}
 
 	function resetShader() {
 		mesh_shader        = render.createShaderObj('vs_mesh', 'fs_mesh');
@@ -65,8 +72,8 @@
 					{
 						meshlist[i].radius = data.input[k].value;
 					}
-					
 				}
+				camera.setupLerp(meshlist[i].boundmin, meshlist[i].boundmax, meshlist[i].trans);
 			}
 		}
 	}
@@ -81,6 +88,7 @@
 		var point_p   = data.pos,
 			point_n   = data.normal,
 			stlmesh   = null,
+			child,
 			linemesh  = null,
 			pointmesh = null,
 			node      = {},
@@ -88,13 +96,12 @@
 
 		console.log(data);
 		stlmesh = render.createMeshObj(data);
-		data.name = data.name + model_id;
-		model_id++;
+		data.name = data.name + GetModelId();
 		stlmesh.name = data.name;
 		stlmesh.setShader(mesh_shader);
 		meshlist.push(stlmesh);
-		datatree.createChild(data.name, 0, stlmesh);
-		window.grouptreeview.update(datatree.getRoot());
+		child = datatree.createChild(data.name, 0, stlmesh);
+		window.grouptreeview.update(datatree.getRoot(), child);
 		
 		//linemesh  = render.createLineMesh(stlmesh, 8, 0.3);
 		//pointmesh = render.createPointMesh(stlmesh, 1.0, 16, 16);  // GLdouble radius, GLint slices, GLint stacks
@@ -105,9 +112,17 @@
 		camera.setupLerp(data.min, data.max);
 	}
 
+	
+	function selectTreeNode(node) {
+		console.log(node);
+		camera.setupLerp(node.data.boundmin, node.data.boundmax, node.data.trans);
+		
+	}
+	
 	function updateMeshText(name, pos) {
 	  var mesh = {'position':pos},
 			bb,
+			child,
 			linemesh,
 			pointmesh;
 		linemesh  = render.createLineMesh(mesh, 8, 0.5);
@@ -121,12 +136,11 @@
 		pointmesh.setShader(mesh_shader);
 		meshlist.push(linemesh);
 		meshlist.push(pointmesh);
-		datatree.createChild(linemesh.name, 0, linemesh);
+		child = datatree.createChild(linemesh.name, 0, linemesh);
 		datatree.createChild(pointmesh.name, 0, pointmesh);
-		window.grouptreeview.update(datatree.getRoot());
+		window.grouptreeview.update(datatree.getRoot(), child);
+		
 		camera.setupLerp(linemesh.boundmin, linemesh.boundmax); //line
-		//bb = render.setupMeshBoundingBox(linemesh, [], []);
-		//camera.setupLerp(pointmesh.boundmin, pointmesh.boundmax);
 	}
   
   
@@ -152,6 +166,8 @@
 		var gridmesh     = null,
 			rootnode     = {};
 		gridmesh = render.createGridMesh(1000, 100, 0.5);
+		Mul(gridmesh.boundmin, [0.01, 0.01, 0.01]);
+		Mul(gridmesh.boundmax, [0.01, 0.01, 0.01]);
 		gridmesh.setMode('Lines');
 		gridmesh.setShader(line_shader);
 		meshlist.push(gridmesh);
@@ -168,8 +184,6 @@
 	}
 
 	function startGL() {
-		
-
 		console.log('startGL');
 		onResize();
 		resetAll();
@@ -217,16 +231,31 @@
 				col,
 				temp,
 				i,
-				j;
-		var hstable = document.getElementById('hstable');
-		var clonetable = hstable.getElementsByClassName('ht_clone_top');
-		var checkboxs = clonetable[0].getElementsByClassName('colcheckbox');
+				j,
+				hstable,
+				clonetable,
+				checkboxs;
+		
+		hstable = document.getElementById('hstable');
+		clonetable = hstable.getElementsByClassName('ht_clone_top');
+		if(clonetable.length <= 0)
+		{
+			console.log('Not found table. bailout.');
+			return;
+		}
+		checkboxs = clonetable[0].getElementsByClassName('colcheckbox');
 		for(i = 0 ; i < checkboxs.length; i = i + 1) {
 			var checkbox = document.getElementById('colcheckbox' + i);
 			if(checkboxs[i].checked) {
 				checklist.push(i);
 			}
 		}
+		
+		if(checklist.length <= 0) {
+			console.log('not select col. bail out');
+			return;
+		}
+
 		for(i = 0 ; i < checklist.length; i++) {
 			coldata.push(window.hstable.getCol(checklist[i]));
 		}
@@ -264,9 +293,9 @@
 		for(i = 0 ; i < checklist.length; i++) {
 			name = name + '_' + checklist[i];
 		}
+		name += '_ID' + GetModelId();
 		
 		updateMeshText(name, pos);
-		
 	}
 	
 	
@@ -276,8 +305,6 @@
 			opencsv     = document.getElementById('OpenCSV'),
 			addgroup    = document.getElementById('AddGroup'),
 			deletegroup = document.getElementById('DeleteGroup');
-		
-		
 		
 		//init
 		canvas = document.getElementById('canvas');
@@ -293,7 +320,7 @@
 		camera.init();
 		
 		//initialize contorller
-		window.ctrl.init(document, callbackResetView);
+		window.ctrl.init(document, canvas, callbackResetView);
 		window.ctrl.setCamera(camera);
 		
 		//
@@ -326,11 +353,12 @@
 		
 	}
 
-	window.onload               = init;
-	window.onresize             = onResize;
-	window.scene                = scene;
-	window.scene.updateDataTree = updateDataTree;
-	window.scene.AddRootTree    = AddRootTree;
+	window.onload                  = init;
+	window.onresize                = onResize;
+	window.scene                   = scene;
+	window.scene.updateDataTree    = updateDataTree;
+	window.scene.AddRootTree       = AddRootTree;
+	window.scene.selectTreeNode    = selectTreeNode;
 	
 
 }(window.loadSTLB));
