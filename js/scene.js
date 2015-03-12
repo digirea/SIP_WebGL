@@ -239,23 +239,23 @@
 	function Pick(win_x, win_y)
 	{
 		var mtx      = new MatIV(),
-		    vpM      = mtx.identity(mtx.create()),
-		    vpMI     = mtx.identity(mtx.create()),
-		    mcheck   = mtx.identity(mtx.create()),
-				nwinpos  = [win_x, canvas.height - win_y, 0.0],
-				fwinpos  = [win_x, canvas.height - win_y, 1.0],
-		
-				viewport = [0, 0, canvas.width, canvas.height],
-				ishit    = false,
-				org      = [0, 0, 0],
-				tar      = [0, 0, 0],
-				dir      = [0, 0, 0],
-				mindex   = 0,
-				tidx     = 0,
-				mesh     = 0,
-				testo    = [0, 0, 0],
-				testd    = [0, 0, 0],
-				linem    = [];
+			vpM      = mtx.identity(mtx.create()),
+			vpMI     = mtx.identity(mtx.create()),
+			mcheck   = mtx.identity(mtx.create()),
+			nwinpos  = [win_x, canvas.height - win_y, 0.0],
+			fwinpos  = [win_x, canvas.height - win_y, 1.0],
+			viewport = [0, 0, canvas.width, canvas.height],
+			ishit    = false,
+			org      = [0, 0, 0],
+			tar      = [0, 0, 0],
+			dir      = [0, 0, 0],
+			mindex   = 0,
+			tidx     = 0,
+			mesh     = 0,
+			t        = 10000,
+			testo    = [0, 0, 0],
+			testd    = [0, 0, 0],
+			linem    = [];
 		
 		
 		
@@ -267,22 +267,6 @@
 		dir = Sub(tar, org);
 		dir = Normalize(dir);
 		
-		//TEST----------------------------
-		mesh = render.createMeshObj
-		(
-			{
-				'pos' : [org[0], org[1], org[2], dir[0] * 1000, dir[1] * 1000, dir[2] * 1000],
-				'color' : [1,0,0,1,1,0,0,1]
-			}
-		);
-		mesh.setMode('Lines');
-		mesh.setShader(line_shader);
-		meshlist.push(mesh);
-		//TEST----------------------------
-		
-		
-		
-		
 		//ëçìñÇΩÇËÅBå„Ç≈ï™äÑÇ∑ÇÈ
 		for(mindex = 0 ; mindex < meshlist.length; mindex = mindex + 1) {
 			mesh = meshlist[mindex];
@@ -292,6 +276,26 @@
 				break;
 			}
 		}
+		
+		
+		if(ishit !== false) 
+		{
+			t = ishit.t;
+		}
+		
+		//TEST----------------------------
+		mesh = render.createMeshObj
+		(
+			{
+				'pos' : [org[0], org[1], org[2], dir[0] * t, dir[1] * t, dir[2] * t],
+				'color' : [1,0,0,1,1,0,0,1]
+			}
+		);
+		mesh.setMode('Lines');
+		mesh.setShader(line_shader);
+		mesh.hp = 60;
+		meshlist.push(mesh);
+		//TEST----------------------------
 		console.log(ishit);
 	}
 	
@@ -337,17 +341,19 @@
 	
 	function addGroup() {
 		var checklist = [],
-				coldata   = [],
-				pos       = [],
-				name      = 'Group',
-				colnum,
-				col,
-				temp,
-				i,
-				j,
-				hstable,
-				clonetable,
-				checkboxs;
+			coldata   = [],
+			pos       = [],
+			name      = '',
+			colnum,
+			col,
+			temp,
+			i,
+			j,
+			hstable,
+			clonetable,
+			checkboxs,
+			headernames;
+		
 		
 		hstable = document.getElementById('hstable');
 		clonetable = hstable.getElementsByClassName('ht_clone_top');
@@ -356,11 +362,13 @@
 			console.log('Not found table. bailout.');
 			return;
 		}
-		checkboxs = clonetable[0].getElementsByClassName('colcheckbox');
+		checkboxs   = clonetable[0].getElementsByClassName('colcheckbox');
+		headernames = clonetable[0].getElementsByClassName('colnames');
 		for(i = 0 ; i < checkboxs.length; i = i + 1) {
 			var checkbox = document.getElementById('colcheckbox' + i);
 			if(checkboxs[i].checked) {
 				checklist.push(i);
+				name += headernames[i].value;
 			}
 		}
 		

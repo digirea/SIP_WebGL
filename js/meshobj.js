@@ -5,6 +5,7 @@ var MeshObj;
 (function () {
 	"use strict";
 	var mesh = function () {
+		this.name          = 'undef';
 		this.position      = [];
 		this.normal        = [];
 		this.color         = [];
@@ -24,6 +25,7 @@ var MeshObj;
 		this.scale         = [1,1,1];
 		this.rotate        = [0,0,0];
 		this.diffColor     = [1,1,1,1];
+		this.hp            = 9999999999;
 	};
 
 	mesh.prototype.setTrans = function (x, y, z) {

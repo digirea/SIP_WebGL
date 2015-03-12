@@ -351,8 +351,8 @@ var WGLRender;
 			z;
 
 		for (i = 0; i <= divide; i = i + 1) {
-			x = Math.cos((3.1415926536 * d) / 180.0);
-			z = Math.sin((3.1415926536 * d) / 180.0);
+			x = Math.cos((Math.PI * d) / 180.0);
+			z = Math.sin((Math.PI * d) / 180.0);
 			buf.push(x);
 			buf.push(1.0);
 			buf.push(z);
@@ -676,12 +676,11 @@ var WGLRender;
 		var primnum    = 0,
 			VertexNum  = 0,
 			PolygonNum = 0,
-			i          = 0;
-		//console.log(meshlist);
-		for(i = 0; i < meshlist.length; i = i + 1) {
-			this.drawMesh(meshlist[i]);
-			VertexNum += meshlist[i].position.length / 3;
-			
+			i          = 0,
+			ref        = meshlist;
+		for(i = 0; i < ref.length; i = i + 1) {
+			this.drawMesh(ref[i]);
+			VertexNum += ref[i].position.length / 3;
 		}
 		PolygonNum = VertexNum / 3;
 		result.push({'VertexNum' : VertexNum, 'PolygonNum' : PolygonNum});
