@@ -1,6 +1,6 @@
 .proparty  {
   font-family      : "Times New Roman", Times, serif;
-  font-size        : 32px;
+  font-size        : 8px;
   position         : absolute;
   background       : rgba(0, 0, 0, 0.5);
   z-index          : 2;
@@ -211,6 +211,11 @@ body {
 	width :24px;
 	height:24px;
 }
+
+.colselectbox {
+	height:32px;
+}
+
 
 
 .nodeListBox {

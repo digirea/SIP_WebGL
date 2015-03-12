@@ -19,7 +19,7 @@ var MeshObj;
 		this.stride        = [];
 		this.shader        = null;
 		this.radius        = 1;
-		this.enable        = true;
+		this.show          = true;
 		this.boundmin      = [0,0,0];
 		this.boundmax      = [0,0,0];
 		this.trans         = [0,0,0];

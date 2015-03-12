@@ -25,7 +25,7 @@
 			'scale' :[1, 1, 1],
 			'rotate':[0, 0, 0],
 			'color' :[1, 1, 1, 1],
-			'radius':1
+			'radius':[1],
 		};
 		selectnode.child.push(child);
 		return child;

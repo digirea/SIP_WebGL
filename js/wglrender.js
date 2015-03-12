@@ -258,6 +258,19 @@ var WGLRender;
 	render.prototype.getMeshBoundingBox = function (mesh, bmin, bmax) {
 		var i;
 		for(i = 0 ; i < mesh.position.length; i = i + 3) {
+			if(mesh.position[i + 0] !== mesh.position[i + 0])
+			{
+				console.log("NAN:", i);
+			}
+			if(mesh.position[i + 1] !== mesh.position[i + 1])
+			{
+				console.log("NAN:", i);
+			}
+			if(mesh.position[i + 2] !== mesh.position[i + 2])
+			{
+				console.log("NAN:", i);
+			}
+			
 			GetMinMax(bmin, bmax, [mesh.position[i + 0], mesh.position[i + 1], mesh.position[i + 2]]);
 		}
 		console.log('BB:', bmin, bmax);
@@ -506,6 +519,9 @@ var WGLRender;
 	render.prototype.createPointMesh = function (base, rad, slices, stacks) {
 		var i,
 			ii,
+			px,
+			py,
+			pz,
 			tr,
 			tx,
 			ty,
@@ -571,7 +587,14 @@ var WGLRender;
 			//reconstruct triangle and normal.
 			for (ii = 0; ii < idx.length; ii = ii + 1) {
 				inum = idx[ii];
-				position.push(pos[inum * 3] + x0, pos[inum * 3 + 1] + y0, pos[inum * 3 + 2] + z0);
+				px = pos[inum * 3 + 0] + x0;
+				py = pos[inum * 3 + 1] + y0;
+				pz = pos[inum * 3 + 2] + z0;
+				if(px !== px) px = 0;
+				if(py !== py) py = 0;
+				if(pz !== pz) pz = 0;
+				
+				position.push(px, py, pz);
 				normal.push(nor[inum * 3], nor[inum * 3 + 1], nor[inum * 3 + 2]);
 			}
 		}
@@ -651,8 +674,10 @@ var WGLRender;
 			i          = 0,
 			ref        = meshlist;
 		for(i = 0; i < ref.length; i = i + 1) {
-			this.drawMesh(ref[i]);
-			VertexNum += ref[i].position.length / 3;
+			if(ref[i].show == true) {
+				this.drawMesh(ref[i]);
+				VertexNum += ref[i].position.length / 3;
+			}
 		}
 		PolygonNum = VertexNum / 3;
 		result.push({'VertexNum' : VertexNum, 'PolygonNum' : PolygonNum});

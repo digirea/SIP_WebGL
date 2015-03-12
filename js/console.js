@@ -58,6 +58,7 @@
 				headerhtml = '';
 				headerhtml += '<INPUT type="text" value="Group ' + i + '"class="colnames">';
 				headerhtml += '<SELECT name="ATTR" class="colselectbox">';
+				headerhtml += '<OPTION value="NONE">NONE</OPTION>';
 				headerhtml += '<OPTION value="X">X</OPTION>';
 				headerhtml += '<OPTION value="Y">Y</OPTION>';
 				headerhtml += '<OPTION value="Z">Z</OPTION>';
@@ -65,7 +66,7 @@
 				headerhtml += '<OPTION value="INDEX">INDEX</OPTION>';
 				headerhtml += '<OPTION value="URL">URL</OPTION>';
 				headerhtml += '</SELECT>';
-				headerhtml += '<INPUT type="checkbox" id="colcheckbox"' + i + ' class="colcheckbox">';
+				//headerhtml += '<INPUT type="checkbox" id="colcheckbox"' + i + ' class="colcheckbox">';
 				header.push(headerhtml);
 			}
 			grid.updateSettings({

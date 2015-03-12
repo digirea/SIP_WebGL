@@ -45,11 +45,14 @@
 		
 		function valChange(data, txt) {
 			return function (e) {
-				data.value = parseFloat(txt.value);
+				console.log(data);
+				data.value = txt.value;
 				scene.updateDataTree(currentData);
-				//changedValueFuncs.push(function () {
-				//	data.value = parseFloat(txt.value);
-				//});
+				/*
+				changedValueFuncs.push(function () {
+
+				});
+				*/
 			};
 		}
 		
@@ -86,8 +89,8 @@
 						}
 					}
 					//updateNode();
+					scene.updateDataTree(currentData);
 				}
-				scene.updateDataTree(currentData);
 			};
 		}(node, textNode)));
 		return itemNode;
@@ -106,11 +109,14 @@
 
 		function valChange(data, txt, i) {
 			return function (e) {
-				data.value[i] = parseFloat(txt.value);
+				console.log(data, i, txt.value);
+				data.value[i] = txt.value;
 				scene.updateDataTree(currentData);
-				
-				//changedValueFuncs.push(function () {
-				//});
+				/*
+				changedValueFuncs.push(function () {
+
+				});
+				*/
 			};
 		}
 		
@@ -194,7 +200,7 @@
 		
 		function addArrayItem(inode, n) {
 			var itemNode;
-			if (inode.type === 'string' || inode.type === 'float') {
+			if (inode.type === 'string') {
 				itemNode = makeItemTextNode('', inode.array[n], inode);
 			} else if (inode.type === 'vec4') {
 				itemNode = makeItemVecNode('', inode.array[n], inode, 4);
@@ -202,6 +208,8 @@
 				itemNode = makeItemVecNode('', inode.array[n], inode, 3);
 			} else if (inode.type === 'vec2') {
 				itemNode = makeItemVecNode('', inode.array[n], inode, 2);
+			} else if (inode.type === 'float') {
+				itemNode = makeItemVecNode('', inode.array[n], inode, 1);
 			} else {
 				itemNode = makeItemNode('', '(Object)');
 			}
@@ -209,7 +217,7 @@
 		}
 		function addItems(inode) {
 			var itemNode;
-			if (inode.type === 'string' || inode.type === 'float') {
+			if (inode.type === 'string') {
 				itemNode = makeItemTextNode(inode.name, inode.value, inode);
 			} else if (inode.type === 'vec4') {
 				itemNode = makeItemVecNode(inode.name, inode.value, inode, 4);
@@ -217,6 +225,8 @@
 				itemNode = makeItemVecNode(inode.name, inode.value, inode, 3);
 			} else if (inode.type === 'vec2') {
 				itemNode = makeItemVecNode(inode.name, inode.value, inode, 2);
+			} else if (inode.type === 'float') {
+				itemNode = makeItemVecNode(inode.name, inode.value, inode, 1);
 			} else {
 				itemNode = makeItemNode(inode.name, '(Object)');
 			}

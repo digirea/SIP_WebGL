@@ -47,7 +47,7 @@
 		var i;
 		var k;
 		for(i = 0; i < meshlist.length; i = i + 1) {
-			console.log(meshlist[i].name, data);
+			//console.log(meshlist[i].name, data);
 			
 			if(meshlist[i].name === data.name) {
 				console.log(data);
@@ -70,7 +70,7 @@
 					}
 					if(data.input[k].name === 'radius')
 					{
-						meshlist[i].radius = data.input[k].value;
+						meshlist[i].radius = parseFloat(data.input[k].value);
 					}
 				}
 				camera.setupLerp(meshlist[i].boundmin, meshlist[i].boundmax, meshlist[i].trans);
@@ -108,10 +108,13 @@
 	}
 
 	
-	function selectTreeNode(node) {
-		console.log(node);
-		camera.setupLerp(node.data.boundmin, node.data.boundmax, node.data.trans);
-		
+	function selectTreeNode(node, checkbox) {
+		if(checkbox) {
+			node.data.show = checkbox.checked;
+		} else {
+			console.log(node.data.boundmin, node.data.boundmax);
+			camera.setupLerp(node.data.boundmin, node.data.boundmax, node.data.trans);
+		}
 	}
 	
 	function updateMeshText(name, pos) {
@@ -121,7 +124,7 @@
 			linemesh,
 			pointmesh;
 		linemesh  = render.createLineMesh(mesh, 8, 0.5);
-		pointmesh = render.createPointMesh(mesh, 1.0, 8, 8);
+		pointmesh = render.createPointMesh(mesh, 1.0, 8, 4);
 		console.log(linemesh.boundmin, linemesh.boundmax);
 		console.log(pointmesh.boundmin, pointmesh.boundmax);
 		linemesh.name = name + '_LINE';
@@ -129,7 +132,7 @@
 		
 		linemesh.setShader(mesh_shader);
 		pointmesh.setShader(mesh_shader);
-		//meshlist.push(linemesh);
+		meshlist.push(linemesh);
 		meshlist.push(pointmesh);
 		child = datatree.createChild(linemesh.name, 0, linemesh);
 		datatree.createChild(pointmesh.name, 0, pointmesh);
@@ -200,7 +203,7 @@
 			t        = 9999999.0,
 			index    = 0,
 			hit      = false;
-		console.log('ray parameter :', o, d);
+		//console.log('ray parameter :', o, d);
 
 		/*
 		for(i = 0 ; i < triarray.length; i = i + 9) {
@@ -320,8 +323,23 @@
 				mesh.pointposition[info.index + 0],
 				mesh.pointposition[info.index + 1],
 				mesh.pointposition[info.index + 2]);
-			console.log(resultpos, info);
 			info.index /= 3;
+			console.log(resultpos, info);
+			/*
+			{
+				var popup = document.createElement('div');
+				//popup.style.position = 'fixed';
+				popup.style.position = 'absolute';
+				popup.style.left   = win_x + 'px';
+				popup.style.top    = win_y + 'px';
+				popup.style.right  = '100px';
+				popup.style.bottom = '100px';
+				popup.style.color = "blue"
+				popup.style.zIndex = '10';
+				popup.innerHTML = info.position;
+				canvas.appendChild(popup);
+			}
+			*/
 		}
 	}
 	
@@ -341,9 +359,7 @@
 			gridcolor     = [0.1, 0.1, 0.1, 1.0],
 			result        = [],
 			vpMatrix;
-
 		camera.updateMatrix(wh);
-
 		render.clearColor(0.1, 0.1, 0.1, 1.0);
 		render.clearDepth(1.0);
 		render.frontFace(true);
@@ -352,10 +368,8 @@
 		vpMatrix = GetViewProjMatrix();
 		render.setViewProjection(vpMatrix);
 		render.drawMeshList(meshlist, result);
-		
 		updateInfo(result[0].VertexNum, result[0].PolygonNum);
 		render.swapBuffer()(updateFrame);
-		
 	}
 
 	function startGL() {
@@ -376,18 +390,22 @@
 	}
 
 	function addGroup() {
-		var checklist = [],
+		var colinfo   = [],
+			colaxis   = [],
 			coldata   = [],
 			pos       = [],
+			vtemp     = [],
 			name      = '',
 			colnum,
 			col,
+			coltemp,
 			temp,
 			i,
 			j,
+			attr,
 			hstable,
 			clonetable,
-			checkboxs,
+			selectnames,
 			headernames;
 		
 		
@@ -400,57 +418,59 @@
 		}
 		
 		//check hstable header
-		checkboxs   = clonetable[0].getElementsByClassName('colcheckbox');
 		headernames = clonetable[0].getElementsByClassName('colnames');
+		selectnames = clonetable[0].getElementsByClassName('colselectbox');
+		//console.log(selectnames);
+		for(i = 0 ; i < selectnames.length; i = i + 1) {
+			
+			console.log(selectnames[i].value);
+			if(selectnames[i].value === 'X') {
+				colinfo.push({'index':i, 'attr':0});
+			}
+			if(selectnames[i].value === 'Y') {
+				colinfo.push({'index':i, 'attr':1});
+			}
+			if(selectnames[i].value === 'Z') {
+				colinfo.push({'index':i, 'attr':2});
+			}
+		}
+		
+		/*
 		for(i = 0 ; i < checkboxs.length; i = i + 1) {
 			var checkbox = document.getElementById('colcheckbox' + i);
-			if(checkboxs[i].checked) {
+			if(selectnames[i].) {
 				checklist.push(i);
 				name += headernames[i].value + '_';
 			}
 		}
+		*/
+		console.log(colinfo);
 		
-		if(checklist.length <= 0) {
+		if(colinfo.length <= 0) {
 			console.log('not select col. bail out');
 			return;
 		}
 
-		for(i = 0 ; i < checklist.length; i++) {
-			coldata.push(window.hstable.getCol(checklist[i]));
-		}
-		
-		console.log(coldata);
-		colnum = coldata.length;
-		if(colnum >= 3)
-		{
-			colnum = 3;
-		}
-		
-		for(j = 0 ; j < colnum; j = j + 1) {
-			col = coldata[j];
-			for(i = 0 ; i < col.length - 1; i = i + 1) {
-				pos[i * 3 + j] = parseFloat(col[i]);
+		for(i = 0 ; i < colinfo.length; i = i + 1) {
+			attr    = colinfo[i].attr;
+			col     = window.hstable.getCol(colinfo[i].index);
+			if(attr === 0 || attr === 1 || attr === 2) {
+				for(j = 0 ; j < col.length - 1; j = j + 1) {
+					pos[j * 3 + attr] = parseFloat(col[j]);
+				}
+				continue;
 			}
 		}
+		for(j = 0 ; j < pos.length; j = j + 1) {
+			if(pos[j] === undefined) {
+				pos[j] = 0;
+			}
+		}
+		console.log(pos);
 
-		if(colnum == 2) {
-			for(i = 0 ; i < col.length - 1; i = i + 1) {
-				temp = pos[i * 3 + 1];
-				pos[i * 3 + 1] = 0;
-				pos[i * 3 + 2] = temp;
-			}
-		}
-
-		if(colnum == 1) {
-			for(i = 0 ; i < col.length - 1; i = i + 1) {
-				pos[i * 3 + 1] = 0.0;
-				pos[i * 3 + 2] = 0.0;
-			}
-		}
-		
 		//Create Name
 		name += 'ID' + GetModelId();
-		
+		console.log(pos);
 		updateMeshText(name, pos);
 	}
 	

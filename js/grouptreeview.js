@@ -12,7 +12,8 @@
 			rotate = {},
 			scale  = {},
 			radius = {},
-			color  = {};
+			color  = {},
+			show   = {};
 		if (node.trans) {
 			trans.name = "trans";
 			trans.type = "vec3";
@@ -66,12 +67,26 @@
 			scene.selectTreeNode(node);
 		};
 	};
-	
+	function checkboxfunc(node, box) {
+		return function (e) {
+			//e.preventDefault();
+			/*
+			propertylistview.showProperty({
+				name : node.name,
+				varname : node.name,
+				input : getPropertyValues(node)
+			});
+			*/
+			//console.log(box.checked);
+			scene.selectTreeNode(node, box);
+		};
+	};
 	function createTree(elem, root) {
 		var node,
 			i,
 			li,
 			ul,
+			box,
 			link;
 
 		
@@ -83,9 +98,19 @@
 			link.href = "#" + node.name;
 			link.onclick = (clickfunc(node));
 			link.innerHTML = node.name;
-			elem.appendChild(li);
 			li.appendChild(link);
-			
+			elem.appendChild(li);
+
+			box = document.createElement("input");
+			box.type = "checkbox";
+			box.name = "name";
+			box.value = "value";
+			box.id = "id";
+			box.setAttribute('checked', 'checked');
+			box.onclick = (checkboxfunc(node, box));
+
+			li.appendChild(box);
+
 			if (node.child && node.child.length > 0) {
 				ul = document.createElement("ul");
 				li.appendChild(ul);
