@@ -279,7 +279,7 @@
 		if(meshlist.length <= 0) return;
 		for(mindex = 0 ; mindex < meshlist.length; mindex = mindex + 1) {
 			mesh = meshlist[mindex];
-			if(mesh.mode === 'Triangles') {
+			if(mesh.mode === 'Triangles' && mesh.show === true) {
 				ishit = IsHitMesh(org, dir, mesh);
 				if(ishit === false) continue;
 				if(ishit.t < info.t) {
