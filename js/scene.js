@@ -368,7 +368,7 @@
 			var checkbox = document.getElementById('colcheckbox' + i);
 			if(checkboxs[i].checked) {
 				checklist.push(i);
-				name += headernames[i].value;
+				name += headernames[i].value + '_';
 			}
 		}
 		
@@ -411,9 +411,6 @@
 		}
 		
 		//Create Name
-		for(i = 0 ; i < checklist.length; i++) {
-			name = name + '_' + checklist[i];
-		}
 		name += '_ID' + GetModelId();
 		
 		updateMeshText(name, pos);

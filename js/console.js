@@ -29,8 +29,12 @@
   }
 
   function handleReadText(evt) {
+    
     var files = evt.target.files;
     var reader = new FileReader();
+    if (evt === '') {
+      return;
+    }
     reader.onloadend = (function(e) {
       var csvArray = csv2Array(e.target.result);
       var style = tbl.style;
@@ -62,6 +66,7 @@
       tbl.style.zIndex = "5";
       scene.AddRootTree({'name':filename});
       filename = '';
+      document.getElementById('OpenText').value = ''; // clear filename
     });
     filename = files[0].name;
     reader.readAsText(files[0], "UTF-8");
