@@ -83,7 +83,9 @@
 		datatree.addData(data.name, data.name);
 		window.grouptreeview.update(datatree.getRoot());
 	}
-	
+
+	/// updateMesh  call back function for loadSTL
+	/// @param data STL data, pos, normal...
 	function updateMesh(data) {
 		var point_p   = data.pos,
 			point_n   = data.normal,
@@ -102,13 +104,6 @@
 		meshlist.push(stlmesh);
 		child = datatree.createChild(data.name, 0, stlmesh);
 		window.grouptreeview.update(datatree.getRoot(), child);
-		
-		//linemesh  = render.createLineMesh(stlmesh, 8, 0.3);
-		//pointmesh = render.createPointMesh(stlmesh, 1.0, 16, 16);  // GLdouble radius, GLint slices, GLint stacks
-		//length = Distance(data.max, data.min);
-		//window.ctrl.setMoveMult(length * 0.001, length * 0.001, 1.0, length * 0.001);
-		//Lerp Start : todo on off
-		
 		camera.setupLerp(data.min, data.max);
 	}
 
@@ -126,21 +121,20 @@
 			linemesh,
 			pointmesh;
 		linemesh  = render.createLineMesh(mesh, 8, 0.5);
-		pointmesh = render.createPointMesh(mesh, 1.0, 16, 16);
+		pointmesh = render.createPointMesh(mesh, 1.0, 8, 8);
 		console.log(linemesh.boundmin, linemesh.boundmax);
 		console.log(pointmesh.boundmin, pointmesh.boundmax);
-		linemesh.name = name + '_line';
-		pointmesh.name = name + '_ball';
+		linemesh.name = name + '_LINE';
+		pointmesh.name = name + '_SPHERE';
 		
 		linemesh.setShader(mesh_shader);
 		pointmesh.setShader(mesh_shader);
-		meshlist.push(linemesh);
+		//meshlist.push(linemesh);
 		meshlist.push(pointmesh);
 		child = datatree.createChild(linemesh.name, 0, linemesh);
 		datatree.createChild(pointmesh.name, 0, pointmesh);
 		window.grouptreeview.update(datatree.getRoot(), child);
-		
-		camera.setupLerp(linemesh.boundmin, linemesh.boundmax); //line
+		camera.setupLerp(linemesh.boundmin, linemesh.boundmax);
 	}
   
   
@@ -150,13 +144,13 @@
 		}
 		loadSTLB.openBinary(evt, function (data) {
 			updateMesh(data);
-			document.getElementById('Open').value = ''; // clear filename
+			document.getElementById('Open').value = '';
 		});
 	}
 
 	function onResize() {
 	  var i;
-		document.getElementById('Open').value = ''; // clear filename
+		document.getElementById('Open').value = '';
 		var w = document.getElementById('consoleOutput').style.width = window.innerWidth + 'px';
 		render.onResize();
 	}
@@ -189,20 +183,26 @@
 			vpMatrix;
 		camZ = camera.getCamPosZ();
 		if(camZ === 0) {
-			vpMatrix = camera.getViewMatrix(60, canvas.width / canvas.height, 0.1, 2560);
+			vpMatrix = camera.getViewMatrix(90, canvas.width / canvas.height, 0.1, 2560);
 		} else {
-			vpMatrix = camera.getViewMatrix(60, canvas.width / canvas.height, camZ * 0.002, camZ * 4.0);
+			vpMatrix = camera.getViewMatrix(90, canvas.width / canvas.height, camZ * 0.002, camZ * 4.0);
 		}
 		return vpMatrix;
 	}
 	
-	function IsHitMesh(o, d, triarray)
+	function IsHitMesh(o, d, mesh)
 	{
 		var i,
 			ishit = false,
-			pos;
+			pos,
+			triarray = mesh.pointposition,
+			radius   = mesh.radius,
+			t        = 9999999.0,
+			index    = 0,
+			hit      = false;
 		console.log('ray parameter :', o, d);
 
+		/*
 		for(i = 0 ; i < triarray.length; i = i + 9) {
 			ishit = IntersectTriangle(
 				o,
@@ -222,17 +222,20 @@
 			}
 			break;
 		}
-		/*
+		*/
 		for(i = 0 ; i < triarray.length; i = i + 3) {
-			ishit = IntersectSphere(o, d, [triarray[i + 0], triarray[i + 1], triarray[i + 2] ], 1);
+			ishit = IntersectSphere(o, d, [triarray[i + 0], triarray[i + 1], triarray[i + 2] ], radius);
 			if(ishit === false) {
 				continue;
 			}
-			break;
+			hit = true;
+			if(t > ishit.t) {
+				t = ishit.t;
+				index = i;
+			}
 		}
-		*/
 		
-		return ishit;
+		return {'hit':hit, 't':t, 'index':index};
 	}
 	
 	
@@ -252,9 +255,11 @@
 			mindex   = 0,
 			tidx     = 0,
 			mesh     = 0,
-			t        = 10000,
+			hitmesh  = -1,
+			info     = {'hit':false,'t':9999999, 'index':-1},
 			testo    = [0, 0, 0],
 			testd    = [0, 0, 0],
+			resultpos= [9999999, 9999999, 9999999],
 			linem    = [];
 		
 		
@@ -268,35 +273,56 @@
 		dir = Normalize(dir);
 		
 		//ëçìñÇΩÇËÅBå„Ç≈ï™äÑÇ∑ÇÈ
+		if(meshlist.length <= 0) return;
 		for(mindex = 0 ; mindex < meshlist.length; mindex = mindex + 1) {
 			mesh = meshlist[mindex];
 			if(mesh.mode === 'Triangles') {
-				ishit = IsHitMesh(org, dir, mesh.position);
+				ishit = IsHitMesh(org, dir, mesh);
 				if(ishit === false) continue;
-				break;
+				if(ishit.t < info.t) {
+					info = ishit;
+					hitmesh = mindex;
+				}
 			}
 		}
-		
-		
-		if(ishit !== false) 
-		{
-			t = ishit.t;
+		if(hitmesh >= 0) {
+			console.log('PROC HIT MESH', hitmesh, info.index);
+			resultpos[0] = meshlist[hitmesh].position[info.index + 0];
+			resultpos[1] = meshlist[hitmesh].position[info.index + 1];
+			resultpos[2] = meshlist[hitmesh].position[info.index + 2];
+		} else {
+			console.log('ATATORAN');
 		}
 		
-		//TEST----------------------------
-		mesh = render.createMeshObj
-		(
-			{
-				'pos' : [org[0], org[1], org[2], dir[0] * t, dir[1] * t, dir[2] * t],
-				'color' : [1,0,0,1,1,0,0,1]
-			}
-		);
-		mesh.setMode('Lines');
-		mesh.setShader(line_shader);
-		mesh.hp = 60;
-		meshlist.push(mesh);
-		//TEST----------------------------
-		console.log(ishit);
+		if(hitmesh >= 0) {
+			//RAY TEST----------------------------
+			mesh = render.createMeshObj
+			(
+				{
+					'pos' : [
+					org[0],
+					org[1],
+					org[2],
+					org[0] + dir[0] * ishit.t,
+					org[1] + dir[1] * ishit.t,
+					org[2] + dir[2] * ishit.t],
+					'color' : [1,0,0,1,1,0,0,1]
+				}
+			);
+			mesh.setMode('Lines');
+			mesh.setShader(line_shader);
+			meshlist.push(mesh);
+			//TEST----------------------------
+			
+			mesh = meshlist[hitmesh];
+			info.position = [];
+			info.position.push(
+				mesh.pointposition[info.index + 0],
+				mesh.pointposition[info.index + 1],
+				mesh.pointposition[info.index + 2]);
+			console.log(resultpos, info);
+			info.index /= 3;
+		}
 	}
 	
 	
@@ -307,38 +333,48 @@
 	}
 	
 
+	function updateFrame() {
+		var cw            = canvas.width,
+			ch            = canvas.height,
+			wh            = 1 / Math.sqrt(cw * cw + ch * ch),
+			uniLocation   = [],
+			gridcolor     = [0.1, 0.1, 0.1, 1.0],
+			result        = [],
+			vpMatrix;
+
+		camera.updateMatrix(wh);
+
+		render.clearColor(0.1, 0.1, 0.1, 1.0);
+		render.clearDepth(1.0);
+		render.frontFace(true);
+		render.Depth(true);
+		render.Blend(true);
+		vpMatrix = GetViewProjMatrix();
+		render.setViewProjection(vpMatrix);
+		render.drawMeshList(meshlist, result);
+		
+		updateInfo(result[0].VertexNum, result[0].PolygonNum);
+		render.swapBuffer()(updateFrame);
+		
+	}
+
 	function startGL() {
 		console.log('startGL');
 		onResize();
 		resetAll();
-		function updateFrame() {
-			var cw            = canvas.width,
-				ch            = canvas.height,
-				wh            = 1 / Math.sqrt(cw * cw + ch * ch),
-				uniLocation   = [],
-				gridcolor     = [0.1, 0.1, 0.1, 1.0],
-				result        = [],
-				vpMatrix;
 
-			camera.updateMatrix(wh);
-
-			render.clearColor(0.1, 0.1, 0.1, 1.0);
-			render.clearDepth(1.0);
-			render.frontFace(true);
-			render.Depth(true);
-			render.Blend(true);
-			vpMatrix = GetViewProjMatrix();
-			render.setViewProjection(vpMatrix);
-			render.drawMeshList(meshlist, result);
-			
-			updateInfo(result[0].VertexNum, result[0].PolygonNum);
-			
-			render.swapBuffer()(updateFrame);
-		}
 		updateFrame();
 	}
 	
-	
+	function KickDogFrame() {
+		//document.getElementById('progress').innerHTML = "updata
+	}
+
+	function KickDog()
+	{
+		render.swapBuffer()(KickDogFrame);
+	}
+
 	function addGroup() {
 		var checklist = [],
 			coldata   = [],
@@ -362,6 +398,8 @@
 			console.log('Not found table. bailout.');
 			return;
 		}
+		
+		//check hstable header
 		checkboxs   = clonetable[0].getElementsByClassName('colcheckbox');
 		headernames = clonetable[0].getElementsByClassName('colnames');
 		for(i = 0 ; i < checkboxs.length; i = i + 1) {
@@ -411,7 +449,7 @@
 		}
 		
 		//Create Name
-		name += '_ID' + GetModelId();
+		name += 'ID' + GetModelId();
 		
 		updateMeshText(name, pos);
 	}
@@ -478,6 +516,7 @@
 	window.scene.updateDataTree    = updateDataTree;
 	window.scene.AddRootTree       = AddRootTree;
 	window.scene.selectTreeNode    = selectTreeNode;
+	window.scene.KickDog           = KickDog;
 	
 
 }(window.loadSTLB));

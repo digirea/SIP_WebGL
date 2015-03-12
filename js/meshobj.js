@@ -19,13 +19,19 @@ var MeshObj;
 		this.stride        = [];
 		this.shader        = null;
 		this.radius        = 1;
+		this.enable        = true;
 		this.boundmin      = [0,0,0];
 		this.boundmax      = [0,0,0];
 		this.trans         = [0,0,0];
 		this.scale         = [1,1,1];
 		this.rotate        = [0,0,0];
 		this.diffColor     = [1,1,1,1];
-		this.hp            = 9999999999;
+		
+		//for raytrace
+		this.pointposition = [];
+		
+		//for info
+		this.urllist       = [];
 	};
 
 	mesh.prototype.setTrans = function (x, y, z) {

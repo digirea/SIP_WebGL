@@ -82,7 +82,6 @@ var Camera;
 
 		if(trans)
 		{
-			console.log('TRANS:', trans);
 			this.camWorldPosEnd[0] += parseFloat(trans[0]);
 			this.camWorldPosEnd[1] += parseFloat(trans[1]);
 			this.camWorldPosEnd[2] += parseFloat(trans[2]);
@@ -98,7 +97,7 @@ var Camera;
 		this.camAtStart[1]      = this.camAt[1];
 		this.camAtStart[2]      = this.camAt[2];
 		
-		this.camPosEnd[2]       = -Distance(max, min) * 1.2;
+		this.camPosEnd[2]       = -Distance(max, min);
 		this.lerpTime           = 0;
 		this.lerpTimeDelta      = 1.0 / 30.0;
 		this.lerpState          = true;

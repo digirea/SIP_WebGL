@@ -48,7 +48,7 @@
 				data.value = parseFloat(txt.value);
 				scene.updateDataTree(currentData);
 				//changedValueFuncs.push(function () {
-				//	data.value = txt.value;
+				//	data.value = parseFloat(txt.value);
 				//});
 			};
 		}
@@ -106,8 +106,8 @@
 
 		function valChange(data, txt, i) {
 			return function (e) {
-					data.value[i] = parseFloat(txt.value);
-					scene.updateDataTree(currentData);
+				data.value[i] = parseFloat(txt.value);
+				scene.updateDataTree(currentData);
 				
 				//changedValueFuncs.push(function () {
 				//});

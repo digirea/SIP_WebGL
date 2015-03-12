@@ -672,25 +672,44 @@ function IntersectTriangle(org, dir, v0, v1, v2)
 
 function IntersectSphere(org, dir, point, radius)
 {
+	//https://code.google.com/p/aobench/
 	var t = 0;
 		B = 0,
 		C = 0,
 		D = 0,
 		rs = [0, 0, 0];
-
-	rs[0] = org[0] - point[0];
-	rs[1] = org[1] - point[1];
-	rs[2] = org[2] - point[2];
-
+	rs = Sub(org, point);
 	B = Dot(rs, dir);
-	//C = Dot(rs, rs) - radius * radius;
-	C = Dot(rs, rs) - 1;
+	C = Dot(rs, rs) - radius * radius;
 	D = B * B - C;
-
 	if (D > 0.0) {
 		t = -B - Math.sqrt(D);
-		return {'t' : t };
+		if(t > 0) {
+			return {'t' : t };
+		}
 	}
+	/*
+	var temp  = Sub(org, point),
+		a,
+		b,
+		c,
+		d,
+		t = 999999.0;
+	a = Dot(dir, dir);
+	b = 2.0 * Dot(dir, temp);
+	c = Dot(temp, temp) - radius * radius;
+	d = b * b - 4 * a * c;
+	if(d > 0) {
+		t = (-b - d) / (2 * a);
+		if(t > 0) {
+			return {'t' : t };
+		}
+	}
+	*/
+	
+	
+	
+	
 	return false;
 }
 
@@ -698,15 +717,6 @@ function IntersectSphere(org, dir, point, radius)
 	//vec4 outpos = invMatrix * inpos;
 function MultMatrixVec4(a, b)
 {
-	/*
-	var ret = 
-		[a.m[0][0] * b.x + a.m[1][0] * b.y + a.m[2][0] * b.z + a.m[3][0] * b.w,
-		 a.m[0][1] * b.x + a.m[1][1] * b.y + a.m[2][1] * b.z + a.m[3][1] * b.w,
-		 a.m[0][2] * b.x + a.m[1][2] * b.y + a.m[2][2] * b.z + a.m[3][2] * b.w,
-		 a.m[0][3] * b.x + a.m[1][3] * b.y + a.m[2][3] * b.z + a.m[3][3] * b.w];
-	*/
-	
-	
 	var ret = 
 		[a[0] * b[0] + a[4 + 0] * b[1] + a[8 + 0] * b[2] + a[12 + 0] * b[3],
 		 a[1] * b[0] + a[4 + 1] * b[1] + a[8 + 1] * b[2] + a[12 + 1] * b[3],
@@ -716,6 +726,7 @@ function MultMatrixVec4(a, b)
 	
 }
 
+//https://github.com/g-truc/glm/blob/88f4a5ed827c316b5f6179bc51193a874a3a96ee/glm/gtc/matrix_transform.inl#L423
 function UnProject(winpos,
 					invMatrix,
 					viewport,
@@ -743,6 +754,5 @@ function UnProject(winpos,
 	ray[0] = outpos[0] / outpos[3];
 	ray[1] = outpos[1] / outpos[3];
 	ray[2] = outpos[2] / outpos[3];
-	//console.log(ray);
 }
 

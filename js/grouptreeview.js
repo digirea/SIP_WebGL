@@ -120,7 +120,6 @@
 			createTree(treeRootElem, node);
 		}
 
-		console.log(child);
 		if(child)
 		{
 			focusProperty(child);

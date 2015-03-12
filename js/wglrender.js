@@ -76,13 +76,10 @@ var WGLRender;
 	
 	render.prototype.Blend = function (enable) {
 		if (enable === true) {
-			//this.gl.enable(this.gl.DEPTH_TEST);
 			this.gl.depthFunc(this.gl.LEQUAL);
-			//this.gl.disable(this.gl.BLEND);
-			this.gl.enable(this.gl.BLEND);
 			this.gl.blendFuncSeparate(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA, this.gl.ONE, this.gl.ONE);
-			//this.gl.blendFuncSeparate(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA, this.gl.ONE, this.gl.ONE);
 			this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
+			this.gl.enable(this.gl.BLEND);
 		} else {
 			this.gl.disable(this.gl.BLEND);
 		}
@@ -114,7 +111,6 @@ var WGLRender;
 
 	render.prototype.createShaderById = function (id) {
 		var ele = document.getElementById(id);
-		//console.log(id, ele.type, ele.text);
 		if (!ele) {
 			return;
 		}
@@ -333,39 +329,12 @@ var WGLRender;
 		if(!data.min || !data.max) {
 			console.log('WARNING : undef min max calc BB');
 			this.setupMeshBoundingBox(mesh);
+			console.log('WARNING : DONEmin max calc BB');
 		}
 		
 		return mesh;
 	};
 	
-	//------------------------------------------------------------------------------
-	// MESHOBJ
-	//------------------------------------------------------------------------------
-	render.prototype.createCyl = function (divide) {
-		var mesh = new MeshObj(),
-			d    = 0,
-		    dd   = 360 / (divide),
-		    buf  = [],
-			i,
-			x,
-			z;
-
-		for (i = 0; i <= divide; i = i + 1) {
-			x = Math.cos((Math.PI * d) / 180.0);
-			z = Math.sin((Math.PI * d) / 180.0);
-			buf.push(x);
-			buf.push(1.0);
-			buf.push(z);
-			
-			buf.push(x);
-			buf.push(-1.0);
-			buf.push(z);
-			
-			d += dd;
-		}
-		return this.createMeshObj({'pos':buf});
-	};
-
 	//------------------------------------------------------------------------------
 	// createLineMesh (Cylinder)
 	//------------------------------------------------------------------------------
@@ -420,9 +389,6 @@ var WGLRender;
 		tangent  = [0, 0, 0];
 		
 		qt = new QtnIV();
-
-		//var sasaki = new ArrayBuffer(1024);
-		//var dv     = new DataView(sasaki);
 
 		//---------------------------------------------------------------------
 		//create vertex
@@ -557,12 +523,16 @@ var WGLRender;
 			nor            = [],
 			idx            = [],
 			position       = [],
-			normal         = [];
+			positionarray  = [],
+			positionconcat = [],
+			normal         = [],
+			normalarray    = [],
+			normalconcat   = [],
+			mesh;
 
 		//---------------------------------------------------------------------
 		// Create Base Mesh
 		//---------------------------------------------------------------------
-		console.log('START : Create Base Mesh');
 		for (i = 0; i <= stacks; i = i + 1) {
 			r =  Math.PI / stacks * i;
 			ry = Math.cos(r);
@@ -586,13 +556,12 @@ var WGLRender;
 				idx.push(r, r + slices + 2, r + slices + 1);
 			}
 		}
-		console.log('END : Create Base Mesh');
 
 		//---------------------------------------------------------------------
 		// Create Mesh per Point
 		//---------------------------------------------------------------------
 		//reconstruct mesh
-		console.log('START : Create Mesh per Point');
+		console.log('START reconstruct mesh');
 		for (i = 0; i < base.position.length; i = i + 3) {
 			//get vertex per line.
 			x0 = base.position[i];
@@ -606,8 +575,11 @@ var WGLRender;
 				normal.push(nor[inum * 3], nor[inum * 3 + 1], nor[inum * 3 + 2]);
 			}
 		}
-	  
-		return this.createMeshObj({'pos':position, 'normal':normal});
+		mesh = this.createMeshObj({'pos':position, 'normal':normal});
+		mesh.radius = rad;
+		mesh.pointposition = base.position;
+		
+		return mesh;
 	};
     
 	
