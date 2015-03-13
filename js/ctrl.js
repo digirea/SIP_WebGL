@@ -3,7 +3,7 @@
 
 (function () {
 	"use strict";
-	var camera      = null,
+	var camera      = [],
 		ctrl        = {},
 		prevEvent   = null,
 		keycallback = null,
@@ -26,23 +26,19 @@
 	}
 
 	function setCamera(cam) {
-		camera = cam;
+		camera.push(cam);
 	}
 
 	function resetView() {
-		if (!camera) {
+		var i;
+		if (camera.length <= 0) {
 			return;
 		}
-		camera.resetView();
+		for (i = 0 ; i < camera.length; i++) {
+			camera[i].resetView();
+		}
 	}
 
-	function getViewInfo() {
-		if (!camera) {
-			return;
-		}
-		camera.getInfo();
-	}
-	
 	function mouseOut(e) {
 		resetMouseState();
 	}
@@ -74,54 +70,62 @@
 	}
 
 	function mouseMove(e) {
-		var movementX  = 0,
+		var i,
+			movementX  = 0,
 			movementY  = 0;
 
 		if (prevEvent) {
 			movementX = e.clientX - prevEvent.clientX;
 			movementY = e.clientY - prevEvent.clientY;
 		}
-		if (!camera) {
+		if (camera.length <= 0) {
 			return;
 		}
+		
+		
+		for (i = 0 ; i < camera.length; i++) {
+			if (mouseState.Right && mouseState.Left) {
+			}
 
-		if (mouseState.Right && mouseState.Left) {
-			//camera.addRotate(-movementX * multrotate, movementY * multrotate, 0);
-			//return;
-		}
+			if (mouseState.Left) {
+				var rot = camera[i].addRotate(-movementX * multrotate, movementY * multrotate, 0);
+				//console.log( rot[1] / 3.141592 );
+			}
 
-		if (mouseState.Left) {
-			var rot = camera.addRotate(-movementX * multrotate, movementY * multrotate, 0);
-			//console.log( rot[1] / 3.141592 );
-		}
+			if (mouseState.Center) {
+				camera[i].addPos(0, 0, -movementY * multY );
+				camera[i].addAt(0,  0, -movementY * multY );
+			}
 
-		if (mouseState.Center) {
-			camera.addPos(0, 0, -movementY * multY );
-			camera.addAt(0,  0, -movementY * multY );
-		}
-
-		if (mouseState.Right) {
-			//camera.addPos(0, 0, -movementY * mult);
-			//camera.addAt(0, 0, -movementY * mult);
-			camera.addPos(movementX * multX, 0, 0);
-			camera.addPos(0, movementY * multY, 0);
-			camera.addAt(movementX * multX, 0, 0);
-			camera.addAt(0,  movementY * multY, 0);
+			if (mouseState.Right) {
+				//camera[i].addPos(0, 0, -movementY * mult);
+				//camera[i].addAt(0, 0, -movementY * mult);
+				camera[i].addPos(movementX * multX, 0, 0);
+				camera[i].addPos(0, movementY * multY, 0);
+				camera[i].addAt(movementX * multX, 0, 0);
+				camera[i].addAt(0,  movementY * multY, 0);
+			}
 		}
 		
 		prevEvent = e;
 	}
 
 	function mouseWheel(e) {
-		var info;
-		if (camera) {
+		var i,
+			info;
+
+		if (camera.length <= 0) {
+			return;
+		}
+
+		for (i = 0 ; i < camera.length; i++) {
 			if (e.wheelDelta) {
-				camera.addPos(0, 0, e.wheelDelta * multWheel);
+				camera[i].addPos(0, 0, e.wheelDelta * multWheel);
 			} else {
-				camera.addPos(0, 0, -e.detail    * multWheel * 40.0);
+				camera[i].addPos(0, 0, -e.detail    * multWheel * 40.0);
 			}
-			if(camera.camPos[2] >= 0.0) {
-				camera.camPos[2] = -0.05;
+			if(camera[i].camPos[2] >= 0.0) {
+				camera[i].camPos[2] = -0.05;
 			}
 		}
 		e.preventDefault();
@@ -166,6 +170,5 @@
 	window.ctrl.setMoveMult = setMoveMult;
 	window.ctrl.setCamera   = setCamera;
 	window.ctrl.resetView   = resetView;
-	window.ctrl.getViewInfo = getViewInfo;
 }());
 

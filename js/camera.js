@@ -7,6 +7,7 @@ var Camera;
 	var camera = function () {
 		this.qtn               = new QtnIV();
 		this.mtx               = new MatIV();
+		this.mode              = 'proj';
 		this.camPos            = [0,0,0];
 		this.camPosStart       = [0,0,0];
 		this.camPosEnd         = [0,0,0];
@@ -20,17 +21,21 @@ var Camera;
 		this.camWorldPosEnd    = [0,0,0];
 		this.RotateMatrix      = this.mtx.identity(this.mtx.create());
 		this.RotateMatrixStart = this.mtx.identity(this.mtx.create());
-		this.resetCamPos       = [0, 100, -1000];
+		this.resetCamPos       = [0, 0, -256];
 		this.resetCamAt        = [0, 0, 0];
 		this.resetCamUp        = [0, 1, 0];
 		this.resetCamRot       = [0, 0, 0];
 		this.camRotStart       = [0, 0, 0];
 		this.camRotEnd         = [0, 0, 0];
-
+		this.screen            = [0, 0];
 		this.lerpState         = false;
 		this.lerpTime          = 0;
 		this.lerpTimeDelta     = 0;
 	};
+
+	camera.prototype.setupScreen = function (s) {
+		screen = s;
+	}
 
 	camera.prototype.resetView = function () {
 		this.camPos   = this.resetCamPos ;
@@ -106,7 +111,7 @@ var Camera;
 	camera.prototype.getCamPosZ = function () {
 		return Math.abs(this.camPos[2]);
 	}
-	
+
 	camera.prototype.getViewMatrix = function (fov, aspect, near, far) {
 		var mtx      = new MatIV(),
 			tMatrix  = mtx.identity(mtx.create()),
@@ -115,6 +120,9 @@ var Camera;
 			pMatrix  = mtx.identity(mtx.create());
 		mtx.lookAt(this.camPos, this.camAt, [0, 1, 0], vMatrix);
 		mtx.perspective(fov, aspect, near, far, pMatrix);
+		//mtx.ortho(-screen[0] screen[0], -screen[1], screen[1], near, far, pMatrix);
+		//mtx.ortho(-1, 1, -1, 1, near, far, pMatrix);
+		
 		mtx.multiply(pMatrix, vMatrix, vpMatrix);
 		
 		mtx.translate(tMatrix, this.camWorldPos,  tMatrix);
@@ -122,7 +130,20 @@ var Camera;
 		mtx.multiply(vpMatrix, tMatrix,           vpMatrix);
 		return vpMatrix;
 	}
-	
+
+	camera.prototype.getViewRotateMatrix = function (fov, aspect, near, far) {
+		var mtx      = new MatIV(),
+			tMatrix  = mtx.identity(mtx.create()),
+			vpMatrix = mtx.identity(mtx.create()),
+			vMatrix  = mtx.identity(mtx.create()),
+			pMatrix  = mtx.identity(mtx.create());
+		mtx.lookAt(this.camPos, this.camAt, [0, 1, 0], vMatrix);
+		mtx.perspective(fov, aspect, near, far, pMatrix);
+		mtx.multiply(pMatrix, vMatrix, vpMatrix);
+		mtx.multiply(vpMatrix, this.RotateMatrix, vpMatrix);
+		return vpMatrix;
+	}
+
 	camera.prototype.getAtDistance = function () { 
 		return Distance(this.camAtStart - this.camPosStart);
 	}

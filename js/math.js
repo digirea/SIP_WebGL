@@ -629,7 +629,7 @@ function GetMinMax(min, max, pos)
 // Intersect Triagle
 function IntersectTriangle(org, dir, v0, v1, v2)
 {
-	var t     = 0,
+	var t       = 0,
 		u       = 0,
 		v       = 0,
 		edge1   = [],
@@ -706,15 +706,10 @@ function IntersectSphere(org, dir, point, radius)
 		}
 	}
 	*/
-	
-	
-	
-	
 	return false;
 }
 
-	
-	//vec4 outpos = invMatrix * inpos;
+///vec4 outpos = invMatrix * inpos;
 function MultMatrixVec4(a, b)
 {
 	var ret = 

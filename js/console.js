@@ -28,8 +28,51 @@
 		return null;
 	}
 
+	function updateGridData(data) {
+		var headerhtml = '';
+		var header = [];
+		var style = tbl.style;
+		if(grid == null) {
+			grid = new Handsontable(tbl, {
+				rowHeaders   : true,
+				colHeaders   : true,
+				fillHandle   : false,
+				onChange: function(change, source) {
+					console.log('チェンジされました', change, source);
+					if(source === 'loadData') return;
+				}
+			});
+		}
+
+		grid.loadData(data);
+
+		for(i = 0; i < grid.countCols(); i++) {
+			
+			//todo createElement
+			headerhtml = '';
+			headerhtml += '<INPUT type="text" value="Group ' + i + '"class="colnames">';
+			headerhtml += '<SELECT name="ATTR" class="colselectbox">';
+			headerhtml += '<OPTION value="NONE">NONE</OPTION>';
+			headerhtml += '<OPTION value="X">X</OPTION>';
+			headerhtml += '<OPTION value="Y">Y</OPTION>';
+			headerhtml += '<OPTION value="Z">Z</OPTION>';
+			headerhtml += '<OPTION value="COLOR">COLOR</OPTION>';
+			headerhtml += '<OPTION value="INDEX">INDEX</OPTION>';
+			headerhtml += '<OPTION value="URL">URL</OPTION>';
+			headerhtml += '</SELECT>';
+			header.push(headerhtml);
+		}
+
+		grid.updateSettings({
+			colHeaders: header
+		});
+		tbl.style = style;
+		tbl.style.overflow = scroll;
+		tbl.style.zIndex = "5";
+		scene.AddRootTree({'name':filename});
+	}
+
 	function handleReadText(evt) {
-		
 		var files = evt.target.files;
 		var reader = new FileReader();
 		if (evt === '') {
@@ -37,46 +80,10 @@
 		}
 		reader.onloadend = (function(e) {
 			var csvArray = csv2Array(e.target.result);
-			var style = tbl.style;
 			var i;
 			var headerhtml = '';
 			var header = [];
-			if(grid == null) {
-				grid = new Handsontable(tbl, {
-					rowHeaders	 : true,
-					colHeaders	 : true,
-					fillHandle	 : false,
-					onChange: function(change, source) {
-						//console.log('チェンジされました', change, source);
-						if(source === 'loadData') return;
-					}
-				});
-			}
-			grid.loadData(csvArray);
-			//console.log('COLS :: ', grid.countCols());
-			for(i = 0; i < grid.countCols(); i++) {
-				headerhtml = '';
-				headerhtml += '<INPUT type="text" value="Group ' + i + '"class="colnames">';
-				headerhtml += '<SELECT name="ATTR" class="colselectbox">';
-				headerhtml += '<OPTION value="NONE">NONE</OPTION>';
-				headerhtml += '<OPTION value="X">X</OPTION>';
-				headerhtml += '<OPTION value="Y">Y</OPTION>';
-				headerhtml += '<OPTION value="Z">Z</OPTION>';
-				headerhtml += '<OPTION value="COLOR">COLOR</OPTION>';
-				headerhtml += '<OPTION value="INDEX">INDEX</OPTION>';
-				headerhtml += '<OPTION value="URL">URL</OPTION>';
-				headerhtml += '</SELECT>';
-				//headerhtml += '<INPUT type="checkbox" id="colcheckbox"' + i + ' class="colcheckbox">';
-				header.push(headerhtml);
-			}
-			grid.updateSettings({
-				colHeaders: header
-			});
-			//console.log(csvArray);
-			tbl.style = style;
-			tbl.style.overflow = scroll;
-			tbl.style.zIndex = "5";
-			scene.AddRootTree({'name':filename});
+			updateGridData(csvArray);
 			filename = '';
 			document.getElementById('OpenText').value = ''; // clear filename
 		});
@@ -90,9 +97,9 @@
 	}
 
 	window.addEventListener('load', init, false);
-	window.hstable					 = hstable;
+	window.hstable           = hstable;
 	window.hstable.countCols = countCols;
-	window.hstable.getCol		= getCol;
+	window.hstable.getCol    = getCol;
 	
 })();
 

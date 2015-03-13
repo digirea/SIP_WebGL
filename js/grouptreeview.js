@@ -67,6 +67,7 @@
 			scene.selectTreeNode(node);
 		};
 	};
+
 	function checkboxfunc(node, box) {
 		return function (e) {
 			//e.preventDefault();
@@ -81,6 +82,7 @@
 			scene.selectTreeNode(node, box);
 		};
 	};
+
 	function createTree(elem, root, ismakecheckbox) {
 		var node,
 			i,

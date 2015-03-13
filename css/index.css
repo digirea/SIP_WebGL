@@ -1,3 +1,7 @@
+.a {
+	color          : #FFFF00
+}
+
 .proparty  {
   font-family      : "Times New Roman", Times, serif;
   font-size        : 8px;
@@ -221,6 +225,16 @@ body {
 	color:#FFF;
 	display: none;
 	z-index: 10;
+}
+
+
+#pickup {
+	margin          :5px;
+	background-color:rgba(100, 77, 55, 1.0);
+	color           :white;
+	display         :none;
+	z-index         :10;
+	//background      :transparent;
 }
 
 

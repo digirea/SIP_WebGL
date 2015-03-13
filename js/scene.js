@@ -9,6 +9,8 @@
 		rAF            = null,
 		meshlist       = [],
 		camera         = null,
+		uicamera       = null,
+		gizmomesh      = null,
 		line_shader    = null,
 		mesh_shader    = null,
 		scene          = {},
@@ -46,28 +48,28 @@
 		console.log(meshlist);
 		var i;
 		var k;
-		for(i = 0; i < meshlist.length; i = i + 1) {
+		for (i = 0; i < meshlist.length; i = i + 1) {
 			//console.log(meshlist[i].name, data);
-			if(meshlist[i].name === data.name) {
+			if (meshlist[i].name === data.name) {
 				console.log(data);
-				for(k = 0 ; k < data.input.length; k = k + 1) {
-					if(data.input[k].name === 'trans')
+				for (k = 0 ; k < data.input.length; k = k + 1) {
+					if (data.input[k].name === 'trans')
 					{
 						meshlist[i].trans = data.input[k].value;
 					}
-					if(data.input[k].name === 'rotate')
+					if (data.input[k].name === 'rotate')
 					{
 						meshlist[i].rotate = data.input[k].value;
 					}
-					if(data.input[k].name === 'scale')
+					if (data.input[k].name === 'scale')
 					{
 						meshlist[i].scale = data.input[k].value;
 					}
-					if(data.input[k].name === 'color')
+					if (data.input[k].name === 'color')
 					{
 						meshlist[i].diffColor = data.input[k].value;
 					}
-					if(data.input[k].name === 'radius')
+					if (data.input[k].name === 'radius')
 					{
 						meshlist[i].radius = parseFloat(data.input[k].value);
 					}
@@ -79,7 +81,7 @@
 
 	function AddRootTree(data)
 	{
-		datatree.addData(data.name, data.name);
+		datatree.addData(data);
 		window.grouptreeview.update(datatree.getRoot());
 	}
 
@@ -108,7 +110,7 @@
 
 	
 	function selectTreeNode(node, checkbox) {
-		if(checkbox) {
+		if (checkbox) {
 			node.data.show = checkbox.checked;
 		} else {
 			console.log(node.data.boundmin, node.data.boundmax);
@@ -121,12 +123,12 @@
 			bb,
 			child,
 			retmesh;
-		if(type === 'Line') {
+		if (type === 'Line') {
 			retmesh  = render.createLineMesh(mesh, 8, 0.5);
 			retmesh.name = name + '_LINE';
 			retmesh.setShader(mesh_shader);
 		}
-		if(type === 'Point') {
+		if (type === 'Point') {
 			retmesh = render.createPointMesh(mesh, 1.0, 8, 4);
 			retmesh.name = name + '_SPHERE';
 			retmesh.setShader(mesh_shader);
@@ -161,6 +163,7 @@
 		var gridmesh     = null,
 			rootnode     = {};
 		gridmesh = render.createGridMesh(1000, 100, 0.5);
+		
 		gridmesh.setMode('Lines');
 		gridmesh.setShader(line_shader);
 		gridmesh.boundmin = Mul(gridmesh.boundmin, [0.5, 0.5, 0.5]);
@@ -169,6 +172,10 @@
 		datatree.addData('root', ['ROOT']);
 		datatree.createChild('Grid', 0, gridmesh);
 		window.grouptreeview.update(datatree.getRoot());
+
+		//create gizmo
+		gizmomesh = render.createGizmoMesh(0.1);
+		gizmomesh.setShader(line_shader);
 	}
 	
 	
@@ -178,15 +185,15 @@
 		resetTree();
 	}
 	
-	function GetViewProjMatrix()
+	function getViewProjMatrix()
 	{
 		var camZ     = 0,
 			vpMatrix;
 		camZ = camera.getCamPosZ();
-		if(camZ === 0) {
+		if (camZ === 0) {
 			vpMatrix = camera.getViewMatrix(90, canvas.width / canvas.height, 0.1, 2560);
 		} else {
-			vpMatrix = camera.getViewMatrix(90, canvas.width / canvas.height, camZ * 0.002, camZ * 4.0);
+			vpMatrix = camera.getViewMatrix(90, canvas.width / canvas.height, camZ * 0.002, camZ * 5.0);
 		}
 		return vpMatrix;
 	}
@@ -204,7 +211,7 @@
 		//console.log('ray parameter :', o, d);
 
 		/*
-		for(i = 0 ; i < triarray.length; i = i + 9) {
+		for (i = 0 ; i < triarray.length; i = i + 9) {
 			ishit = IntersectTriangle(
 				o,
 				d,
@@ -218,19 +225,19 @@
 					triarray[i + 6], triarray[i + 7], triarray[i + 8]
 				]
 			);
-			if(ishit === false) {
+			if (ishit === false) {
 				continue;
 			}
 			break;
 		}
 		*/
-		for(i = 0 ; i < triarray.length; i = i + 3) {
+		for (i = 0 ; i < triarray.length; i = i + 3) {
 			ishit = IntersectSphere(o, d, [triarray[i + 0], triarray[i + 1], triarray[i + 2] ], radius);
-			if(ishit === false) {
+			if (ishit === false) {
 				continue;
 			}
 			hit = true;
-			if(t > ishit.t) {
+			if (t > ishit.t) {
 				t = ishit.t;
 				index = i;
 			}
@@ -239,6 +246,50 @@
 		return {'hit':hit, 't':t, 'index':index};
 	}
 	
+	function updatePopup() {
+		var vpM   = getViewProjMatrix(),
+			vpMI  = getViewProjMatrix(),
+			ppos  = [0, 0, 0, 0],
+			mtx   = new MatIV(),
+			popup = document.getElementById('pickup'),
+			viewport = [0, 0,  canvas.width, canvas.height],
+			org   = [];
+		
+		if(popup.style.display === 'block') {
+			ppos = [parseInt(popup.style.left), canvas.height - parseInt(popup.style.top), 0.0, 1.0];
+			mtx.inverse(vpM, vpMI);
+			UnProject(
+				[parseInt(popup.style.left), canvas.height - parseInt(popup.style.top), 0.0],
+				vpMI,
+				viewport,
+				ppos);
+			console.log(ppos);
+			popup.style.left = ppos[0] + 'px';
+			popup.style.top  = ppos[1] + 'px';
+			
+		}
+	}
+	
+	function createPopup(win_x, win_y, data)
+	{
+		var popup = document.getElementById('pickup'),
+			url;
+		popup.style.position = 'absolute';
+		popup.style.left     = win_x + 'px';
+		popup.style.top      = win_y + 'px';
+		popup.style.display  = 'block';
+		popup.innerHTML      = "<i>index</i>:" + data.index + "<br>";
+		popup.innerHTML     += data.position + "<br>"; 
+
+		if(data.URL) {
+			url = document.createElement('a');
+			url.title     = data.URL.title;
+			url.href      = data.URL.href;
+			url.target    = '_blank';
+			url.innerHTML = data.URL.title;
+			popup.appendChild(url);
+		}
+	}
 	
 	function Pick(win_x, win_y)
 	{
@@ -248,7 +299,7 @@
 			mcheck   = mtx.identity(mtx.create()),
 			nwinpos  = [win_x, canvas.height - win_y, 0.0],
 			fwinpos  = [win_x, canvas.height - win_y, 1.0],
-			viewport = [0, 0, canvas.width, canvas.height],
+			viewport = [0, 0,  canvas.width, canvas.height],
 			ishit    = false,
 			org      = [0, 0, 0],
 			tar      = [0, 0, 0],
@@ -262,122 +313,82 @@
 			testd    = [0, 0, 0],
 			resultpos= [9999999, 9999999, 9999999],
 			linem    = [];
-		
-		
-		
-		vpM = GetViewProjMatrix();
+
+		if (meshlist.length <= 0) return;
+
+		//create ray
+		vpM = getViewProjMatrix();
 		mtx.inverse(vpM, vpMI);
 		UnProject(nwinpos, vpMI, viewport, org);
 		UnProject(fwinpos, vpMI, viewport, tar);
-
-		dir = Sub(tar, org);
-		dir = Normalize(dir);
+		dir = Normalize(Sub(tar, org));
 		
-		//‘“–‚½‚èBŒã‚Å•ªŠ„‚·‚é
-		if(meshlist.length <= 0) return;
-		for(mindex = 0 ; mindex < meshlist.length; mindex = mindex + 1) {
+		//traverse mesh
+		for (mindex = 0 ; mindex < meshlist.length; mindex = mindex + 1) {
 			mesh = meshlist[mindex];
-			if(mesh.mode === 'Triangles' && mesh.show === true) {
+			if (mesh.mode === 'Triangles' && mesh.show === true) {
 				ishit = IsHitMesh(org, dir, mesh);
-				if(ishit === false) continue;
-				if(ishit.t < info.t) {
+				if (ishit === false) continue;
+				if (ishit.t < info.t) {
 					info = ishit;
 					hitmesh = mindex;
 				}
 			}
 		}
-		if(hitmesh >= 0) {
-			console.log('PROC HIT MESH', hitmesh, info.index);
-			resultpos[0] = meshlist[hitmesh].position[info.index + 0];
-			resultpos[1] = meshlist[hitmesh].position[info.index + 1];
-			resultpos[2] = meshlist[hitmesh].position[info.index + 2];
-		} else {
-			console.log('ATATORAN');
+		
+		if (hitmesh < 0) {
+			console.log('RAY MISS');
+			return;
 		}
 		
-		if(hitmesh >= 0) {
-			//RAY TEST----------------------------
-			mesh = render.createMeshObj
-			(
-				{
-					'pos' : [
-					org[0],
-					org[1],
-					org[2],
-					org[0] + dir[0] * ishit.t,
-					org[1] + dir[1] * ishit.t,
-					org[2] + dir[2] * ishit.t],
-					'color' : [1,0,0,1,1,0,0,1]
-				}
-			);
-			mesh.setMode('Lines');
-			mesh.setShader(line_shader);
-			meshlist.push(mesh);
-			//TEST----------------------------
-			
-			mesh = meshlist[hitmesh];
-			info.position = [];
-			info.position.push(
-				mesh.pointposition[info.index + 0],
-				mesh.pointposition[info.index + 1],
-				mesh.pointposition[info.index + 2]);
-			info.index /= 3;
-			console.log(resultpos, info);
-			/*
+		resultpos[0] = meshlist[hitmesh].position[info.index + 0];
+		resultpos[1] = meshlist[hitmesh].position[info.index + 1];
+		resultpos[2] = meshlist[hitmesh].position[info.index + 2];
+
+		//RAY TEST START----------------------------
+		mesh = render.createMeshObj
+		(
 			{
-				var popup = document.createElement('div');
-				//popup.style.position = 'fixed';
-				popup.style.position = 'absolute';
-				popup.style.left   = win_x + 'px';
-				popup.style.top    = win_y + 'px';
-				popup.style.right  = '100px';
-				popup.style.bottom = '100px';
-				popup.style.color = "blue"
-				popup.style.zIndex = '10';
-				popup.innerHTML = info.position;
-				canvas.appendChild(popup);
+				'pos' : [
+				org[0],
+				org[1],
+				org[2],
+				org[0] + dir[0] * ishit.t,
+				org[1] + dir[1] * ishit.t,
+				org[2] + dir[2] * ishit.t],
+				'color' : [1,0,0,1,1,0,0,1]
 			}
-			*/
-		}
+		);
+		mesh.setMode('Lines');
+		mesh.setShader(line_shader);
+		meshlist.push(mesh);
+		//RAY TEST END----------------------------
+		
+		mesh = meshlist[hitmesh];
+		info.position = [];
+		info.position.push(
+			mesh.pointposition[info.index + 0],
+			mesh.pointposition[info.index + 1],
+			mesh.pointposition[info.index + 2]);
+		info.index /= 3;
+		console.log(resultpos, info);
+		
+		//TEST URL
+		info.URL = {};
+		info.URL.title = "http://pouet.net";
+		info.URL.href  = "http://pouet.net";
+		
+		createPopup(win_x, win_y, info);
 	}
 	
 	
 	function MouseClickFunc(evt)
 	{
 		//console.log(evt.clientX, evt.clientY);
-		if(evt.button === 1) Pick(evt.clientX, evt.clientY);
+		if (evt.button === 1) Pick(evt.clientX, evt.clientY);
 	}
 	
 
-	function updateFrame() {
-		var cw            = canvas.width,
-			ch            = canvas.height,
-			wh            = 1 / Math.sqrt(cw * cw + ch * ch),
-			uniLocation   = [],
-			gridcolor     = [0.1, 0.1, 0.1, 1.0],
-			result        = [],
-			vpMatrix;
-		camera.updateMatrix(wh);
-		render.clearColor(0.1, 0.1, 0.1, 1.0);
-		render.clearDepth(1.0);
-		render.frontFace(true);
-		render.Depth(true);
-		render.Blend(true);
-		vpMatrix = GetViewProjMatrix();
-		render.setViewProjection(vpMatrix);
-		render.drawMeshList(meshlist, result);
-		updateInfo(result[0].VertexNum, result[0].PolygonNum);
-		render.swapBuffer()(updateFrame);
-	}
-
-	function startGL() {
-		console.log('startGL');
-		onResize();
-		resetAll();
-
-		updateFrame();
-	}
-	
 	function KickDogFrame() {
 		//document.getElementById('progress').innerHTML = "updata
 	}
@@ -409,7 +420,7 @@
 		
 		hstable = document.getElementById('hstable');
 		clonetable = hstable.getElementsByClassName('ht_clone_top');
-		if(clonetable.length <= 0)
+		if (clonetable.length <= 0)
 		{
 			console.log('Not found table. bailout.');
 			return;
@@ -418,45 +429,45 @@
 		//check hstable header
 		headernames = clonetable[0].getElementsByClassName('colnames');
 		selectnames = clonetable[0].getElementsByClassName('colselectbox');
-		//console.log(selectnames);
-		for(i = 0 ; i < selectnames.length; i = i + 1) {
+		for (i = 0 ; i < selectnames.length; i = i + 1) {
 			
 			console.log(selectnames[i].value);
-			if(selectnames[i].value === 'X') {
+			if (selectnames[i].value === 'X') {
 				colinfo.push({'index':i, 'attr':0});
 			}
-			if(selectnames[i].value === 'Y') {
+			if (selectnames[i].value === 'Y') {
 				colinfo.push({'index':i, 'attr':1});
 			}
-			if(selectnames[i].value === 'Z') {
+			if (selectnames[i].value === 'Z') {
 				colinfo.push({'index':i, 'attr':2});
 			}
 		}
 		
-		//colinfo‚©‚ç–¼‘O¶¬
-		for(i = 0 ; i < colinfo.length; i = i + 1) {
+		
+		//Create Name
+		for (i = 0 ; i < colinfo.length; i = i + 1) {
 			name += headernames[colinfo[i].index].value + '_';
 		}
 
 		console.log(colinfo);
 		
-		if(colinfo.length <= 0) {
+		if (colinfo.length <= 0) {
 			console.log('not select col. bail out');
 			return;
 		}
 
-		for(i = 0 ; i < colinfo.length; i = i + 1) {
+		for (i = 0 ; i < colinfo.length; i = i + 1) {
 			attr    = colinfo[i].attr;
 			col     = window.hstable.getCol(colinfo[i].index);
-			if(attr === 0 || attr === 1 || attr === 2) {
-				for(j = 0 ; j < col.length - 1; j = j + 1) {
+			if (attr === 0 || attr === 1 || attr === 2) {
+				for (j = 0 ; j < col.length - 1; j = j + 1) {
 					pos[j * 3 + attr] = parseFloat(col[j]);
 				}
 				continue;
 			}
 		}
-		for(j = 0 ; j < pos.length; j = j + 1) {
-			if(pos[j] === undefined) {
+		for (j = 0 ; j < pos.length; j = j + 1) {
+			if (pos[j] === undefined) {
 				pos[j] = 0;
 			}
 		}
@@ -480,6 +491,61 @@
 	}
 	
 	
+	function drawGizmo()
+	{
+		var mtx    = new MatIV();
+		var mRotate  = camera.RotateMatrix;
+		var mLook    = mtx.identity(mtx.create());
+		var mProj    = mtx.identity(mtx.create());
+		var vpM      = mtx.identity(mtx.create());
+		mtx.lookAt([0, 0, 1], [0, 0, 0], [0, 1, 0], mLook);
+		//mtx.perspective(30, canvas.width / canvas.height, 0.1, 100, mProj);
+		mtx.ortho(-1,1, -1, 1, 0.1, 100, mProj);
+		mtx.multiply(mProj, mLook, vpM);
+		mtx.multiply(vpM, mRotate, vpM);
+		vpM[12] = 0.8;
+		vpM[13] = -0.8;
+		render.setViewProjection(vpM);
+		render.drawMesh(gizmomesh);
+	}
+	
+
+	function updateFrame() {
+		var cw            = canvas.width,
+			ch            = canvas.height,
+			wh            = 1 / Math.sqrt(cw * cw + ch * ch),
+			uniLocation   = [],
+			gridcolor     = [0.1, 0.1, 0.1, 1.0],
+			result        = [],
+			vpMatrix;
+		camera.setupScreen([cw, ch]);
+		camera.updateMatrix(wh);
+		uicamera.setupScreen([cw, ch]);
+		uicamera.updateMatrix(wh);
+		//updatePopup()
+		render.clearColor(0.1, 0.1, 0.1, 1.0);
+		render.clearDepth(1.0);
+		render.frontFace(true);
+		render.Depth(true);
+		render.Blend(true);
+		vpMatrix = getViewProjMatrix();
+		render.setViewProjection(vpMatrix);
+		render.drawMeshList(meshlist, result);
+		updateInfo(result[0].VertexNum, result[0].PolygonNum);
+		
+		drawGizmo();
+		
+		render.swapBuffer()(updateFrame);
+	}
+
+	function startGL() {
+		console.log('startGL');
+		onResize();
+		resetAll();
+
+		updateFrame();
+	}
+	
 	function init() {
 		var i,
 			openstl     = document.getElementById('OpenSTL'),
@@ -487,31 +553,32 @@
 			addline     = document.getElementById('AddLine'),
 			addpoint    = document.getElementById('AddPoint'),
 			deletegroup = document.getElementById('DeleteGroup');
-		
-		//init
+
 		canvas = document.getElementById('canvas');
-		
+
 		//init render
 		render = new WGLRender();
 		
 		//create camera 
-		camera = new Camera();
+		camera   = new Camera();
+		uicamera = new Camera();
 		
 		//initialize render
 		render.init(canvas, window);
 		camera.init();
+		uicamera.init();
 		
 		//initialize contorller
 		window.ctrl.init(document, canvas, callbackResetView);
 		window.ctrl.setCamera(camera);
+		window.ctrl.setCamera(uicamera);
 		
-		//
 		document.getElementById('Open').addEventListener('change', loadSTL, false);
 
 		openstl.onclick  = loadSTL;
 		addline.onclick  = addLine;
 		addpoint.onclick = addPoint;
-		
+
 		// Create Tab
 		var consoleTab = window.animtab.create('bottom', {
 			'bottomTab' : { min : '10px', max : '400' }

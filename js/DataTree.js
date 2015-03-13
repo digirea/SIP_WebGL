@@ -9,6 +9,11 @@
 		var dataleaf = {'name':name, 'data':data, 'child':[]};
 		root.push(dataleaf);
 	};
+	
+	
+	function delData(name) {
+		
+	}
 
 	function createChild(name, index, data) {
 		var selectnode,
@@ -32,6 +37,7 @@
 	};
 
 	function getRoot() {
+		console.log(root);
 		return root;
 	}
 
