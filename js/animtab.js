@@ -159,7 +159,6 @@
 		
 		for (id in targets) {
 			if (targets.hasOwnProperty(id)) {
-				console.log(id);
 				targetElem = $(id);
 				initialOverflow[id] = targetElem.style.overflow;
 				targetMin = targets[id].min;

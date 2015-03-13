@@ -48,7 +48,6 @@
 		var k;
 		for(i = 0; i < meshlist.length; i = i + 1) {
 			//console.log(meshlist[i].name, data);
-			
 			if(meshlist[i].name === data.name) {
 				console.log(data);
 				for(k = 0 ; k < data.input.length; k = k + 1) {
@@ -117,27 +116,26 @@
 		}
 	}
 	
-	function updateMeshText(name, pos) {
+	function updateMeshText(name, pos, type) {
 	  var mesh = {'position':pos},
 			bb,
 			child,
-			linemesh,
-			pointmesh;
-		linemesh  = render.createLineMesh(mesh, 8, 0.5);
-		pointmesh = render.createPointMesh(mesh, 1.0, 8, 4);
-		console.log(linemesh.boundmin, linemesh.boundmax);
-		console.log(pointmesh.boundmin, pointmesh.boundmax);
-		linemesh.name = name + '_LINE';
-		pointmesh.name = name + '_SPHERE';
+			retmesh;
+		if(type === 'Line') {
+			retmesh  = render.createLineMesh(mesh, 8, 0.5);
+			retmesh.name = name + '_LINE';
+			retmesh.setShader(mesh_shader);
+		}
+		if(type === 'Point') {
+			retmesh = render.createPointMesh(mesh, 1.0, 8, 4);
+			retmesh.name = name + '_SPHERE';
+			retmesh.setShader(mesh_shader);
+		}
 		
-		linemesh.setShader(mesh_shader);
-		pointmesh.setShader(mesh_shader);
-		meshlist.push(linemesh);
-		meshlist.push(pointmesh);
-		child = datatree.createChild(linemesh.name, 0, linemesh);
-		datatree.createChild(pointmesh.name, 0, pointmesh);
+		meshlist.push(retmesh);
+		child = datatree.createChild(retmesh.name, 0, retmesh);
 		window.grouptreeview.update(datatree.getRoot(), child);
-		camera.setupLerp(linemesh.boundmin, linemesh.boundmax);
+		camera.setupLerp(retmesh.boundmin, retmesh.boundmax);
 	}
   
   
@@ -389,7 +387,7 @@
 		render.swapBuffer()(KickDogFrame);
 	}
 
-	function addGroup() {
+	function addGroup(type) {
 		var colinfo   = [],
 			colaxis   = [],
 			coldata   = [],
@@ -435,15 +433,11 @@
 			}
 		}
 		
-		/*
-		for(i = 0 ; i < checkboxs.length; i = i + 1) {
-			var checkbox = document.getElementById('colcheckbox' + i);
-			if(selectnames[i].) {
-				checklist.push(i);
-				name += headernames[i].value + '_';
-			}
+		//colinfo‚©‚ç–¼‘O¶¬
+		for(i = 0 ; i < colinfo.length; i = i + 1) {
+			name += headernames[colinfo[i].index].value + '_';
 		}
-		*/
+
 		console.log(colinfo);
 		
 		if(colinfo.length <= 0) {
@@ -471,7 +465,18 @@
 		//Create Name
 		name += 'ID' + GetModelId();
 		console.log(pos);
-		updateMeshText(name, pos);
+		updateMeshText(name, pos, type);
+	}
+	
+	
+	function addLine(e)
+	{
+		addGroup('Line')
+	}
+	
+	function addPoint(e)
+	{
+		addGroup('Point')
 	}
 	
 	
@@ -479,7 +484,8 @@
 		var i,
 			openstl     = document.getElementById('OpenSTL'),
 			opencsv     = document.getElementById('OpenCSV'),
-			addgroup    = document.getElementById('AddGroup'),
+			addline     = document.getElementById('AddLine'),
+			addpoint    = document.getElementById('AddPoint'),
 			deletegroup = document.getElementById('DeleteGroup');
 		
 		//init
@@ -503,7 +509,8 @@
 		document.getElementById('Open').addEventListener('change', loadSTL, false);
 
 		openstl.onclick  = loadSTL;
-		addgroup.onclick = addGroup;
+		addline.onclick  = addLine;
+		addpoint.onclick = addPoint;
 		
 		// Create Tab
 		var consoleTab = window.animtab.create('bottom', {

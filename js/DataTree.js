@@ -55,35 +55,6 @@
 	window.datatree.createChild = createChild;
 	window.datatree.getRoot     = getRoot;
 	window.datatree.getData     = getData;
-	
-	//test data
-	/*
-	addData('test1',
-		{
-			'0':[1,2,3,4,5,63,7,8,9],
-			'1':[2,3,-4,-5,63,7,-8,-9],
-			'2':[22,3,-4,-5,63,7,-82,-9],
-			'3':[-4,3,-4,-5,63,7,-8,-9],
-			'4':[6,3,-4,-5,63,7,-8,-9]
-		});
-	
-	addData('test2',
-		{
-			'0':[-4,3,-4,-5,63,7,-8,-9],
-			'1':[1,2,3,4,5,63,7,8,9],
-			'2':[22,3,-4,-5,63,7,-8,-9],
-			'3':[2,32,-4,-5,63,7,-8,-9]
-		});
-
-	createChild('child1', 0, [0, 1, 2]);
-	createChild('child2', 0, [0, 2]);
-	console.log(getRoot());
-	console.log('GET', getData('child1'));
-	console.log('GET', getData('child2'));
-	console.log('GET', getData('childs2')); //null
-	*/
-	
-	
 }());
 
 

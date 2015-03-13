@@ -170,6 +170,7 @@
 			applyButton  = document.getElementById('ApplyProperty'),
 			deleteButton = document.getElementById('DeleteProperty');
 		
+		/*
 		if (data.name !== 'root') {
 			applyButton.style.display  = "block";
 			deleteButton.style.display = "block";
@@ -183,6 +184,7 @@
 			applyButton.onclick        = null;
 			deleteButton.onclick       = null;
 		}
+		*/
 		
 		currentData = data;
 		changedValueFuncs = []; // clear

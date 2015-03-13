@@ -142,6 +142,31 @@ body {
 	color:#FFF;
 }
 
+
+#AddLine {
+	/*position:absolute;
+	right:150px;
+	top:28px;*/
+	margin: 5px;
+	width: 150px;
+	height:25px;
+	background-color:#e50e78;
+	color:#FFF;
+}
+
+
+#AddPoint {
+	/*position:absolute;
+	right:150px;
+	top:28px;*/
+	margin: 5px;
+	width: 150px;
+	height:25px;
+	background-color:#155e98;
+	color:#FFF;
+}
+
+
 #DeleteGroup {
 	/*position:absolute;
 	right:10px;

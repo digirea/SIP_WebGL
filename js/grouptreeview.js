@@ -81,7 +81,7 @@
 			scene.selectTreeNode(node, box);
 		};
 	};
-	function createTree(elem, root) {
+	function createTree(elem, root, ismakecheckbox) {
 		var node,
 			i,
 			li,
@@ -101,20 +101,23 @@
 			li.appendChild(link);
 			elem.appendChild(li);
 
-			box = document.createElement("input");
-			box.type = "checkbox";
-			box.name = "name";
-			box.value = "value";
-			box.id = "id";
-			box.setAttribute('checked', 'checked');
-			box.onclick = (checkboxfunc(node, box));
+			//create mask checkbox
+			if(ismakecheckbox === true) {
+				box = document.createElement("input");
+				box.type = "checkbox";
+				box.name = "name";
+				box.value = "value";
+				box.id = "id";
+				box.setAttribute('checked', 'checked');
+				box.onclick = (checkboxfunc(node, box));
 
-			li.appendChild(box);
+				li.appendChild(box);
+			}
 
 			if (node.child && node.child.length > 0) {
 				ul = document.createElement("ul");
 				li.appendChild(ul);
-				createTree(ul, node.child);
+				createTree(ul, node.child, true);
 			}
 		}
 	}
