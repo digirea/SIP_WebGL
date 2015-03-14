@@ -316,6 +316,13 @@
 		}
 	}
 	
+	function hidePopup() {
+		var popup = document.getElementById('pickup');
+		if (popup) {
+			popup.style.display = "none";
+		}
+	}
+	
 	function createRayMesh(org, dir, t) {
 		var mesh = render.createMeshObj
 		(
@@ -534,7 +541,6 @@
 		render.setViewProjection(vpM);
 		render.drawMesh(gizmomesh);
 	}
-	
 
 	function updateFrame() {
 		var cw            = canvas.width,
@@ -620,7 +626,6 @@
 			opencsv     = document.getElementById('OpenCSV'),
 			addline     = document.getElementById('AddLine'),
 			addpoint    = document.getElementById('AddPoint'),
-		
 			pickup      = document.getElementById('pickup'),
 			sideviewx   = document.getElementById('SideViewX'),
 			sideviewy   = document.getElementById('SideViewY'),
@@ -642,6 +647,8 @@
 		//initialize contorller
 		window.ctrl.init(document, canvas, callbackResetView);
 		window.ctrl.setCamera(camera);
+		
+		canvas.addEventListener('mousedown', hidePopup, true);
 		
 		document.getElementById('OpenSTLFile').addEventListener('change',  loadSTL, false);
 		document.getElementById('OpenTextFile').addEventListener('change', loadTXT, false);
