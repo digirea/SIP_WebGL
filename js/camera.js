@@ -1,4 +1,5 @@
 /*jslint devel:true*/
+/*global QtnIV, MatIV, Negative, Distance, CosInter */
 
 var Camera;
 var test_time = 0;
@@ -8,17 +9,17 @@ var test_time = 0;
 		this.qtn               = new QtnIV();
 		this.mtx               = new MatIV();
 		this.mode              = 'proj';
-		this.camPos            = [0,0,0];
-		this.camPosStart       = [0,0,0];
-		this.camPosEnd         = [0,0,0];
-		this.camAt             = [0,0,0];
-		this.camAtStart        = [0,0,0];
-		this.camUp             = [0,0,0];
-		this.camRot            = [0,0,0];
-		this.camRotPrev        = [0,0,0];
-		this.camWorldPos       = [0,0,0];
-		this.camWorldPosStart  = [0,0,0];
-		this.camWorldPosEnd    = [0,0,0];
+		this.camPos            = [0, 0, 0];
+		this.camPosStart       = [0, 0, 0];
+		this.camPosEnd         = [0, 0, 0];
+		this.camAt             = [0, 0, 0];
+		this.camAtStart        = [0, 0, 0];
+		this.camUp             = [0, 0, 0];
+		this.camRot            = [0, 0, 0];
+		this.camRotPrev        = [0, 0, 0];
+		this.camWorldPos       = [0, 0, 0];
+		this.camWorldPosStart  = [0, 0, 0];
+		this.camWorldPosEnd    = [0, 0, 0];
 		this.RotateMatrix      = this.mtx.identity(this.mtx.create());
 		this.RotateMatrixStart = this.mtx.identity(this.mtx.create());
 		this.camRotStart       = [0, 0, 0];
@@ -31,19 +32,19 @@ var test_time = 0;
 
 	camera.prototype.setupScreen = function (s) {
 		this.screen = s;
-	}
+	};
 
 	camera.prototype.resetView = function () {
 		console.log('View Matrix RESET');
 		this.qtn               = new QtnIV();
 		this.camPos            = [0, 0, -256];
 		this.camAt             = [0, 0, 0];
-		this.camAtStart        = [0,0,0];
+		this.camAtStart        = [0, 0, 0];
 		this.camUp             = [0, 1, 0];
 		this.camRot            = [0, 0, 0];
 		this.camRotPrev        = [0, 0, 0];
-		this.camWorldPosStart  = [0,0,0];
-		this.camWorldPosEnd    = [0,0,0];
+		this.camWorldPosStart  = [0, 0, 0];
+		this.camWorldPosEnd    = [0, 0, 0];
 		this.camWorldPos       = [0, 0, 0];
 		this.lerpTime          = 0;
 		this.RotateMatrix      = this.mtx.identity(this.mtx.create());
@@ -53,26 +54,26 @@ var test_time = 0;
 		var z = 1000;//this.getCamPosZ();
 		this.resetView();
 		
-		if(type === 'x') {
+		if (type === 'x') {
 			this.camPos[0] = z;
 			this.camPos[1] = 0;
 			this.camPos[2] = 0;
 
 			this.mtx.rotate(this.RotateMatrix, (Math.PI * -90.0) / 180.0, [0, 1, 0], this.RotateMatrix);
 		}
-		if(type === 'y') {
+		if (type === 'y') {
 			this.camPos[0] = 0;
 			this.camPos[1] = z;
 			this.camPos[2] = 0;
 			this.mtx.rotate(this.RotateMatrix, (Math.PI * -90.0) / 180.0, [1, 0, 0], this.RotateMatrix);
 		}
-		if(type === 'z') {
+		if (type === 'z') {
 			this.camPos[0] = 0;
 			this.camPos[1] = 0;
 			this.camPos[2] = -z;
 		}
 
-	}
+	};
 	camera.prototype.pos = function (x, y, z) {
 		this.camPos   = [x, y, z];
 		return this.camPos;
@@ -114,8 +115,7 @@ var test_time = 0;
 		this.camWorldPosStart   = this.camWorldPos;
 		this.camWorldPosEnd     = [(max[0] + min[0]) / 2, (max[1] + min[1]) / 2, (max[2] + min[2]) / 2];
 
-		if(trans)
-		{
+		if (trans) {
 			this.camWorldPosEnd[0] += parseFloat(trans[0]);
 			this.camWorldPosEnd[1] += parseFloat(trans[1]);
 			this.camWorldPosEnd[2] += parseFloat(trans[2]);
@@ -135,7 +135,7 @@ var test_time = 0;
 		this.camPosEnd[1]       = 0;
 		this.camPosEnd[2]       = 0;
 		
-		if(axis) {
+		if (axis) {
 			this.camPosEnd[axis]    = -Distance(max, min);
 		} else {
 			this.camPosEnd[2]       = -Distance(max, min);
@@ -144,11 +144,11 @@ var test_time = 0;
 		this.lerpTime           = 0;
 		this.lerpTimeDelta      = 1.0 / 30.0;
 		this.lerpState          = true;
-	}
+	};
 
 	camera.prototype.getCamPosZ = function () {
 		return Math.abs(this.camPos[2]);
-	}
+	};
 
 	camera.prototype.getViewMatrix = function (fov, aspect, near, far) {
 		var mtx      = new MatIV(),
@@ -167,7 +167,7 @@ var test_time = 0;
 		mtx.multiply(vpMatrix, this.RotateMatrix, vpMatrix);
 		mtx.multiply(vpMatrix, tMatrix,           vpMatrix);
 		return vpMatrix;
-	}
+	};
 
 	camera.prototype.getViewRotateMatrix = function (fov, aspect, near, far) {
 		var mtx      = new MatIV(),
@@ -180,15 +180,15 @@ var test_time = 0;
 		mtx.multiply(pMatrix, vMatrix, vpMatrix);
 		mtx.multiply(vpMatrix, this.RotateMatrix, vpMatrix);
 		return vpMatrix;
-	}
+	};
 
-	camera.prototype.getAtDistance = function () { 
+	camera.prototype.getAtDistance = function () {
 		return Distance(this.camAtStart - this.camPosStart);
-	}
+	};
 	
-	camera.prototype.LeapCamera = function() {
+	camera.prototype.LeapCamera = function () {
 		this.lerpTime = this.lerpTime + this.lerpTimeDelta;
-		if(this.lerpTime >= 1.0) {
+		if (this.lerpTime >= 1.0) {
 			this.lerpTime = 1.0;
 			this.lerpState = false;
 		}
@@ -201,28 +201,28 @@ var test_time = 0;
 		this.camAt[0]         = CosInter(this.camAtStart[0],       0, this.lerpTime);
 		this.camAt[1]         = CosInter(this.camAtStart[1],       0, this.lerpTime);
 		this.camAt[2]         = CosInter(this.camAtStart[2],       0, this.lerpTime);
-		if(this.lerpTime >= 1.0) {
+		if (this.lerpTime >= 1.0) {
 			this.lerpTime = 0.0;
 		}
-	}
+	};
 
 	camera.prototype.updateRotateMatrix = function (r, y, x) {
-		var qt = this.qtn.identity(this.qtn.create());
-		var qMatrixXY = this.mtx.identity(this.mtx.create());
+		var qt = this.qtn.identity(this.qtn.create()),
+			qMatrixXY = this.mtx.identity(this.mtx.create());
 		this.qtn.rotate(r, [y, x, 0.0], qt);
 		this.qtn.toMatIV(qt, qMatrixXY);
 		this.mtx.multiply(qMatrixXY, this.RotateMatrix, this.RotateMatrix);
 		this.camRotPrev[0] = this.camRot[0];
 		this.camRotPrev[1] = this.camRot[1];
 		this.camRotPrev[2] = this.camRot[2];
-	}
+	};
 	
 	camera.prototype.updateMatrix = function (wh) {
-		if(this.lerpState === false) {
-			var x        = this.camRot[0] - this.camRotPrev[0];
-			var y        = this.camRot[1] - this.camRotPrev[1];
-			var sq       = Math.sqrt(x * x + y * y);
-			var r        = sq * 2.0 * Math.PI * wh;
+		if (this.lerpState === false) {
+			var x        = this.camRot[0] - this.camRotPrev[0],
+				y        = this.camRot[1] - this.camRotPrev[1],
+				sq       = Math.sqrt(x * x + y * y),
+				r        = sq * 2.0 * Math.PI * wh;
 			if (sq !== 1) {
 				sq = 1 / sq;
 				x *= sq;
@@ -236,7 +236,7 @@ var test_time = 0;
 		}
 		this.LeapCamera();
 
-	}
+	};
 
 	camera.prototype.init = function () {
 		this.resetView();
