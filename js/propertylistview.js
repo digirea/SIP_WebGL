@@ -47,7 +47,7 @@
 			return function (e) {
 				console.log(data);
 				data.value = txt.value;
-				scene.updateDataTree(currentData);
+				window.scene.updateDataTree(currentData);
 				/*
 				changedValueFuncs.push(function () {
 
@@ -89,7 +89,7 @@
 						}
 					}
 					//updateNode();
-					scene.updateDataTree(currentData);
+					window.scene.updateDataTree(currentData);
 				}
 			};
 		}(node, textNode)));
@@ -111,7 +111,7 @@
 			return function (e) {
 				console.log(data, i, txt.value);
 				data.value[i] = txt.value;
-				scene.updateDataTree(currentData);
+				window.scene.updateDataTree(currentData);
 				/*
 				changedValueFuncs.push(function () {
 
@@ -140,7 +140,7 @@
 			func();
 		}
 		if (currentData) {
-			scene.updateDataTree(currentData);
+			window.scene.updateDataTree(currentData);
 		}
 		changedValueFuncs = [];
 	}
@@ -191,7 +191,6 @@
 		to.innerHTML = ''; // clear
 		to.appendChild(makeItemNode('Property Name', 'Value', true));
 		to.appendChild(makeItemNode('name', data.name));
-		to.appendChild(makeItemNode('varname', data.varname));
 		//to.appendChild(makeItemNode('funcname', data.funcname));
 		
 		to.appendChild(prop);

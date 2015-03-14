@@ -5,10 +5,11 @@
 	var datatree = {};
 	var root  = [];
 
-	function makeNode(name, data) {
+	function makeNode(type, name, data) {
 		var node =
 		{
-			'child':[],
+			'child' :[],
+			'type'  :type,
 			'name'  :name,
 			'data'  :data,
 			'trans' :[0, 0, 0],
@@ -20,17 +21,17 @@
 		return node;
 	}
 
-	function createRoot(name, data) {
-		var r = makeNode(name, data);
+	function createRoot(type, name, data) {
+		var r = makeNode(type, name, data);
 		root.push(r);
 		return r;
 	};
 
-	function createChild(name, data) {
+	function createChild(type, name, data) {
 		var parent,
 			child,
 			i;
-		child = makeNode(name, data);
+		child = makeNode(type, name, data);
 		console.log('Create Child : ', child);
 		return child;
 	};

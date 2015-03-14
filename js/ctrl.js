@@ -136,12 +136,14 @@
 			}
 			
 			//update coef
+			/*
 			if(delta < 0) {
 				multWheelCoef *= (1.0 + 0.02);
 			}
 			if(delta > 0) {
 				multWheelCoef *= (1.0 - 0.02);
 			}
+			*/
 		}
 		e.preventDefault();
 		return false;

@@ -92,7 +92,7 @@
 		meshlist.push(stlmesh);
 		
 		//add root
-		node = datatree.createRoot(data.name, stlmesh);
+		node = datatree.createRoot('mesh', data.name, stlmesh);
 		window.grouptreeview.update(datatree.getRoot(), node);
 		window.scene.propertyTab(true);
 
@@ -104,10 +104,16 @@
 		if (checkbox) {
 			node.data.show = checkbox.checked;
 		} else {
+			console.log(node);
 			if(node.data.boundmin) {
 				console.log(node.data.boundmin, node.data.boundmax);
 				camera.setupLerp(node.data.boundmin, node.data.boundmax, node.data.trans);
 			}
+		}
+		
+		//update handsontable
+		if(node.type === 'text') {
+			window.hstable.loadData(node.data);
 		}
 	}
 	
@@ -129,7 +135,7 @@
 		}
 
 		meshlist.push(retmesh);
-		child = datatree.createChild(retmesh.name, retmesh);
+		child = datatree.createChild('mesh', retmesh.name, retmesh);
 		datatree.addChild(selectnode.name, child);
 
 		window.grouptreeview.update(datatree.getRoot(), child);
@@ -171,7 +177,7 @@
 		meshlist.push(gridmesh);
 		
 		//update tree
-		rootnode = datatree.createRoot('grid', gridmesh);
+		rootnode = datatree.createRoot('mesh', 'grid', gridmesh);
 		window.grouptreeview.update(datatree.getRoot(), rootnode);
 		/*
 		gridmesh= render.createGizmoMesh(1000);
@@ -653,13 +659,6 @@
 		*/
 		
 		// Create Tab
-		var consoleTab = window.animtab.create('bottom', {
-			'bottomTab' : { min : '10px', max : '400' }
-		}, {
-			'consoleOutput' : { min : '0px', max : '400px' }
-		}, 'console');
-		consoleTab(false)
-
 		var propertyTab = window.animtab.create('right', {
 			'rightTab' : { min : '0px', max : 'auto' }
 		}, {
@@ -672,6 +671,13 @@
 		}, {
 			'groupTab' : { min : '0px', max : '280px' }
 		}, 'Groups');
+
+		var consoleTab = window.animtab.create('bottom', {
+			'bottomTab' : { min : '10px', max : '400' }
+		}, {
+			'consoleOutput' : { min : '0px', max : '400px' }
+		}, 'console');
+		consoleTab(false)
 
 		window.scene.consoleTab        = consoleTab;
 		window.scene.propertyTab       = propertyTab;

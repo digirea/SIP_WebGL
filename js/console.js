@@ -29,7 +29,9 @@
 	}
 	
 	function loadData(data) {
-		grid.loadData(data);
+		if(grid) {
+			grid.loadData(data);
+		}
 	}
 
 	function updateGridData(data) {
@@ -53,13 +55,13 @@
 			});
 		}
 
-		grid.loadData(data);
+		loadData(data);
 
 		for(i = 0; i < grid.countCols(); i++) {
 			
 			//todo createElement
 			headerhtml = '';
-			headerhtml += '<INPUT type="text" value="Group ' + i + '"class="colnames">';
+			headerhtml += '<INPUT type="text" value="G' + i + '"class="colnames">';
 			headerhtml += '<SELECT name="ATTR" class="colselectbox">';
 			headerhtml += '<OPTION value="NONE">NONE</OPTION>';
 			headerhtml += '<OPTION value="X">X</OPTION>';
@@ -78,7 +80,7 @@
 		tbl.style = style;
 		tbl.style.overflow = scroll;
 
-		rootnode = datatree.createRoot(filename, data);
+		rootnode = datatree.createRoot('text', filename, data);
 		window.grouptreeview.update(datatree.getRoot(), rootnode);
 	}
 

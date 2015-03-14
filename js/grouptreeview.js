@@ -15,6 +15,7 @@
 			radius = {},
 			color  = {},
 			show   = {};
+		if(node.type === 'text') return null;
 		if (node.trans) {
 			trans.name = "trans";
 			trans.type = "vec3";
@@ -48,10 +49,17 @@
 		return values;
 	}
 	
+	
+	function doSelectNode(node) {
+		selectnode = node;
+		scene.selectTreeNode(node);
+	}
+	
 	function focusProperty(node) {
+		doSelectNode(node);
+		console.log('selectnode:', selectnode);
 		propertylistview.showProperty({
 			name : node.name,
-			varname : node.name,
 			input : getPropertyValues(node)
 		});
 	}
@@ -60,14 +68,12 @@
 	function clickfunc(node) {
 		return function (e) {
 			e.preventDefault();
-			selectnode = node;
+			doSelectNode(node);
 			console.log("selectnode : ", selectnode);
 			propertylistview.showProperty({
 				name : node.name,
-				varname : node.name,
 				input : getPropertyValues(node)
 			});
-			scene.selectTreeNode(node);
 		};
 	};
 
@@ -106,7 +112,7 @@
 			li.appendChild(link);
 			elem.appendChild(li);
 
-			//if(makebox === true) {
+			if(node.type === 'mesh') {
 				box = document.createElement("input");
 				box.type  = "checkbox";
 				box.name  = "name";
@@ -115,7 +121,7 @@
 				box.setAttribute('checked', 'checked');
 				box.onclick = (checkboxfunc(node, box));
 				li.appendChild(box);
-			//}
+			}
 
 			if (node.child && node.child.length > 0) {
 				ul = document.createElement("ul");
