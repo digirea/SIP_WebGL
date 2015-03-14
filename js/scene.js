@@ -508,7 +508,6 @@
 				pos[j] = 0;
 			}
 		}
-		console.log(pos);
 
 		//Create Name
 		name += 'ID' + GetModelId();

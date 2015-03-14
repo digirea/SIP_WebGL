@@ -2,8 +2,9 @@
 
 (function () {
 	"use strict";
-	var datatree = {};
-	var root  = [];
+	var datatree = {},
+		root     = [],
+		dataid   = 0;
 
 	function makeNode(type, name, data) {
 		var node =
@@ -20,9 +21,16 @@
 		};
 		return node;
 	}
+	
+	
+	function GetName(base) {
+		var ret = dataid;
+		dataid = dataid + 1;
+		return  'ID' + ret + '_' + base;
+	}
 
 	function createRoot(type, name, data) {
-		var r = makeNode(type, name, data);
+		var r = makeNode(type, GetName(name), data);
 		root.push(r);
 		return r;
 	};
@@ -31,7 +39,7 @@
 		var parent,
 			child,
 			i;
-		child = makeNode(type, name, data);
+		child = makeNode(type, GetName(name), data);
 		console.log('Create Child : ', child);
 		return child;
 	};

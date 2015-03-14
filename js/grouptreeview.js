@@ -5,7 +5,7 @@
 	"use strict";
 	var grouptreeview = {},
 		selectnode    = null,
-		treeRootElem = document.getElementById('tree');
+		treeRootElem  = document.getElementById('tree');
 
 	function getPropertyValues(node) {
 		var values = [],
