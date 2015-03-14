@@ -28,17 +28,12 @@
 		return null;
 	}
 	
-	function loadData(data) {
-		if(grid) {
-			grid.loadData(data);
-		}
+	function resetData() {
+		delete grid;
+		grid = null;
 	}
-
-	function updateGridData(data) {
-		var headerhtml = '';
-		var header     = [];
-		var rootnode   = {};
-		var style = tbl.style;
+	
+	function loadData(data) {
 		if(grid == null) {
 			grid = new Handsontable(tbl, {
 				rowHeaders   : true,
@@ -54,6 +49,18 @@
 				}
 			});
 		}
+
+		if(grid) {
+			grid.loadData(data);
+		}
+	}
+
+	function updateGridData(data) {
+		var headerhtml = '';
+		var header     = [];
+		var rootnode   = {};
+		var style = tbl.style;
+
 
 		loadData(data);
 
@@ -112,6 +119,7 @@
 	window.hstable.countCols = countCols;
 	window.hstable.openText  = openText;
 	window.hstable.loadData  = loadData;
+	window.hstable.resetData  = resetData;
 	window.hstable.getCol    = getCol;
 	
 })(window.scene);

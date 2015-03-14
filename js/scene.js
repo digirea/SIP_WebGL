@@ -38,8 +38,43 @@
 		}
 	}
 
-	function updateDataTree(data)
-	{
+	function delMesh(name) {
+		var i,
+			newlist;
+		
+		if(meshlist.length <= 0) return;
+		
+		newlist = [];
+		for(i = 0 ; i < meshlist.length; i++) {
+			if(meshlist[i].name !== name) {
+				newlist.push(meshlist[i]);
+			} else {
+				console.log('DELETE MESH : ', meshlist[i].name);
+			}
+		}
+		console.log(newlist);
+		meshlist = newlist;
+	}
+	
+	function delData(name) {
+		var i,
+			newlist;
+		
+		if(meshlist.length <= 0) return;
+		
+		newlist = [];
+		for(i = 0 ; i < meshlist.length; i++) {
+			if(meshlist[i].name !== name) {
+				newlist.push(meshlist[i]);
+			}
+		}
+		meshlist = newlist;
+		window.hstable.resetData();
+	}
+	
+	
+
+	function updateDataTree(data) {
 		console.log(meshlist);
 		var i;
 		var k;
@@ -97,7 +132,6 @@
 		camera.setupLerp(data.min, data.max);
 	}
 
-	
 	function selectTreeNode(node, checkbox) {
 		if (checkbox) {
 			node.data.show = checkbox.checked;
@@ -113,18 +147,20 @@
 			window.hstable.loadData(node.data);
 		}
 	}
-	
+
 	function updateMeshText(name, pos, type) {
 	  var mesh = {'position':pos},
 			bb,
 			child,
 			retmesh,
 			selectnode = window.grouptreeview.getSelectNode();
+
 		if (type === 'Line') {
 			retmesh  = render.createLineMesh(mesh, 8, 0.5);
 			retmesh.name = name + 'LINE';
 			retmesh.setShader(mesh_shader);
 		}
+
 		if (type === 'Point') {
 			retmesh = render.createPointMesh(mesh, 1.0, 8, 4);
 			retmesh.name = name + 'SPHERE';
@@ -683,6 +719,8 @@
 	window.scene.updateDataTree    = updateDataTree;
 	window.scene.selectTreeNode    = selectTreeNode;
 	window.scene.updateconsole     = updateconsole;
+	window.scene.delMesh           = delMesh;
+	window.scene.delData           = delData;
 	
 	window.scene.KickDog           = KickDog;
 }(window.loadSTLB));

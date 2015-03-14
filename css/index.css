@@ -117,6 +117,17 @@ body {
 }
 
 
+.groupdel {
+  font-family     : "Times New Roman", Times, serif;
+  font-size       : 32px;
+  position        :absolute;
+  background      :url("../image/icon_dustbox.png");
+  right           :0px;
+  width           :32px;
+  height          :32px;
+  border          :0;
+}
+
 #OpenSwitch {
 	position        :absolute;
 	margin          :5px;
@@ -132,6 +143,7 @@ body {
 
 #hstable { 
 	height          :400px;
+	background-color:rgba(200, 200, 100, 1.0);
 }
 
 

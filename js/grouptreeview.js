@@ -96,17 +96,14 @@
 
 	function delbuttonfunc(node) {
 		return function (e) {
-			//e.preventDefault();
-			/*
-			propertylistview.showProperty({
-				name : node.name,
-				varname : node.name,
-				input : getPropertyValues(node)
-			});
-			*/
-			//console.log(box.checked);
-			//scene.selectTreeNode(node, box);
-			console.log("DEL NODE:", node);
+			var temproot = datatree.getRoot();
+			var root;
+			if(node.name === temproot[0].name)
+			{
+				return;
+			}
+			root = window.datatree.delData(node.name);
+			window.grouptreeview.update(root, null);
 		};
 	};
 	
@@ -117,6 +114,7 @@
 			li,
 			ul,
 			ele,
+			box,
 			link;
 
 		
@@ -144,11 +142,12 @@
 				}
 				ele.onclick = (checkboxfunc(node, ele));
 				li.appendChild(ele);
+				box = ele;
 			}
 			ele = document.createElement("input");
 			ele.type  = "button";
-			ele.value = "DEL";
-			ele.class = "groupdel";
+			ele.setAttribute("class", "groupdel");
+			//ele.class = "groupdel";
 			ele.onclick = (delbuttonfunc(node));
 			li.appendChild(ele);
 

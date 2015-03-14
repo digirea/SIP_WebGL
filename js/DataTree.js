@@ -45,8 +45,34 @@
 		return child;
 	};
 
+	function delDataChild(name, node) {
+		var i;
+		if(node.data) {
+			//todo mesh data
+			window.scene.delMesh(node.data.name);
+		}
+		if(node.child && node.child.length > 0) {
+			for(i = 0 ; i < node.child.length; i = i + 1) {
+				delDataChild(name, node.child[i]);
+			}
+		}
+	}
+
 	function delData(name) {
-		
+		var i,
+			newroot;
+		if (root.length <= 0) return ;
+		newroot = [];
+		for (i = 0 ; i < root.length; i++) {
+			console.log(root[i].name, name);
+			if(root[i].name !== name) {
+				newroot.push(root[i]);
+			} else {
+				delDataChild(name, root[i]);
+			}
+		}
+		root = newroot;
+		return root;
 	}
 
 	function findRoot(name) {
@@ -105,6 +131,7 @@
 	window.datatree.addChild    = addChild;
 	window.datatree.getRoot     = getRoot;
 	window.datatree.getData     = getData;
+	window.datatree.delData     = delData;
 }());
 
 
