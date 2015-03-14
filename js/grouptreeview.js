@@ -147,7 +147,7 @@
 			}
 			ele = document.createElement("input");
 			ele.type  = "button";
-			ele.value = "del";
+			ele.value = "DEL";
 			ele.class = "groupdel";
 			ele.onclick = (delbuttonfunc(node));
 			li.appendChild(ele);

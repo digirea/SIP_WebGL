@@ -105,7 +105,6 @@
 	window.datatree.addChild    = addChild;
 	window.datatree.getRoot     = getRoot;
 	window.datatree.getData     = getData;
-	window.datatree.delData     = delData;
 }());
 
 
