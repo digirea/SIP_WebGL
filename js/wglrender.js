@@ -527,22 +527,22 @@ var WGLRender;
 			mesh;
 
 		//X
-		position.push(0, 0, 0);
+		position.push(0, 0.001, 0);
 		position.push(l, 0, 0);
 		color.push(1, 0, 0, 1);
 		color.push(1, 0, 0, 1);
+
+		//Y
+		position.push(0, 0.001, 0);
+		position.push(0, -l, 0);
+		color.push(0, 1, 0, 1);
+		color.push(0, 1, 0, 1);
 		
 		//Z
-		position.push(0, 0, 0);
+		position.push(0, 0.001, 0);
 		position.push(0, 0, l);
-		color.push(0, 1, 0, 1);
-		color.push(0, 1, 0, 1);
-		
-		//Y
-		position.push(0, 0, 0);
-		position.push(0, -l, 0);
-		color.push(1, 1, 0, 1);
-		color.push(1, 1, 0, 1);
+		color.push(0, 0, 1, 1);
+		color.push(0, 0, 1, 1);
 
 		mesh = this.createMeshObj({'pos' : position, 'color' : color});
 		mesh.setMode('Lines');

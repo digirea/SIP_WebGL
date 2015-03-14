@@ -97,7 +97,7 @@ body {
 	font-size:20px;
 	padding: 2px;
 	text-align: center;
-	border-radius: 5px;
+	border-radius: 2px;
 	cursor: pointer;
 }
 /* --- TODO: beautiful----*/
@@ -112,6 +112,30 @@ body {
 	color:#FFF;
 }
 
+
+#OpenSwitch {
+	position: absolute;
+	margin: 5px;
+	width: 150px;
+	height:25px;
+	top:0px;
+	background-color:#253e78;
+	color:#FFF;
+}
+
+
+#OpenWindow {
+	position: absolute;
+	margin: 5px;
+	width: 250px;
+	height:168px;
+	left:36px;
+	top:32px;
+	background-color:rgba(200, 200, 100, 1.0);
+	color:#FFF;
+}
+
+
 #OpenSTL {
 	/*position:absolute;
 	right:150px;
@@ -119,7 +143,7 @@ body {
 	margin: 5px;
 	width: 150px;
 	height:25px;
-	background-color:#253e78;
+	background-color:#F53e78;
 	color:#FFF;
 }
 
@@ -131,6 +155,17 @@ body {
 	width: 150px;
 	height:25px;
 	background-color:#253e08;
+	color:#FFF;
+}
+
+
+#ViewSwitch {
+	position: absolute;
+	margin: 5px;
+	width: 150px;
+	height:25px;
+	top:0px;
+	background-color:#253e78;
 	color:#FFF;
 }
 
@@ -169,6 +204,32 @@ body {
 	background-color:#155e98;
 	color:#FFF;
 }
+
+
+#SideViewX {
+	margin: 5px;
+	width: 150px;
+	height:25px;
+	background-color:#211111;
+	color:#FFFFFF;
+}
+
+#SideViewY {
+	margin: 5px;
+	width: 150px;
+	height:25px;
+	background-color:#112111;
+	color:#FFFFFF;
+}
+
+#SideViewZ {
+	margin: 5px;
+	width: 150px;
+	height:25px;
+	background-color:#111121;
+	color:#FFFFFF;
+}
+
 
 
 #DeleteGroup {
@@ -394,7 +455,7 @@ body {
 {
 	position: absolute;
 	width:280px;
-	top:0px;
+	top:36px;
 	bottom:430px;
 	background-color:rgba(180, 180, 180, 0.5);
 	overflow: auto;
@@ -466,7 +527,10 @@ body {
 
 .leftTab
 {
+/*
 	top : 0px;
+*/
+	top : 36px;
 	left : 280px;
 	width: 80px;
 	height : 20px;

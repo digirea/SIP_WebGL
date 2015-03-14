@@ -5,26 +5,11 @@
 	var datatree = {};
 	var root  = [];
 
-	function addData(name, data) {
-		var dataleaf = {'name':name, 'data':data, 'child':[]};
-		root.push(dataleaf);
-	};
-	
-	
-	function delData(name) {
-		
-	}
-
-	function createChild(name, index, data) {
-		var selectnode,
-			child,
-			i;
-		if(!root[index]) return;
-		selectnode = root[index];
-		child =
+	function makeNode(name, data) {
+		var node =
 		{
+			'child':[],
 			'name'  :name,
-			'index' :index,
 			'data'  :data,
 			'trans' :[0, 0, 0],
 			'scale' :[1, 1, 1],
@@ -32,12 +17,43 @@
 			'color' :[1, 1, 1, 1],
 			'radius':[1],
 		};
-		selectnode.child.push(child);
+		return node;
+	}
+	
+	
+	function addRoot(name, data) {
+		var r = {'name':name, 'data':data, 'child':[]};
+		root = r;
+	};
+	
+	
+	function delData(name) {
+		
+	}
+
+	function findTree(name, node) {
+		if(!node) return null;
+		if(node.name === name) {
+			return node;
+		}
+		return findTree(node.child);
+	}
+
+	function createChild(parentname, name, data) {
+		var parent,
+			child,
+			i;
+
+		if(root.length < 0) return null;
+
+		parent = findTree(parentname, root);
+		if(parent == null) return null;
+		child = makeNode(name, data);
+		parent.child.push(child);
 		return child;
 	};
 
 	function getRoot() {
-		console.log(root);
 		return root;
 	}
 
@@ -57,7 +73,7 @@
 	}
 
 	window.datatree             = datatree;
-	window.datatree.addData     = addData;
+	window.datatree.addRoot     = addRoot;
 	window.datatree.createChild = createChild;
 	window.datatree.getRoot     = getRoot;
 	window.datatree.getData     = getData;

@@ -112,7 +112,7 @@
 		});
 	}
 	
-	function create(direction, button, targets, textlabel) {
+	function create(direction, button, targets, textlabel, cbopen, cbclose) {
 		var buttonElem = document.createElement("input"),
 			separatorElem = document.createElement("span"),
 			buttonID = Object.keys(button)[0],
@@ -120,7 +120,7 @@
 			buttonMax = button[buttonID].max,
 			whstr,
 			json,
-			time = 500,
+			time = 100,
 			state = 0,
 			targetElem,
 			targetMin,
@@ -236,12 +236,18 @@
 					targetMin = targets[id].min;
 					targetMax = targets[id].max;
 					if (state === 0) {
+						if(cbopen) {
+							cbopen();
+						}
 						state = 1;
 						$animate(targetElem, to_json(whstr, { from: targetMax, to: targetMin }), time, beforeTarget);
 						//$animate(buttonElem, to_json(direction, { from : buttonMax, to : buttonMin }), time, beforeButton);
 						$animate(separatorElem, to_json(direction, { from : buttonMax, to : buttonMin }), time, beforeSep);
 					} else if (state === 2) {
 						state = 3;
+						if(cbclose) {
+							cbclose();
+						}
 						$animate(targetElem, to_json(whstr, { from: targetMin, to: targetMax }), time, afterTarget);
 						//$animate(buttonElem, to_json(direction, { from : buttonMin, to : buttonMax }), time, afterButton);
 						$animate(separatorElem, to_json(direction, { from : buttonMin, to : buttonMax }), time, afterSep);

@@ -1,4 +1,4 @@
-(function() {
+(function(updateconsole) {
 	var grid = null,
 			tbl,
 			filename = '',
@@ -40,6 +40,7 @@
 				onChange: function(change, source) {
 					console.log('チェンジされました', change, source);
 					if(source === 'loadData') return;
+					updateconsole(change);
 				}
 			});
 		}
@@ -101,5 +102,5 @@
 	window.hstable.countCols = countCols;
 	window.hstable.getCol    = getCol;
 	
-})();
+})(window.scene.updateconsole);
 

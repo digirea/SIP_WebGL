@@ -9,7 +9,6 @@
 		rAF            = null,
 		meshlist       = [],
 		camera         = null,
-		uicamera       = null,
 		gizmomesh      = null,
 		line_shader    = null,
 		mesh_shader    = null,
@@ -94,6 +93,7 @@
 			child,
 			linemesh  = null,
 			pointmesh = null,
+			root,
 			node      = {},
 			length    = 0;
 
@@ -103,8 +103,12 @@
 		stlmesh.name = data.name;
 		stlmesh.setShader(mesh_shader);
 		meshlist.push(stlmesh);
-		child = datatree.createChild(data.name, 0, stlmesh);
+		child = datatree.createChild(data.name, stlmesh);
 		window.grouptreeview.update(datatree.getRoot(), child);
+
+		//root = datatree.getRoot();
+		//datatree.addData(data.name, stlmesh);
+		console.log(root);
 		camera.setupLerp(data.min, data.max);
 	}
 
@@ -133,11 +137,13 @@
 			retmesh.name = name + '_SPHERE';
 			retmesh.setShader(mesh_shader);
 		}
-		
+
 		meshlist.push(retmesh);
-		child = datatree.createChild(retmesh.name, 0, retmesh);
+		child = datatree.createChild(retmesh.name, retmesh);
 		window.grouptreeview.update(datatree.getRoot(), child);
-		camera.setupLerp(retmesh.boundmin, retmesh.boundmax);
+
+		//datatree.addData(retmesh.name, retmesh);
+		//camera.setupLerp(retmesh.boundmin, retmesh.boundmax);
 	}
   
   
@@ -147,13 +153,13 @@
 		}
 		loadSTLB.openBinary(evt, function (data) {
 			updateMesh(data);
-			document.getElementById('Open').value = '';
+			document.getElementById('OpenSTLFile').value = '';
 		});
 	}
 
 	function onResize() {
 	  var i;
-		document.getElementById('Open').value = '';
+		document.getElementById('OpenSTLFile').value = '';
 		var w = document.getElementById('consoleOutput').style.width = window.innerWidth + 'px';
 		render.onResize();
 	}
@@ -166,16 +172,25 @@
 		
 		gridmesh.setMode('Lines');
 		gridmesh.setShader(line_shader);
-		gridmesh.boundmin = Mul(gridmesh.boundmin, [0.5, 0.5, 0.5]);
-		gridmesh.boundmax = Mul(gridmesh.boundmax, [0.5, 0.5, 0.5]);
+		gridmesh.boundmin = Mul(gridmesh.boundmin, [0.25, 0.25, 0.25]);
+		gridmesh.boundmax = Mul(gridmesh.boundmax, [0.25, 0.25, 0.25]);
 		meshlist.push(gridmesh);
-		datatree.addData('root', ['ROOT']);
-		datatree.createChild('Grid', 0, gridmesh);
-		window.grouptreeview.update(datatree.getRoot());
 
-		//create gizmo
+		/*
+		gridmesh= render.createGizmoMesh(1000);
+		gridmesh.setShader(line_shader);
+		meshlist.push(gridmesh);
+		*/
+
 		gizmomesh = render.createGizmoMesh(0.1);
 		gizmomesh.setShader(line_shader);
+
+		//create root
+		datatree.addRoot('/', ['/']);
+		datatree.createChild('Grid', gridmesh);
+		window.grouptreeview.update(datatree.getRoot());
+
+
 	}
 	
 	
@@ -183,6 +198,21 @@
 	{
 		resetShader();
 		resetTree();
+		
+		camera.resetView();
+	}
+	
+	
+	function sideViewX(e) {
+		camera.ViewSide('x');
+	}
+	
+	function sideViewY(e) {
+		camera.ViewSide('y');
+	}
+	
+	function sideViewZ(e) {
+		camera.ViewSide('z');
 	}
 	
 	function getViewProjMatrix()
@@ -193,7 +223,7 @@
 		if (camZ === 0) {
 			vpMatrix = camera.getViewMatrix(90, canvas.width / canvas.height, 0.1, 2560);
 		} else {
-			vpMatrix = camera.getViewMatrix(90, canvas.width / canvas.height, camZ * 0.002, camZ * 5.0);
+			vpMatrix = camera.getViewMatrix(90, canvas.width / canvas.height, camZ * 0.002, camZ * 10.0);
 		}
 		return vpMatrix;
 	}
@@ -346,6 +376,7 @@
 		resultpos[2] = meshlist[hitmesh].position[info.index + 2];
 
 		//RAY TEST START----------------------------
+		/*
 		mesh = render.createMeshObj
 		(
 			{
@@ -362,6 +393,7 @@
 		mesh.setMode('Lines');
 		mesh.setShader(line_shader);
 		meshlist.push(mesh);
+		*/
 		//RAY TEST END----------------------------
 		
 		mesh = meshlist[hitmesh];
@@ -493,18 +525,22 @@
 	
 	function drawGizmo()
 	{
-		var mtx    = new MatIV();
+		var mtx      = new MatIV();
 		var mRotate  = camera.RotateMatrix;
 		var mLook    = mtx.identity(mtx.create());
 		var mProj    = mtx.identity(mtx.create());
 		var vpM      = mtx.identity(mtx.create());
+		var aspect   = canvas.width / canvas.height;
 		mtx.lookAt([0, 0, 1], [0, 0, 0], [0, 1, 0], mLook);
-		//mtx.perspective(30, canvas.width / canvas.height, 0.1, 100, mProj);
-		mtx.ortho(-1,1, -1, 1, 0.1, 100, mProj);
+		mtx.ortho(-1 * aspect, 1 * aspect, -1, 1, 0.1, 100, mProj);
 		mtx.multiply(mProj, mLook, vpM);
 		mtx.multiply(vpM, mRotate, vpM);
-		vpM[12] = 0.8;
-		vpM[13] = -0.8;
+		
+		//transform gizmo
+		vpM[12] =  0.8;
+		vpM[13] =  0.8;
+		
+
 		render.setViewProjection(vpM);
 		render.drawMesh(gizmomesh);
 	}
@@ -520,8 +556,6 @@
 			vpMatrix;
 		camera.setupScreen([cw, ch]);
 		camera.updateMatrix(wh);
-		uicamera.setupScreen([cw, ch]);
-		uicamera.updateMatrix(wh);
 		//updatePopup()
 		render.clearColor(0.1, 0.1, 0.1, 1.0);
 		render.clearDepth(1.0);
@@ -546,61 +580,83 @@
 		updateFrame();
 	}
 	
+	
+	function openSwitch(e) {
+		var openwindow = document.getElementById('OpenWindow');
+		var result = $toggle(openwindow, 100);
+		window.scene.groupTab(false);
+	}
+	
 	function init() {
 		var i,
+			openswitch  = document.getElementById('OpenSwitch'),
 			openstl     = document.getElementById('OpenSTL'),
 			opencsv     = document.getElementById('OpenCSV'),
 			addline     = document.getElementById('AddLine'),
 			addpoint    = document.getElementById('AddPoint'),
+		
+			sideviewx   = document.getElementById('SideViewX'),
+			sideviewy   = document.getElementById('SideViewY'),
+			sideviewz   = document.getElementById('SideViewZ'),
+
 			deletegroup = document.getElementById('DeleteGroup');
 
 		canvas = document.getElementById('canvas');
 
 		//init render
-		render = new WGLRender();
+		render   = new WGLRender();
 		
 		//create camera 
 		camera   = new Camera();
-		uicamera = new Camera();
 		
 		//initialize render
 		render.init(canvas, window);
 		camera.init();
-		uicamera.init();
 		
 		//initialize contorller
 		window.ctrl.init(document, canvas, callbackResetView);
 		window.ctrl.setCamera(camera);
-		window.ctrl.setCamera(uicamera);
 		
-		document.getElementById('Open').addEventListener('change', loadSTL, false);
-
+		document.getElementById('OpenSTLFile').addEventListener('change', loadSTL, false);
+		
+		openswitch.onclick = openSwitch;
 		openstl.onclick  = loadSTL;
 		addline.onclick  = addLine;
 		addpoint.onclick = addPoint;
 
+		/*
+		sideviewx.onclick = sideViewX;
+		sideviewy.onclick = sideViewY;
+		sideviewz.onclick = sideViewZ;
+		*/
+		
+		
 		// Create Tab
 		var consoleTab = window.animtab.create('bottom', {
 			'bottomTab' : { min : '10px', max : '400' }
 		}, {
 			'consoleOutput' : { min : '0px', max : '400px' }
 		}, 'console');
+		consoleTab(false)
 
 		var propertyTab = window.animtab.create('right', {
 			'rightTab' : { min : '0px', max : 'auto' }
 		}, {
 			'menuTab' : { min : '0px', max : '300px' }
 		}, 'Property');
+		propertyTab(false);
 
-		var groups = window.animtab.create('left', {
+		var groupTab = window.animtab.create('left', {
 			'leftTab' : { min : '0px', max : 'auto' }
 		}, {
 			'groupTab' : { min : '0px', max : '280px' }
 		}, 'Groups');
-		
-		
+		groupTab(false);
+
+		window.scene.consoleTab        = consoleTab;
+		window.scene.propertyTab       = propertyTab;
+		window.scene.groupTab          = groupTab;
 		setTimeout(startGL, 250);
-		
 	}
 	
 	document.addEventListener("click" , MouseClickFunc);
@@ -611,6 +667,5 @@
 	window.scene.AddRootTree       = AddRootTree;
 	window.scene.selectTreeNode    = selectTreeNode;
 	window.scene.KickDog           = KickDog;
-	
-
 }(window.loadSTLB));
+
