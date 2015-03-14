@@ -92,6 +92,24 @@
 			scene.selectTreeNode(node, box);
 		};
 	};
+	
+
+	function delbuttonfunc(node) {
+		return function (e) {
+			//e.preventDefault();
+			/*
+			propertylistview.showProperty({
+				name : node.name,
+				varname : node.name,
+				input : getPropertyValues(node)
+			});
+			*/
+			//console.log(box.checked);
+			//scene.selectTreeNode(node, box);
+			console.log("DEL NODE:", node);
+		};
+	};
+	
 
 	function createTree(elem, root, makebox) {
 		var node,
@@ -118,7 +136,7 @@
 				ele.type  = "checkbox";
 				ele.name  = "name";
 				ele.value = "value";
-				ele.id    = "id";
+				ele.class = "groupcheckbox";
 				if (node.data) {
 					if (node.data.show == true) {
 						ele.setAttribute('checked', 'checked');
@@ -127,7 +145,12 @@
 				ele.onclick = (checkboxfunc(node, ele));
 				li.appendChild(ele);
 			}
-			
+			ele = document.createElement("input");
+			ele.type  = "button";
+			ele.value = "DEL";
+			ele.class = "groupdel";
+			ele.onclick = (delbuttonfunc(node));
+			li.appendChild(ele);
 
 			if (node.child && node.child.length > 0) {
 				ul = document.createElement("ul");

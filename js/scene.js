@@ -122,12 +122,12 @@
 			selectnode = window.grouptreeview.getSelectNode();
 		if (type === 'Line') {
 			retmesh  = render.createLineMesh(mesh, 8, 0.5);
-			retmesh.name = name + '_LINE';
+			retmesh.name = name + 'LINE';
 			retmesh.setShader(mesh_shader);
 		}
 		if (type === 'Point') {
 			retmesh = render.createPointMesh(mesh, 1.0, 8, 4);
-			retmesh.name = name + '_SPHERE';
+			retmesh.name = name + 'SPHERE';
 			retmesh.setShader(mesh_shader);
 		}
 
