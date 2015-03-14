@@ -16,7 +16,7 @@ var WGLRender;
 
 	render.prototype.setViewProjection = function (m) {
 		this.vpMat = m;
-	}
+	};
 
 	render.prototype.init = function (canvas, window) {
 		this.gl     = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
@@ -257,35 +257,32 @@ var WGLRender;
 	//------------------------------------------------------------------------------
 	render.prototype.getMeshBoundingBox = function (mesh, bmin, bmax) {
 		var i;
-		for(i = 0 ; i < mesh.position.length; i = i + 3) {
-			if(mesh.position[i + 0] !== mesh.position[i + 0])
-			{
+		for (i = 0; i < mesh.position.length; i = i + 3) {
+			if (mesh.position[i + 0] !== mesh.position[i + 0]) {
 				console.log("NAN:", i);
 			}
-			if(mesh.position[i + 1] !== mesh.position[i + 1])
-			{
+			if (mesh.position[i + 1] !== mesh.position[i + 1]) {
 				console.log("NAN:", i);
 			}
-			if(mesh.position[i + 2] !== mesh.position[i + 2])
-			{
+			if (mesh.position[i + 2] !== mesh.position[i + 2]) {
 				console.log("NAN:", i);
 			}
 			
 			GetMinMax(bmin, bmax, [mesh.position[i + 0], mesh.position[i + 1], mesh.position[i + 2]]);
 		}
 		console.log('BB:', bmin, bmax);
-		return {'min':bmin, 'max':bmax};
-	}
+		return {'min' : bmin, 'max' : bmax};
+	};
 
 	//------------------------------------------------------------------------------
 	// setupMeshBoundingBox
 	//------------------------------------------------------------------------------
 	render.prototype.setupMeshBoundingBox = function (mesh) {
 		var i,
-		maxValue       = 9999999,
-		bmin           = [maxValue, maxValue, maxValue],
-		bmax           = [-maxValue,-maxValue,-maxValue],
-		ret;
+			maxValue       = 9999999,
+			bmin           = [maxValue, maxValue, maxValue],
+			bmax           = [-maxValue, -maxValue, -maxValue],
+			ret;
 		
 		
 		//calc bb
@@ -295,7 +292,7 @@ var WGLRender;
 		
 		console.log(mesh);
 		return ret;
-	}
+	};
 	
 	//------------------------------------------------------------------------------
 	// MESHOBJ
@@ -329,17 +326,17 @@ var WGLRender;
 			mesh.attrnames.push('color');
 		}
 		
-		if(data.min) {
+		if (data.min) {
 			mesh.boundmin = data.min;
 			console.log(mesh.boundmin);
 		}
 		
-		if(data.max) {
+		if (data.max) {
 			mesh.boundmax = data.max;
 			console.log(mesh.boundmax);
 		}
 		
-		if(!data.min || !data.max) {
+		if (!data.min || !data.max) {
 			console.log('WARNING : undef min max calc BB');
 			this.setupMeshBoundingBox(mesh);
 			console.log('WARNING : DONEmin max calc BB');
@@ -490,7 +487,7 @@ var WGLRender;
 			reconstnoremal.push(normal[inum * 3],  normal[inum * 3 + 1], normal[inum * 3 + 2]);
 		}
 
-		return this.createMeshObj({'pos':pos, 'normal':reconstnoremal});
+		return this.createMeshObj({'pos' : pos, 'normal' : reconstnoremal});
 	};
 	
 	
@@ -628,15 +625,15 @@ var WGLRender;
 				px = pos[inum * 3 + 0] + x0;
 				py = pos[inum * 3 + 1] + y0;
 				pz = pos[inum * 3 + 2] + z0;
-				if(px !== px) px = 0;
-				if(py !== py) py = 0;
-				if(pz !== pz) pz = 0;
+				if (px !== px) { px = 0; }
+				if (py !== py) { py = 0; }
+				if (pz !== pz) { pz = 0; }
 				
 				position.push(px, py, pz);
 				normal.push(nor[inum * 3], nor[inum * 3 + 1], nor[inum * 3 + 2]);
 			}
 		}
-		mesh = this.createMeshObj({'pos':position, 'normal':normal});
+		mesh = this.createMeshObj({'pos' : position, 'normal' : normal});
 		mesh.radius = rad;
 		mesh.pointposition = base.position;
 		
@@ -689,9 +686,9 @@ var WGLRender;
 		this.gl.useProgram(program);
 		uniLocation = this.getShaderUniformList(shader, uniformname);
 		attLocation = this.getAttribList(program, mesh.attrnames);
-		if(uniLocation[0] !== null) this.setUniform('Matrix4fv', uniLocation[0], lMatrix);
-		if(uniLocation[1] !== null) this.setUniform('4fv',       uniLocation[1], mesh.diffColor);
-		if(uniLocation[2] !== null) this.setUniform('1f',        uniLocation[2], mesh.radius);
+		if (uniLocation[0] !== null) { this.setUniform('Matrix4fv', uniLocation[0], lMatrix); }
+		if (uniLocation[1] !== null) { this.setUniform('4fv',       uniLocation[1], mesh.diffColor); }
+		if (uniLocation[2] !== null) { this.setUniform('1f',        uniLocation[2], mesh.radius); }
 		this.setAttribute(mesh.vbo_list, attLocation, mesh.stride);
 		if (mesh.mode === 'Points') {
 			primnum = mesh.position.length / 3;
@@ -711,8 +708,8 @@ var WGLRender;
 			PolygonNum = 0,
 			i          = 0,
 			ref        = meshlist;
-		for(i = 0; i < ref.length; i = i + 1) {
-			if(ref[i].show == true) {
+		for (i = 0; i < ref.length; i = i + 1) {
+			if (ref[i].show == true) {
 				this.drawMesh(ref[i]);
 				VertexNum += ref[i].position.length / 3;
 			}
