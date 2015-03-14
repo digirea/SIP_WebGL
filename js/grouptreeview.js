@@ -51,13 +51,15 @@
 	
 	
 	function doSelectNode(node) {
-		selectnode = node;
+		if(node.type === 'text') {
+			selectnode = node;
+			console.log('selectnode:', selectnode);
+		}
 		scene.selectTreeNode(node);
 	}
 	
 	function focusProperty(node) {
 		doSelectNode(node);
-		console.log('selectnode:', selectnode);
 		propertylistview.showProperty({
 			name : node.name,
 			input : getPropertyValues(node)
@@ -69,7 +71,6 @@
 		return function (e) {
 			e.preventDefault();
 			doSelectNode(node);
-			console.log("selectnode : ", selectnode);
 			propertylistview.showProperty({
 				name : node.name,
 				input : getPropertyValues(node)

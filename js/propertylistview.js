@@ -250,7 +250,6 @@
 		}
 	}
 	
-	/*
 	function init() {
 		(function ($) {
 			$(function () {
@@ -264,7 +263,6 @@
 		}(jQuery));
 	}
 	init();
-	*/
 
 	window.propertylistview = propertylist;
 	window.propertylistview.showProperty = showProperty;
