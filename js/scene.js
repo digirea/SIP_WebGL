@@ -17,13 +17,6 @@
 		openstate      = 0,
 		consolestate   = 0;
 	
-	function GetModelId()
-	{
-		var ret = model_id;
-		model_id++;
-		return ret;
-	}
-
 	function resetShader() {
 		mesh_shader        = render.createShaderObj('vs_mesh', 'fs_mesh');
 		line_shader        = render.createShaderObj('vs_line', 'fs_line');
@@ -90,7 +83,7 @@
 			length    = 0;
 		console.log(data);
 		stlmesh      = render.createMeshObj(data);
-		data.name    = data.name + GetModelId();
+		data.name    = data.name;
 		stlmesh.name = data.name;
 		stlmesh.setShader(mesh_shader);
 		meshlist.push(stlmesh);
@@ -510,8 +503,6 @@
 		}
 
 		//Create Name
-		name += 'ID' + GetModelId();
-		console.log(pos);
 		updateMeshText(name, pos, type);
 	}
 	
