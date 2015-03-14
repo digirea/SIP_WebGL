@@ -77,6 +77,7 @@
 			}
 		}
 		root = newroot;
+		window.hstable.resetData();
 		return root;
 	}
 

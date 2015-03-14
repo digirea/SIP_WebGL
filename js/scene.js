@@ -55,24 +55,6 @@
 		console.log(newlist);
 		meshlist = newlist;
 	}
-	
-	function delData(name) {
-		var i,
-			newlist;
-		
-		if(meshlist.length <= 0) return;
-		
-		newlist = [];
-		for(i = 0 ; i < meshlist.length; i++) {
-			if(meshlist[i].name !== name) {
-				newlist.push(meshlist[i]);
-			}
-		}
-		meshlist = newlist;
-		window.hstable.resetData();
-	}
-	
-	
 
 	function updateDataTree(data) {
 		console.log(meshlist);

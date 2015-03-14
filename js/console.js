@@ -29,11 +29,20 @@
 	}
 	
 	function resetData() {
-		delete grid;
+		if(grid) {
+			delete grid;
+		}
 		grid = null;
+		if(tbl) {
+			tbl.innerHTML = '';
+		}
 	}
 	
 	function loadData(data) {
+		var header     = [];
+		var headerhtml = '';
+		var style = tbl.style;
+		resetData();
 		if(grid == null) {
 			grid = new Handsontable(tbl, {
 				rowHeaders   : true,
@@ -52,41 +61,35 @@
 
 		if(grid) {
 			grid.loadData(data);
+
+			for(i = 0; i < grid.countCols(); i++) {
+				
+				//todo createElement
+				headerhtml = '';
+				headerhtml += '<INPUT type="text" value="G' + i + '"class="colnames">';
+				headerhtml += '<SELECT name="ATTR" class="colselectbox">';
+				headerhtml += '<OPTION value="NONE">NONE</OPTION>';
+				headerhtml += '<OPTION value="X">X</OPTION>';
+				headerhtml += '<OPTION value="Y">Y</OPTION>';
+				headerhtml += '<OPTION value="Z">Z</OPTION>';
+				headerhtml += '<OPTION value="COLOR">COLOR</OPTION>';
+				headerhtml += '<OPTION value="INDEX">INDEX</OPTION>';
+				headerhtml += '<OPTION value="URL">URL</OPTION>';
+				headerhtml += '</SELECT>';
+				header.push(headerhtml);
+			}
+
+			grid.updateSettings({
+				colHeaders: header
+			});
+			tbl.style = style;
+			tbl.style.overflow = scroll;
 		}
 	}
 
 	function updateGridData(data) {
-		var headerhtml = '';
-		var header     = [];
 		var rootnode   = {};
-		var style = tbl.style;
-
-
 		loadData(data);
-
-		for(i = 0; i < grid.countCols(); i++) {
-			
-			//todo createElement
-			headerhtml = '';
-			headerhtml += '<INPUT type="text" value="G' + i + '"class="colnames">';
-			headerhtml += '<SELECT name="ATTR" class="colselectbox">';
-			headerhtml += '<OPTION value="NONE">NONE</OPTION>';
-			headerhtml += '<OPTION value="X">X</OPTION>';
-			headerhtml += '<OPTION value="Y">Y</OPTION>';
-			headerhtml += '<OPTION value="Z">Z</OPTION>';
-			headerhtml += '<OPTION value="COLOR">COLOR</OPTION>';
-			headerhtml += '<OPTION value="INDEX">INDEX</OPTION>';
-			headerhtml += '<OPTION value="URL">URL</OPTION>';
-			headerhtml += '</SELECT>';
-			header.push(headerhtml);
-		}
-
-		grid.updateSettings({
-			colHeaders: header
-		});
-		tbl.style = style;
-		tbl.style.overflow = scroll;
-
 		rootnode = datatree.createRoot('text', filename, data);
 		window.grouptreeview.update(datatree.getRoot(), rootnode);
 	}
@@ -119,7 +122,7 @@
 	window.hstable.countCols = countCols;
 	window.hstable.openText  = openText;
 	window.hstable.loadData  = loadData;
-	window.hstable.resetData  = resetData;
+	window.hstable.resetData = resetData;
 	window.hstable.getCol    = getCol;
 	
 })(window.scene);
