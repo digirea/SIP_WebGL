@@ -104,6 +104,15 @@ body {
 	cursor: pointer;
 }
 
+.menuButtonClassDel {
+	font-size:20px;
+	padding: 2px;
+	text-align: center;
+	border-radius: 2px;
+	cursor: pointer;
+}
+
+
 /* --- TODO: beautiful----*/
 .AddButton {
 	/*position:absolute;
@@ -200,6 +209,9 @@ DustBox{
 	background-color:#253e08;
 	color           :#FFF;
 }
+
+
+.groupdel
 
 .file input[type="file"] {
 	opacity: 0;
