@@ -34,11 +34,15 @@
 	}
 
 	function updateInfo(vnum, pnum) {
-		var info = document.getElementById('DataInfo'),
-			html = '';
-		html += 'VertexNum :' + vnum + '<br>';
-		html += 'PolygonNum:' + pnum + '<br>';
-		info.innerHTML = html;
+		var vnumElem = document.getElementById('vertexNum'),
+			pnumElem = document.getElementById('polygonNum');
+		
+		if (parseInt(vnumElem.innerHTML, 10) !== vnum) {
+			vnumElem.innerHTML = vnum;
+		}
+		if (parseInt(pnumElem.innerHTML, 10) !== pnum) {
+			pnumElem.innerHTML = pnum;
+		}
 	}
 
 	function updateDataTree(data)
