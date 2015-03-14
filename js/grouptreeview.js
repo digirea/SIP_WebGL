@@ -102,6 +102,8 @@
 			{
 				return;
 			}
+			console.log("------NODE:", node);
+			console.log("------NAME:", node.name);
 			root = window.datatree.delData(node.name);
 			window.grouptreeview.update(root, null);
 		};
@@ -110,6 +112,7 @@
 
 	function createTree(elem, root, makebox) {
 		var node,
+			temproot = datatree.getRoot(),
 			i,
 			li,
 			ul,
@@ -117,7 +120,6 @@
 			box,
 			link;
 
-		
 		for (i = 0; i < root.length; i = i + 1) {
 			node = root[i];
 			li = document.createElement("li");
@@ -144,12 +146,14 @@
 				li.appendChild(ele);
 				box = ele;
 			}
-			ele = document.createElement("input");
-			ele.type  = "button";
-			ele.setAttribute("class", "groupdel");
-			//ele.class = "groupdel";
-			ele.onclick = (delbuttonfunc(node));
-			li.appendChild(ele);
+
+			if (temproot[0].name !== node.name) {
+				ele = document.createElement("input");
+				ele.type  = "button";
+				ele.setAttribute("class", "groupdel");
+				ele.onclick = (delbuttonfunc(node));
+				li.appendChild(ele);
+			}
 
 			if (node.child && node.child.length > 0) {
 				ul = document.createElement("ul");

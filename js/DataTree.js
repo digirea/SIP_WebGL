@@ -47,14 +47,20 @@
 
 	function delDataChild(name, node) {
 		var i;
-		if(node.data) {
-			//todo mesh data
-			window.scene.delMesh(node.data.name);
-		}
+		var newchild = [];
+
 		if(node.child && node.child.length > 0) {
 			for(i = 0 ; i < node.child.length; i = i + 1) {
+				if(name !== node.child[i].name) {
+					newchild.push(node.child[i]);
+				} else {
+					console.log("DELETE CHILD ", name, node.child[i].name);
+					window.scene.delMesh(node.child[i].name);
+					console.log("DELETE MESH ", name, node.data.name);
+				}
 				delDataChild(name, node.child[i]);
 			}
+			node.child = newchild;
 		}
 	}
 
@@ -65,10 +71,9 @@
 		newroot = [];
 		for (i = 0 ; i < root.length; i++) {
 			console.log(root[i].name, name);
+			delDataChild(name, root[i]);
 			if(root[i].name !== name) {
 				newroot.push(root[i]);
-			} else {
-				delDataChild(name, root[i]);
 			}
 		}
 		root = newroot;
