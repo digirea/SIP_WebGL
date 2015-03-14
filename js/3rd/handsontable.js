@@ -18708,7 +18708,7 @@ WalkontableTableRenderer.prototype.renderRows = function (totalRows, cloneLimit,
   var isWorkingOnClone = this.wtTable.isWorkingOnClone();
 
   while (sourceRowIndex < totalRows && sourceRowIndex >= 0) {
-    if (visibleRowIndex > 1000) {
+    if (visibleRowIndex > 10000000) {
       throw new Error('Security brake: Too much TRs. Please define height for your table, which will enforce scrollbars.');
     }
 

@@ -31,12 +31,15 @@
 
 
 
-.DataInfo  {
-  font-family      : "Consolas";
-  font-size        : 24px;
-  position         : absolute;
-  background       : rgba(0, 0, 0, 0.5);
-  z-index          : 10;
+#DataInfo  {
+	font-family      : "Consolas";
+	font-size        : 12px;
+	position         : absolute;
+	top              : 95%;
+	left             : 90%;
+	background       : rgba(1, 1, 0, 0.5);
+	z-index          : 0;
+	color            : #FFFFFF;
 }
 
 
@@ -114,58 +117,66 @@ body {
 
 
 #OpenSwitch {
-	position: absolute;
-	margin: 5px;
-	width: 150px;
-	height:25px;
-	top:0px;
+	position        :absolute;
+	margin          :5px;
+	width           :150px;
+	height          :25px;
+
+	left            :0px;
+	top             :0px;
 	background-color:#253e78;
-	color:#FFF;
+	color           :#FFF;
+	z-index: 100;
+}
+
+#hstable { 
+	height          :400px;
 }
 
 
+#ViewSwitch {
+	position        :absolute;
+	margin          :5px;
+	width           :150px;
+	height          :25px;
+
+	left            :150px;
+	top             :0px;
+	background-color:#233232;
+	color           :#FFF;
+	z-index: 100;
+}
+
+
+
 #OpenWindow {
-	position: absolute;
-	margin: 5px;
-	width: 250px;
-	height:168px;
-	left:36px;
-	top:32px;
+	position        :absolute;
+	margin          :5px;
+	width           :250px;
+	height          :168px;
+	left            :36px;
+	top             :32px;
 	background-color:rgba(200, 200, 100, 1.0);
-	color:#FFF;
+	color           :#FFF;
 }
 
 
 #OpenSTL {
-	/*position:absolute;
-	right:150px;
-	top:28px;*/
-	margin: 5px;
-	width: 150px;
-	height:25px;
+	margin          : 5px;
+	width           : 150px;
+	height          :25px;
 	background-color:#F53e78;
-	color:#FFF;
+	color           :#FFF;
 }
 
 #OpenCSV {
 	/*position:absolute;
 	right:150px;
 	top:28px;*/
-	margin: 5px;
+	margin: 10px;
 	width: 150px;
 	height:25px;
 	background-color:#253e08;
-	color:#FFF;
-}
-
-
-#ViewSwitch {
-	position: absolute;
-	margin: 5px;
-	width: 150px;
-	height:25px;
-	top:0px;
-	background-color:#253e78;
 	color:#FFF;
 }
 
@@ -174,7 +185,7 @@ body {
 	/*position:absolute;
 	right:150px;
 	top:28px;*/
-	margin: 5px;
+	margin: 50px;
 	width: 150px;
 	height:25px;
 	background-color:#e53e78;
@@ -186,7 +197,7 @@ body {
 	/*position:absolute;
 	right:150px;
 	top:28px;*/
-	margin: 5px;
+	margin: 10px;
 	width: 150px;
 	height:25px;
 	background-color:#e50e78;
@@ -198,7 +209,7 @@ body {
 	/*position:absolute;
 	right:150px;
 	top:28px;*/
-	margin: 5px;
+	margin: 10px;
 	width: 150px;
 	height:25px;
 	background-color:#155e98;
@@ -207,7 +218,7 @@ body {
 
 
 #SideViewX {
-	margin: 5px;
+	margin: 10px;
 	width: 150px;
 	height:25px;
 	background-color:#211111;
@@ -215,7 +226,7 @@ body {
 }
 
 #SideViewY {
-	margin: 5px;
+	margin: 10px;
 	width: 150px;
 	height:25px;
 	background-color:#112111;
@@ -223,7 +234,7 @@ body {
 }
 
 #SideViewZ {
-	margin: 5px;
+	margin: 10px;
 	width: 150px;
 	height:25px;
 	background-color:#111121;
@@ -236,7 +247,7 @@ body {
 	/*position:absolute;
 	right:10px;
 	top:60px;*/
-	margin: 5px;
+	margin: 10px;
 	width: 120px;
 	height:25px;
 	background-color:#e5923e;
@@ -247,19 +258,19 @@ body {
 	/*position:absolute;
 	right:210px;
 	top:5px;*/
-	margin: 5px;
+	margin: 10px;
 	width: 60px;
 }
 #Open {
 	/*position:absolute;
 	right:0px;
 	top:5px;*/
-	margin: 5px;
+	margin: 10px;
 	width: 200px;
 }
 
 #ApplyProperty {
-	margin: 5px;
+	margin: 10px;
 	width: 120px;
 	height:25px;
 	background-color:#e5923e;
@@ -268,7 +279,7 @@ body {
 }
 
 #DeleteProperty {
-	margin: 5px;
+	margin: 10px;
 	width: 120px;
 	height:25px;
 	background-color:#111111;
@@ -279,7 +290,7 @@ body {
 
 
 #AlphaValue {
-	margin: 5px;
+	margin: 10px;
 	width: 120px;
 	height:25px;
 	background-color:#111111;
@@ -320,7 +331,7 @@ body {
 
 .nodeListBox {
 	/*position:absolute;*/
-	margin: 5px;
+	margin: 10px;
 }
 
 .noneselect
@@ -345,7 +356,7 @@ body {
 .nodeProperty
 {
 	display: table;
-	margin: 5px;
+	margin: 10px;
 }
 
 .nodePropertyRow

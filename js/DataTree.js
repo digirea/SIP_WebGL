@@ -19,16 +19,46 @@
 		};
 		return node;
 	}
-	
-	
-	function addRoot(name, data) {
-		var r = {'name':name, 'data':data, 'child':[]};
-		root = r;
+
+	function createRoot(name, data) {
+		var r = makeNode(name, data);
+		root.push(r);
+		return r;
 	};
-	
-	
+
+	function createChild(name, data) {
+		var parent,
+			child,
+			i;
+		child = makeNode(name, data);
+		console.log('Create Child : ', child);
+		return child;
+	};
+
 	function delData(name) {
 		
+	}
+
+	function findRoot(name) {
+		var i;
+		if(root.length < 0) {
+			console.log('root length is zero.');
+			return null;
+		}
+		for(i = 0 ; i < root.length ; i++) {
+			if(root[i].name == name) {
+				return root[i];
+			}
+		}
+		console.log('findRoot not found : ', name);
+		return null;
+	}
+
+	function addChild(rootname, child) {
+		var node = findRoot(rootname);
+		if(!node) return ;
+		node.child.push(child);
+		return ;
 	}
 
 	function findTree(name, node) {
@@ -38,20 +68,6 @@
 		}
 		return findTree(node.child);
 	}
-
-	function createChild(parentname, name, data) {
-		var parent,
-			child,
-			i;
-
-		if(root.length < 0) return null;
-
-		parent = findTree(parentname, root);
-		if(parent == null) return null;
-		child = makeNode(name, data);
-		parent.child.push(child);
-		return child;
-	};
 
 	function getRoot() {
 		return root;
@@ -73,8 +89,10 @@
 	}
 
 	window.datatree             = datatree;
-	window.datatree.addRoot     = addRoot;
+	window.datatree.createRoot  = createRoot;
+	window.datatree.findRoot    = findRoot;
 	window.datatree.createChild = createChild;
+	window.datatree.addChild    = addChild;
 	window.datatree.getRoot     = getRoot;
 	window.datatree.getData     = getData;
 }());

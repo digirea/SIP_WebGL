@@ -11,6 +11,7 @@
 		multY       = 0.5,
 		multrotate  = 0.5,
 		multWheel   = 0.1,
+		multWheelCoef = 1.0,
 		mouseState  = {"Left": false, "Center": false, "Right": false };
 	
 	function resetMouseState() {
@@ -112,7 +113,9 @@
 
 	function mouseWheel(e) {
 		var i,
-			info;
+			info,
+			delta  = 0,
+			rate   = multWheelCoef * multWheel;
 
 		if (camera.length <= 0) {
 			return;
@@ -120,12 +123,24 @@
 
 		for (i = 0 ; i < camera.length; i++) {
 			if (e.wheelDelta) {
-				camera[i].addPos(0, 0, e.wheelDelta * multWheel);
-			} else {
-				camera[i].addPos(0, 0, -e.detail    * multWheel * 40.0);
+				delta = e.wheelDelta * rate * 1.0;
 			}
+			if( e.detail) {
+				delta = -e.detail    * rate * 40.0
+				
+			}
+			camera[i].addPos(0, 0, delta);
 			if(camera[i].camPos[2] >= 0.0) {
 				camera[i].camPos[2] = -0.05;
+				return;
+			}
+			
+			//update coef
+			if(delta < 0) {
+				multWheelCoef *= (1.0 + 0.02);
+			}
+			if(delta > 0) {
+				multWheelCoef *= (1.0 - 0.02);
 			}
 		}
 		e.preventDefault();

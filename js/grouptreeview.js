@@ -4,6 +4,7 @@
 (function (datatree, propertylistview) {
 	"use strict";
 	var grouptreeview = {},
+		selectnode    = null,
 		treeRootElem = document.getElementById('tree');
 
 	function getPropertyValues(node) {
@@ -59,6 +60,8 @@
 	function clickfunc(node) {
 		return function (e) {
 			e.preventDefault();
+			selectnode = node;
+			console.log("selectnode : ", selectnode);
 			propertylistview.showProperty({
 				name : node.name,
 				varname : node.name,
@@ -83,7 +86,7 @@
 		};
 	};
 
-	function createTree(elem, root) {
+	function createTree(elem, root, makebox) {
 		var node,
 			i,
 			li,
@@ -103,15 +106,16 @@
 			li.appendChild(link);
 			elem.appendChild(li);
 
-			box = document.createElement("input");
-			box.type = "checkbox";
-			box.name = "name";
-			box.value = "value";
-			box.id = "id";
-			box.setAttribute('checked', 'checked');
-			box.onclick = (checkboxfunc(node, box));
-
-			li.appendChild(box);
+			//if(makebox === true) {
+				box = document.createElement("input");
+				box.type  = "checkbox";
+				box.name  = "name";
+				box.value = "value";
+				box.id    = "id";
+				box.setAttribute('checked', 'checked');
+				box.onclick = (checkboxfunc(node, box));
+				li.appendChild(box);
+			//}
 
 			if (node.child && node.child.length > 0) {
 				ul = document.createElement("ul");
@@ -136,6 +140,7 @@
 	
 	function update(node, child) {
 		var elem;
+		console.log(node);
 		if (!node) { return; }
 		if (node.child && node.child.length > 0) {
 			elem = document.getElementById(node.name);
@@ -151,6 +156,12 @@
 		{
 			focusProperty(child);
 		}
+	}
+	
+	function getSelectNode()
+	{
+		console.log('getSelectNode : ', selectnode);
+		return selectnode;
 	}
 	
 	function init() {
@@ -169,6 +180,7 @@
 	init();
 	window.grouptreeview = grouptreeview;
 	window.grouptreeview.update = update;
+	window.grouptreeview.getSelectNode = getSelectNode;
 	
 }(window.datatree, window.propertylistview));
 

@@ -1,4 +1,4 @@
-(function(updateconsole) {
+(function(scene) {
 	var grid = null,
 			tbl,
 			filename = '',
@@ -27,10 +27,15 @@
 		}
 		return null;
 	}
+	
+	function loadData(data) {
+		grid.loadData(data);
+	}
 
 	function updateGridData(data) {
 		var headerhtml = '';
-		var header = [];
+		var header     = [];
+		var rootnode   = {};
 		var style = tbl.style;
 		if(grid == null) {
 			grid = new Handsontable(tbl, {
@@ -39,8 +44,11 @@
 				fillHandle   : false,
 				onChange: function(change, source) {
 					console.log('チェンジされました', change, source);
+					if(grid) {
+						grid.render();
+					}
 					if(source === 'loadData') return;
-					updateconsole(change);
+					window.scene.updateconsole(change);
 				}
 			});
 		}
@@ -69,11 +77,12 @@
 		});
 		tbl.style = style;
 		tbl.style.overflow = scroll;
-		tbl.style.zIndex = "5";
-		scene.AddRootTree({'name':filename});
+
+		rootnode = datatree.createRoot(filename, data);
+		window.grouptreeview.update(datatree.getRoot(), rootnode);
 	}
 
-	function handleReadText(evt) {
+	function openText(evt) {
 		var files = evt.target.files;
 		var reader = new FileReader();
 		if (evt === '') {
@@ -86,7 +95,7 @@
 			var header = [];
 			updateGridData(csvArray);
 			filename = '';
-			document.getElementById('OpenText').value = ''; // clear filename
+			document.getElementById('OpenTextFile').value = ''; // clear filename
 		});
 		filename = files[0].name;
 		reader.readAsText(files[0], "UTF-8");
@@ -94,13 +103,14 @@
 
 	function init() {
 		tbl = document.getElementById('hstable');
-		document.getElementById('OpenText').addEventListener('change', handleReadText, false);
 	}
 
 	window.addEventListener('load', init, false);
 	window.hstable           = hstable;
 	window.hstable.countCols = countCols;
+	window.hstable.openText  = openText;
+	window.hstable.loadData  = loadData;
 	window.hstable.getCol    = getCol;
 	
-})(window.scene.updateconsole);
+})(window.scene);
 

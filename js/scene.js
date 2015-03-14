@@ -13,7 +13,9 @@
 		line_shader    = null,
 		mesh_shader    = null,
 		scene          = {},
-		model_id       = 0;
+		model_id       = 0,
+		openstate      = 0,
+		consolestate   = 0;
 	
 	function GetModelId()
 	{
@@ -34,9 +36,6 @@
 	function updateInfo(vnum, pnum) {
 		var info = document.getElementById('DataInfo'),
 			html = '';
-		info.style.color = 'black';
-		info.style.left  = '20px';
-		info.style.top   = (canvas.height - 100) + 'px';
 		html += 'VertexNum :' + vnum + '<br>';
 		html += 'PolygonNum:' + pnum + '<br>';
 		info.innerHTML = html;
@@ -48,28 +47,25 @@
 		var i;
 		var k;
 		for (i = 0; i < meshlist.length; i = i + 1) {
-			//console.log(meshlist[i].name, data);
 			if (meshlist[i].name === data.name) {
 				console.log(data);
 				for (k = 0 ; k < data.input.length; k = k + 1) {
-					if (data.input[k].name === 'trans')
-					{
+					if (data.input[k].name === 'trans') {
 						meshlist[i].trans = data.input[k].value;
 					}
-					if (data.input[k].name === 'rotate')
-					{
+					if (data.input[k].name === 'rotate') {
 						meshlist[i].rotate = data.input[k].value;
 					}
-					if (data.input[k].name === 'scale')
-					{
+
+					if (data.input[k].name === 'scale') {
 						meshlist[i].scale = data.input[k].value;
 					}
-					if (data.input[k].name === 'color')
-					{
+
+					if (data.input[k].name === 'color') {
 						meshlist[i].diffColor = data.input[k].value;
 					}
-					if (data.input[k].name === 'radius')
-					{
+
+					if (data.input[k].name === 'radius') {
 						meshlist[i].radius = parseFloat(data.input[k].value);
 					}
 				}
@@ -78,37 +74,28 @@
 		}
 	}
 
-	function AddRootTree(data)
-	{
-		datatree.addData(data);
-		window.grouptreeview.update(datatree.getRoot());
-	}
-
 	/// updateMesh  call back function for loadSTL
 	/// @param data STL data, pos, normal...
 	function updateMesh(data) {
 		var point_p   = data.pos,
 			point_n   = data.normal,
 			stlmesh   = null,
-			child,
 			linemesh  = null,
 			pointmesh = null,
-			root,
 			node      = {},
 			length    = 0;
-
 		console.log(data);
-		stlmesh = render.createMeshObj(data);
-		data.name = data.name + GetModelId();
+		stlmesh      = render.createMeshObj(data);
+		data.name    = data.name + GetModelId();
 		stlmesh.name = data.name;
 		stlmesh.setShader(mesh_shader);
 		meshlist.push(stlmesh);
-		child = datatree.createChild(data.name, stlmesh);
-		window.grouptreeview.update(datatree.getRoot(), child);
+		
+		//add root
+		node = datatree.createRoot(data.name, stlmesh);
+		window.grouptreeview.update(datatree.getRoot(), node);
+		window.scene.propertyTab(true);
 
-		//root = datatree.getRoot();
-		//datatree.addData(data.name, stlmesh);
-		console.log(root);
 		camera.setupLerp(data.min, data.max);
 	}
 
@@ -117,8 +104,10 @@
 		if (checkbox) {
 			node.data.show = checkbox.checked;
 		} else {
-			console.log(node.data.boundmin, node.data.boundmax);
-			camera.setupLerp(node.data.boundmin, node.data.boundmax, node.data.trans);
+			if(node.data.boundmin) {
+				console.log(node.data.boundmin, node.data.boundmax);
+				camera.setupLerp(node.data.boundmin, node.data.boundmax, node.data.trans);
+			}
 		}
 	}
 	
@@ -126,7 +115,8 @@
 	  var mesh = {'position':pos},
 			bb,
 			child,
-			retmesh;
+			retmesh,
+			selectnode = window.grouptreeview.getSelectNode();
 		if (type === 'Line') {
 			retmesh  = render.createLineMesh(mesh, 8, 0.5);
 			retmesh.name = name + '_LINE';
@@ -140,7 +130,10 @@
 
 		meshlist.push(retmesh);
 		child = datatree.createChild(retmesh.name, retmesh);
+		datatree.addChild(selectnode.name, child);
+
 		window.grouptreeview.update(datatree.getRoot(), child);
+		window.scene.propertyTab(true);
 
 		//datatree.addData(retmesh.name, retmesh);
 		//camera.setupLerp(retmesh.boundmin, retmesh.boundmax);
@@ -154,6 +147,7 @@
 		loadSTLB.openBinary(evt, function (data) {
 			updateMesh(data);
 			document.getElementById('OpenSTLFile').value = '';
+			openSwitch();
 		});
 	}
 
@@ -175,22 +169,17 @@
 		gridmesh.boundmin = Mul(gridmesh.boundmin, [0.25, 0.25, 0.25]);
 		gridmesh.boundmax = Mul(gridmesh.boundmax, [0.25, 0.25, 0.25]);
 		meshlist.push(gridmesh);
-
+		
+		//update tree
+		rootnode = datatree.createRoot('grid', gridmesh);
+		window.grouptreeview.update(datatree.getRoot(), rootnode);
 		/*
 		gridmesh= render.createGizmoMesh(1000);
 		gridmesh.setShader(line_shader);
 		meshlist.push(gridmesh);
 		*/
-
-		gizmomesh = render.createGizmoMesh(0.1);
+		gizmomesh = render.createGizmoMesh(0.15);
 		gizmomesh.setShader(line_shader);
-
-		//create root
-		datatree.addRoot('/', ['/']);
-		datatree.createChild('Grid', gridmesh);
-		window.grouptreeview.update(datatree.getRoot());
-
-
 	}
 	
 	
@@ -321,8 +310,26 @@
 		}
 	}
 	
-	function Pick(win_x, win_y)
-	{
+	function createRayMesh(org, dir, t) {
+		var mesh = render.createMeshObj
+		(
+			{
+				'pos' : [
+				org[0],
+				org[1],
+				org[2],
+				org[0] + dir[0] * t,
+				org[1] + dir[1] * t,
+				org[2] + dir[2] * t],
+				'color' : [1,0,0,1,1,0,0,1]
+			}
+		);
+		mesh.setMode('Lines');
+		mesh.setShader(line_shader);
+		meshlist.push(mesh);
+	}
+
+	function Pick(win_x, win_y) {
 		var mtx      = new MatIV(),
 			vpM      = mtx.identity(mtx.create()),
 			vpMI     = mtx.identity(mtx.create()),
@@ -377,22 +384,7 @@
 
 		//RAY TEST START----------------------------
 		/*
-		mesh = render.createMeshObj
-		(
-			{
-				'pos' : [
-				org[0],
-				org[1],
-				org[2],
-				org[0] + dir[0] * ishit.t,
-				org[1] + dir[1] * ishit.t,
-				org[2] + dir[2] * ishit.t],
-				'color' : [1,0,0,1,1,0,0,1]
-			}
-		);
-		mesh.setMode('Lines');
-		mesh.setShader(line_shader);
-		meshlist.push(mesh);
+		createRayMesh
 		*/
 		//RAY TEST END----------------------------
 		
@@ -414,8 +406,7 @@
 	}
 	
 	
-	function MouseClickFunc(evt)
-	{
+	function MouseClickFunc(evt) {
 		//console.log(evt.clientX, evt.clientY);
 		if (evt.button === 1) Pick(evt.clientX, evt.clientY);
 	}
@@ -452,12 +443,11 @@
 		
 		hstable = document.getElementById('hstable');
 		clonetable = hstable.getElementsByClassName('ht_clone_top');
-		if (clonetable.length <= 0)
-		{
+		if (clonetable.length <= 0) {
 			console.log('Not found table. bailout.');
 			return;
 		}
-		
+
 		//check hstable header
 		headernames = clonetable[0].getElementsByClassName('colnames');
 		selectnames = clonetable[0].getElementsByClassName('colselectbox');
@@ -480,8 +470,6 @@
 		for (i = 0 ; i < colinfo.length; i = i + 1) {
 			name += headernames[colinfo[i].index].value + '_';
 		}
-
-		console.log(colinfo);
 		
 		if (colinfo.length <= 0) {
 			console.log('not select col. bail out');
@@ -512,19 +500,16 @@
 	}
 	
 	
-	function addLine(e)
-	{
+	function addLine(e) {
 		addGroup('Line')
 	}
 	
-	function addPoint(e)
-	{
+	function addPoint(e) {
 		addGroup('Point')
 	}
 	
 	
-	function drawGizmo()
-	{
+	function drawGizmo() {
 		var mtx      = new MatIV();
 		var mRotate  = camera.RotateMatrix;
 		var mLook    = mtx.identity(mtx.create());
@@ -535,11 +520,10 @@
 		mtx.ortho(-1 * aspect, 1 * aspect, -1, 1, 0.1, 100, mProj);
 		mtx.multiply(mProj, mLook, vpM);
 		mtx.multiply(vpM, mRotate, vpM);
-		
+
 		//transform gizmo
-		vpM[12] =  0.8;
-		vpM[13] =  0.8;
-		
+		vpM[12] =  0.85;
+		vpM[13] =  0.85;
 
 		render.setViewProjection(vpM);
 		render.drawMesh(gizmomesh);
@@ -566,9 +550,7 @@
 		render.setViewProjection(vpMatrix);
 		render.drawMeshList(meshlist, result);
 		updateInfo(result[0].VertexNum, result[0].PolygonNum);
-		
 		drawGizmo();
-		
 		render.swapBuffer()(updateFrame);
 	}
 
@@ -576,16 +558,54 @@
 		console.log('startGL');
 		onResize();
 		resetAll();
-
 		updateFrame();
 	}
-	
-	
+
 	function openSwitch(e) {
 		var openwindow = document.getElementById('OpenWindow');
-		var result = $toggle(openwindow, 100);
-		window.scene.groupTab(false);
+		$toggle(openwindow, 100);
+		if(openstate === 0) {
+			window.scene.groupTab(false);
+			openstate = 1;
+		} else {
+			window.scene.groupTab(true);
+			openstate = 0;
+		}
 	}
+	
+	
+	function consoleSwitch(e) {
+		var openwindow = document.getElementById('console');
+		$toggle(openwindow, 100);
+		
+	}
+	
+	
+	function loadTXT(e)
+	{
+		window.hstable.openText(e);
+		openSwitch();
+		document.getElementById('OpenTextFile').innerHTML = '';
+		
+		if(consolestate === 0) {
+			consolestate = 1;
+			window.scene.consoleTab(true);
+		}
+	}
+	
+	
+	function pickupClick(e)
+	{
+		
+	}
+	
+	
+	
+	function updateconsole(change)
+	{
+		
+	}
+	
 	
 	function init() {
 		var i,
@@ -595,10 +615,10 @@
 			addline     = document.getElementById('AddLine'),
 			addpoint    = document.getElementById('AddPoint'),
 		
+			pickup      = document.getElementById('pickup'),
 			sideviewx   = document.getElementById('SideViewX'),
 			sideviewy   = document.getElementById('SideViewY'),
 			sideviewz   = document.getElementById('SideViewZ'),
-
 			deletegroup = document.getElementById('DeleteGroup');
 
 		canvas = document.getElementById('canvas');
@@ -617,10 +637,12 @@
 		window.ctrl.init(document, canvas, callbackResetView);
 		window.ctrl.setCamera(camera);
 		
-		document.getElementById('OpenSTLFile').addEventListener('change', loadSTL, false);
+		document.getElementById('OpenSTLFile').addEventListener('change',  loadSTL, false);
+		document.getElementById('OpenTextFile').addEventListener('change', loadTXT, false);
+		
+		pickup.onclick = pickupClick;
 		
 		openswitch.onclick = openSwitch;
-		openstl.onclick  = loadSTL;
 		addline.onclick  = addLine;
 		addpoint.onclick = addPoint;
 
@@ -629,7 +651,6 @@
 		sideviewy.onclick = sideViewY;
 		sideviewz.onclick = sideViewZ;
 		*/
-		
 		
 		// Create Tab
 		var consoleTab = window.animtab.create('bottom', {
@@ -642,7 +663,7 @@
 		var propertyTab = window.animtab.create('right', {
 			'rightTab' : { min : '0px', max : 'auto' }
 		}, {
-			'menuTab' : { min : '0px', max : '300px' }
+			'menuTab' : { min : '0px', max : '500px' }
 		}, 'Property');
 		propertyTab(false);
 
@@ -651,12 +672,11 @@
 		}, {
 			'groupTab' : { min : '0px', max : '280px' }
 		}, 'Groups');
-		groupTab(false);
 
 		window.scene.consoleTab        = consoleTab;
 		window.scene.propertyTab       = propertyTab;
 		window.scene.groupTab          = groupTab;
-		setTimeout(startGL, 250);
+		setTimeout(startGL, 50);
 	}
 	
 	document.addEventListener("click" , MouseClickFunc);
@@ -664,8 +684,9 @@
 	window.onresize                = onResize;
 	window.scene                   = scene;
 	window.scene.updateDataTree    = updateDataTree;
-	window.scene.AddRootTree       = AddRootTree;
 	window.scene.selectTreeNode    = selectTreeNode;
+	window.scene.updateconsole     = updateconsole;
+	
 	window.scene.KickDog           = KickDog;
 }(window.loadSTLB));
 

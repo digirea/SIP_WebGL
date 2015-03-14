@@ -22,7 +22,6 @@
   <script type="text/javascript" src="./js/math.js"></script>
   <script type="text/javascript" src="./js/stlloader.js"></script>
   <script type="text/javascript" src="./js/DataTree.js"></script>
-  <script type="text/javascript" src="./js/scene.js"></script>
   <script type="text/javascript" src="./js/camera.js"></script>
   <script type="text/javascript" src="./js/ctrl.js"></script>
   <script type="text/javascript" src="./js/wglrender.js"></script>
@@ -40,21 +39,27 @@
       uniform   vec4   uColor;
       uniform   float  Radius;
       varying   vec4   vColor;
+      varying   vec4   vNormal;
 
       void main(void)
       {
-        vec3       L = normalize(vec3(2.0, 9.0, -3.0));
-        vec3 col     = uColor.xyz * max(0.0, dot(normal, L));
-        vColor       = vec4(col, uColor.a);
+        vec4 pos     = vec4(0, 0, 0, 0);
         vec3 N       = normalize(normal);
-        vec3 p       = position + (normalize(normal) * (Radius - 1.0));
-        gl_Position  = mvpMatrix * vec4(p, 1.0);
+        vec3       L = normalize(vec3(2.0, 9.0, -3.0));
+        vec3 col     = uColor.xyz * max(0.0, dot(N, L));
+        vNormal.xyz  = N.xyz;
+        vColor       = vec4(col, uColor.a);
+        vec3 p       = position + (N * (Radius - 1.0));
+        pos          = mvpMatrix * vec4(p, 1.0);
+        vNormal.w    = pos.z / pos.w;
+        gl_Position  = pos;
       }
   </script>
 
   <script id="fs_mesh" type="x-shader/x-fragment">
       precision mediump float;
-      varying vec4      vColor;
+      varying vec4   vColor;
+      varying vec4   vNormal;
       void main(void)
       {
           gl_FragColor = vColor;
@@ -92,26 +97,9 @@
 <body>
 <div id="main">
   <div id="pickup"></div>
-  <canvas id="canvas"      class="canvas"></canvas>
+  <canvas id="canvas" class="canvas"></canvas>
 	<div id="progress"></div>
-	<div class="menuTab" id="menuTab">
-		<div id="property"       class="nodeProperty"></div>
-
-		<!--
-			<div id="ApplyProperty"  class="menuButtonClass noneselect">Apply</div>
-			<div id="DeleteProperty" class="menuButtonClass noneselect">Delete</div>
-		-->
-
-		<div   id="ColorPicker"></div>
-		
-		<input id="AlphaValue"   class="menuButtonClass noneselect" type="range" value="10" min="10" max="320">
-	</div>
-	<div id="consoleOutput" class="consoleOutput">
-		<span id="consoleTextBlock" class="consoleTextBlock">
-		<div id="hstable" class="hstable"></div>
-		</span>
-	</div>
-	
+	<div id="DataInfo" class="DataInfo"></div>
 	<div id="groupTab" class="groupTab">
 		<div id="AddPoint" class="menuButtonClass noneselect">Add-Point</div>
 		<div id="AddLine" class="menuButtonClass noneselect">Add-Line</div>
@@ -123,10 +111,8 @@
 			<div id="SideViewZ" class="menuButtonClass noneselect">SideViewZ</div>
 		-->
 
-		<div class="spacer"></div>
 		<div id="DeleteGroup" class="menuButtonClass noneselect">DeleteGroup</div>
 		<div class="spacer"></div>
-		<div id="DataInfo" class="DataInfo"></div>
 		<div id="main">
 			<div id="sidetree">
 			<div id="sidetreecontrol"><a href="?#">Collapse All</a> | <a href="?#">Expand All</a></div>
@@ -134,19 +120,42 @@
 		</div>
 		</div>
 	</div>
+	
+	<div class="menuTab" id="menuTab">
+		<div id="property"       class="nodeProperty"></div>
+		<!--
+			<div id="ApplyProperty"  class="menuButtonClass noneselect">Apply</div>
+			<div id="DeleteProperty" class="menuButtonClass noneselect">Delete</div>
+		-->
+		<div   id="ColorPicker"></div>
+		<input id="AlphaValue"   class="menuButtonClass noneselect" type="range" value="10" min="10" max="320">
+	</div>
+
+	<div id="consoleOutput" class="consoleOutput">
+		<span id="consoleTextBlock" class="consoleTextBlock">
+		<div id="hstable" class="hstable"></div>
+		</span>
+	</div>
+	
+	
 	<div id="OpenSwitch" class="menuButtonClass noneselect">Open</div>
 	<div id="OpenWindow" class="OpenWindow" style="display:none">
-		<div id="OpenSTL" class="menuButtonClass noneselect">STL</div>
+		<div id="OpenSTL" class="menuButtonClass noneselect">STL File</div>
 		<input type="file"    value="Open" id="OpenSTLFile" style="hidden"><br>
-		<div id="OpenCSV" class="menuButtonClass noneselect">CSV</div>
-		<input type="file"    value="OpenText"    id="OpenText"><br>
+		<div class="spacer"></div>
+		<div id="OpenCSV" class="menuButtonClass noneselect">CSV File</div>
+		<input type="file"    value="OpenText"    id="OpenTextFile"><br>
 	</div>
+
+	<div id="ViewSwitch" class="menuButtonClass noneselect">DisplayView</div>
+
 </div>
   <script type="text/javascript" src="./js/propertylistview.js"></script>
   <script type="text/javascript" src="./js/grouptreeview.js"></script>
   
   <script type="text/javascript" src="./js/3rd/colorpicker.js"></script>
   <script type="text/javascript" src="./js/3rd/eye.js"></script>
+  <script type="text/javascript" src="./js/scene.js"></script>
  
 </body>
 </html>
