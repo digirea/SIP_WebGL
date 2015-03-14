@@ -150,11 +150,23 @@ body {
 
 
 
+DustBox{
+	width:100px;
+	height:200px;
+	background:url("./image/icon_dustsbox_ok.png");
+}
+
+* html DustBox{
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src='./image/icon_dustbox_ok.png',sizingMethod='scale');
+	background:none;
+}
+
+
 #OpenWindow {
 	position        :absolute;
 	margin          :5px;
-	width           :180px;
-	height          :120px;
+	width           :160px;
+	height          :80px;
 	left            :36px;
 	top             :32px;
 	background-color:rgba(200, 200, 100, 1.0);
@@ -162,30 +174,31 @@ body {
 }
 
 #OpenSTL {
-	display : inline-block;
-	overflow: hidden;
-	position: relative;
-	padding: 0px;
+	display         : inline-block;
+	overflow        : hidden;
+	position        : relative;
+	padding         : 0px;
 	margin          : 5px;
-	margin-top: 10px;
-	margin-bottom: 0px;
+	margin-top      : 10px;
+	margin-bottom   : 0px;
 	width           : 150px;
-	height          :25px;
-	background-color:#F53e78;
-	color           :#FFF;
+	height          : 25px;
+	background-color: #F53e78;
+	color           : #FFF;
 }
 
 #OpenCSV {
-	display : inline-block;
-	overflow: hidden;
-	position: relative;
+	display         : inline-block;
+	overflow        : hidden;
+	position        : relative;
+	padding         : 0px;
 	margin          : 5px;
-	margin-top: 0px;
-	margin-bottom: 10px;
-	width: 150px;
-	height:25px;
+	margin-top      : 0px;
+	margin-bottom   : 10px;
+	width           : 150px;
+	height          : 25px;
 	background-color:#253e08;
-	color:#FFF;
+	color           :#FFF;
 }
 
 .file input[type="file"] {
@@ -234,6 +247,12 @@ body {
 	background-color:#155e98;
 	color:#FFF;
 }
+
+
+#sidetree {
+	margin: 10px;
+}
+
 
 
 #SideViewX {

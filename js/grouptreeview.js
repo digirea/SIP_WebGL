@@ -98,7 +98,7 @@
 			i,
 			li,
 			ul,
-			box,
+			ele,
 			link;
 
 		
@@ -114,15 +114,20 @@
 			elem.appendChild(li);
 
 			if(node.type === 'mesh') {
-				box = document.createElement("input");
-				box.type  = "checkbox";
-				box.name  = "name";
-				box.value = "value";
-				box.id    = "id";
-				box.setAttribute('checked', 'checked');
-				box.onclick = (checkboxfunc(node, box));
-				li.appendChild(box);
+				ele = document.createElement("input");
+				ele.type  = "checkbox";
+				ele.name  = "name";
+				ele.value = "value";
+				ele.id    = "id";
+				if (node.data) {
+					if (node.data.show == true) {
+						ele.setAttribute('checked', 'checked');
+					}
+				}
+				ele.onclick = (checkboxfunc(node, ele));
+				li.appendChild(ele);
 			}
+			
 
 			if (node.child && node.child.length > 0) {
 				ul = document.createElement("ul");

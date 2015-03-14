@@ -32,6 +32,7 @@
 	function createRoot(type, name, data) {
 		var r = makeNode(type, GetName(name), data);
 		root.push(r);
+		data.name = r.name;
 		return r;
 	};
 
@@ -40,7 +41,7 @@
 			child,
 			i;
 		child = makeNode(type, GetName(name), data);
-		console.log('Create Child : ', child);
+		data.name = child.name;
 		return child;
 	};
 

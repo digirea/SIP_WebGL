@@ -36,7 +36,7 @@ var test_time = 0;
 	};
 
 	camera.prototype.setupScreen = function (s) {
-		screen = s;
+		this.screen = s;
 	}
 
 	camera.prototype.resetView = function () {
@@ -115,7 +115,7 @@ var test_time = 0;
 		return this.camRot;
 	};
 
-	camera.prototype.setupLerp = function (min, max, trans) {
+	camera.prototype.setupLerp = function (min, max, trans, axis) {
 		var len = 0;
 		this.camWorldPosStart   = this.camWorldPos;
 		this.camWorldPosEnd     = [(max[0] + min[0]) / 2, (max[1] + min[1]) / 2, (max[2] + min[2]) / 2];
@@ -137,7 +137,16 @@ var test_time = 0;
 		this.camAtStart[1]      = this.camAt[1];
 		this.camAtStart[2]      = this.camAt[2];
 		
-		this.camPosEnd[2]       = -Distance(max, min);
+		this.camPosEnd[0]       = 0;
+		this.camPosEnd[1]       = 0;
+		this.camPosEnd[2]       = 0;
+		
+		if(axis) {
+			this.camPosEnd[axis]    = -Distance(max, min);
+		} else {
+			this.camPosEnd[2]       = -Distance(max, min);
+		}
+		
 		this.lerpTime           = 0;
 		this.lerpTimeDelta      = 1.0 / 30.0;
 		this.lerpState          = true;
@@ -192,8 +201,8 @@ var test_time = 0;
 		this.camWorldPos[0]   = CosInter(this.camWorldPosStart[0], this.camWorldPosEnd[0], this.lerpTime);
 		this.camWorldPos[1]   = CosInter(this.camWorldPosStart[1], this.camWorldPosEnd[1], this.lerpTime);
 		this.camWorldPos[2]   = CosInter(this.camWorldPosStart[2], this.camWorldPosEnd[2], this.lerpTime);
-		this.camPos[0]        = CosInter(this.camPosStart[0],      0, this.lerpTime);
-		this.camPos[1]        = CosInter(this.camPosStart[1],      0, this.lerpTime);
+		this.camPos[0]        = CosInter(this.camPosStart[0],      this.camPosEnd[0], this.lerpTime);
+		this.camPos[1]        = CosInter(this.camPosStart[1],      this.camPosEnd[1], this.lerpTime);
 		this.camPos[2]        = CosInter(this.camPosStart[2],      this.camPosEnd[2], this.lerpTime);
 		this.camAt[0]         = CosInter(this.camAtStart[0],       0, this.lerpTime);
 		this.camAt[1]         = CosInter(this.camAtStart[1],       0, this.lerpTime);

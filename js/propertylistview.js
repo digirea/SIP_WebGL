@@ -262,8 +262,8 @@
 			});
 		}(jQuery));
 	}
-	init();
 
+	init();
 	window.propertylistview = propertylist;
 	window.propertylistview.showProperty = showProperty;
 

@@ -44,6 +44,7 @@
 		var i;
 		var k;
 		for (i = 0; i < meshlist.length; i = i + 1) {
+		console.log(meshlist[i].name, data.name);
 			if (meshlist[i].name === data.name) {
 				console.log(data);
 				for (k = 0 ; k < data.input.length; k = k + 1) {
@@ -86,12 +87,12 @@
 		data.name    = data.name;
 		stlmesh.name = data.name;
 		stlmesh.setShader(mesh_shader);
-		meshlist.push(stlmesh);
 		
 		//add root
 		node = datatree.createRoot('mesh', data.name, stlmesh);
 		window.grouptreeview.update(datatree.getRoot(), node);
 		window.scene.propertyTab(true);
+		meshlist.push(node.data);
 
 		camera.setupLerp(data.min, data.max);
 	}
@@ -103,7 +104,6 @@
 		} else {
 			console.log(node);
 			if(node.data.boundmin) {
-				console.log(node.data.boundmin, node.data.boundmax);
 				camera.setupLerp(node.data.boundmin, node.data.boundmax, node.data.trans);
 			}
 		}
@@ -131,12 +131,12 @@
 			retmesh.setShader(mesh_shader);
 		}
 
-		meshlist.push(retmesh);
 		child = datatree.createChild('mesh', retmesh.name, retmesh);
 		datatree.addChild(selectnode.name, child);
 
 		window.grouptreeview.update(datatree.getRoot(), child);
 		window.scene.propertyTab(true);
+		meshlist.push(child.data);
 
 		//datatree.addData(retmesh.name, retmesh);
 		//camera.setupLerp(retmesh.boundmin, retmesh.boundmax);
@@ -600,18 +600,10 @@
 	}
 	
 	
-	function pickupClick(e)
-	{
-		
-	}
-	
-	
-	
 	function updateconsole(change)
 	{
 		
 	}
-	
 	
 	function init() {
 		var i,
@@ -647,8 +639,6 @@
 		document.getElementById('OpenSTLFile').addEventListener('change',  loadSTL, false);
 		document.getElementById('OpenTextFile').addEventListener('change', loadTXT, false);
 		
-		pickup.onclick = pickupClick;
-		
 		openswitch.onclick = openSwitch;
 		addline.onclick  = addLine;
 		addpoint.onclick = addPoint;
@@ -663,7 +653,7 @@
 		var propertyTab = window.animtab.create('right', {
 			'rightTab' : { min : '0px', max : 'auto' }
 		}, {
-			'menuTab' : { min : '0px', max : '500px' }
+			'menuTab' : { min : '0px', max : '400px' }
 		}, 'Property');
 		propertyTab(false);
 
