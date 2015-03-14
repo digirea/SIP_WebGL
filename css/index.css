@@ -103,6 +103,7 @@ body {
 	border-radius: 2px;
 	cursor: pointer;
 }
+
 /* --- TODO: beautiful----*/
 .AddButton {
 	/*position:absolute;
@@ -152,17 +153,22 @@ body {
 #OpenWindow {
 	position        :absolute;
 	margin          :5px;
-	width           :250px;
-	height          :168px;
+	width           :180px;
+	height          :120px;
 	left            :36px;
 	top             :32px;
 	background-color:rgba(200, 200, 100, 1.0);
 	color           :#FFF;
 }
 
-
 #OpenSTL {
+	display : inline-block;
+	overflow: hidden;
+	position: relative;
+	padding: 0px;
 	margin          : 5px;
+	margin-top: 10px;
+	margin-bottom: 0px;
 	width           : 150px;
 	height          :25px;
 	background-color:#F53e78;
@@ -170,16 +176,29 @@ body {
 }
 
 #OpenCSV {
-	/*position:absolute;
-	right:150px;
-	top:28px;*/
-	margin: 10px;
+	display : inline-block;
+	overflow: hidden;
+	position: relative;
+	margin          : 5px;
+	margin-top: 0px;
+	margin-bottom: 10px;
 	width: 150px;
 	height:25px;
 	background-color:#253e08;
 	color:#FFF;
 }
 
+.file input[type="file"] {
+	opacity: 0;
+	filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0);
+	position: absolute;
+	right: 0;
+	top: 0;
+	height : 25px;
+	margin: 0;
+	font-size: 100px;
+	cursor: pointer;
+}
 
 #AddGroup {
 	/*position:absolute;
