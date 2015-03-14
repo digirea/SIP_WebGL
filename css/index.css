@@ -319,6 +319,24 @@ DustBox{
 	width: 200px;
 }
 
+#viewFront {
+	position        :absolute;
+	left            :300px;
+	top             :0px;
+}
+
+#viewLeft {
+	position        :absolute;
+	left            :450px;
+	top             :0px;
+}
+
+#viewTop {
+	position        :absolute;
+	left            :600px;
+	top             :0px;
+}
+
 #ApplyProperty {
 	margin: 10px;
 	width: 120px;
@@ -614,4 +632,13 @@ DustBox{
 	-o-transform: rotate(90deg);
 	-ms-transform: rotate(90deg);
 	transform: rotate(90deg);
+}
+
+.viewDirButton {
+	margin          :5px;
+	width           :150px;
+	height          :25px;
+	background-color:#543210;
+	color           :#FFF;
+	z-index: 100;
 }

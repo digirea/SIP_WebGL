@@ -233,14 +233,17 @@
 	
 	function sideViewX(e) {
 		camera.ViewSide('x');
+		selectTreeNode(datatree.getRoot()[0]);
 	}
 	
 	function sideViewY(e) {
 		camera.ViewSide('y');
+		selectTreeNode(datatree.getRoot()[0]);
 	}
 	
 	function sideViewZ(e) {
 		camera.ViewSide('z');
+		selectTreeNode(datatree.getRoot()[0]);
 	}
 	
 	function getViewProjMatrix()
@@ -649,9 +652,9 @@
 			addline     = document.getElementById('AddLine'),
 			addpoint    = document.getElementById('AddPoint'),
 			pickup      = document.getElementById('pickup'),
-			sideviewx   = document.getElementById('SideViewX'),
-			sideviewy   = document.getElementById('SideViewY'),
-			sideviewz   = document.getElementById('SideViewZ'),
+			sideviewx   = document.getElementById('viewLeft'),
+			sideviewy   = document.getElementById('viewTop'),
+			sideviewz   = document.getElementById('viewFront'),
 			deletegroup = document.getElementById('DeleteGroup');
 
 		canvas = document.getElementById('canvas');
@@ -679,11 +682,9 @@
 		addline.onclick  = addLine;
 		addpoint.onclick = addPoint;
 
-		/*
 		sideviewx.onclick = sideViewX;
 		sideviewy.onclick = sideViewY;
 		sideviewz.onclick = sideViewZ;
-		*/
 		
 		// Create Tab
 		var propertyTab = window.animtab.create('right', {

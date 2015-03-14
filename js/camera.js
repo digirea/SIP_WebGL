@@ -21,12 +21,6 @@ var test_time = 0;
 		this.camWorldPosEnd    = [0,0,0];
 		this.RotateMatrix      = this.mtx.identity(this.mtx.create());
 		this.RotateMatrixStart = this.mtx.identity(this.mtx.create());
-		this.resetCamPos       = [0, 0, -256];
-		this.resetCamAt        = [0, 0, 0];
-		this.resetCamUp        = [0, 1, 0];
-		this.resetCamRot       = [0, 0, 0];
-		this.resetCamRotPrev   = [0, 0, 0];
-		this.resetcamWorldPos  = [0, 0, 0];
 		this.camRotStart       = [0, 0, 0];
 		this.camRotEnd         = [0, 0, 0];
 		this.screen            = [0, 0];
@@ -41,13 +35,17 @@ var test_time = 0;
 
 	camera.prototype.resetView = function () {
 		console.log('View Matrix RESET');
-		this.camPos            = this.resetCamPos ;
-		this.camAt             = this.resetCamAt  ;
-		this.camUp             = this.resetCamUp  ;
-		this.camRot            = this.resetCamRot ;
-		this.camRotPrev        = this.resetCamRotPrev ;
-		
-		this.camWorldPos       = this.resetcamWorldPos ;
+		this.qtn               = new QtnIV();
+		this.camPos            = [0, 0, -256];
+		this.camAt             = [0, 0, 0];
+		this.camAtStart        = [0,0,0];
+		this.camUp             = [0, 1, 0];
+		this.camRot            = [0, 0, 0];
+		this.camRotPrev        = [0, 0, 0];
+		this.camWorldPosStart  = [0,0,0];
+		this.camWorldPosEnd    = [0,0,0];
+		this.camWorldPos       = [0, 0, 0];
+		this.lerpTime          = 0;
 		this.RotateMatrix      = this.mtx.identity(this.mtx.create());
 	};
 
@@ -60,22 +58,18 @@ var test_time = 0;
 			this.camPos[1] = 0;
 			this.camPos[2] = 0;
 
-			this.mtx.rotate(this.RotateMatrix, (2 * Math.PI * 90.0) / 180.0, [0, 1, 0], this.RotateMatrix);
-			this.camRot[1] = (Math.PI * 90.0 * 2);
+			this.mtx.rotate(this.RotateMatrix, (Math.PI * -90.0) / 180.0, [0, 1, 0], this.RotateMatrix);
 		}
 		if(type === 'y') {
 			this.camPos[0] = 0;
 			this.camPos[1] = z;
 			this.camPos[2] = 0;
-
-			this.mtx.rotate(this.RotateMatrix, (2 * Math.PI * 90.0) / 180.0, [1, 0, 0], this.RotateMatrix);
+			this.mtx.rotate(this.RotateMatrix, (Math.PI * -90.0) / 180.0, [1, 0, 0], this.RotateMatrix);
 		}
 		if(type === 'z') {
 			this.camPos[0] = 0;
 			this.camPos[1] = 0;
 			this.camPos[2] = -z;
-
-			//this.mtx.rotate(this.RotateMatrix, Math.PI * 90.0 / 180.0, [1, 0, 0], this.RotateMatrix);
 		}
 
 	}
