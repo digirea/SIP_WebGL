@@ -70,7 +70,6 @@
 		if (root.length <= 0) return ;
 		newroot = [];
 		for (i = 0 ; i < root.length; i++) {
-			window.scene.delMesh(name);
 			console.log(root[i].name, name);
 			delDataChild(name, root[i]);
 			if(root[i].name !== name) {
