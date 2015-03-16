@@ -159,16 +159,25 @@
 	}
 
 	function init(document, canvas, keycb) {
+		var mouseUpFunc = function (evt) {
+			resetMouseState();
+			window.removeEventListener('mousemove', mouseMove, false);
+			window.removeEventListener('mouseup', mouseUpFunc, true);
+		};
 		//document.addEventListener('mouseout',  mouseOut, true);
 		//document.addEventListener('mousemove', mouseMove, true);
 		//document.addEventListener('mouseup',   mouseUp, true);
 		//document.addEventListener('mousedown', mouseDown, true);
 		//document.addEventListener('contextmenu', function (e) {
 		
-		canvas.addEventListener('mouseout',  mouseOut, true);
+		//canvas.addEventListener('mouseout',  mouseOut, true);
 		canvas.addEventListener('mousemove', mouseMove, true);
 		canvas.addEventListener('mouseup',   mouseUp, true);
-		canvas.addEventListener('mousedown', mouseDown, true);
+		canvas.addEventListener('mousedown', function (evt) {
+			mouseDown(evt);
+			window.addEventListener('mousemove', mouseMove, false);
+			window.addEventListener('mouseup', mouseUpFunc, true);
+		}, true);
 		canvas.addEventListener('contextmenu', function (e) {
 			if (e.button === 2) {
 				e.preventDefault();
