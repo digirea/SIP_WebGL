@@ -1,5 +1,7 @@
 /*jslint devel:true*/
-/*global Float32Array, ArrayBuffer, Int16Array, QtnIV, MatIV, WGLRender, Camera, ReqFile*/
+/*global Float32Array, ArrayBuffer, Int16Array, QtnIV, MatIV,
+WGLRender, Camera, ReqFile, datatree, Mul, IntersectSphere, UnProject,
+Normalize, Sub */
 
 (function (loadSTLB) {
 	"use strict";
@@ -42,11 +44,11 @@
 		var i,
 			newlist;
 		
-		if(meshlist.length <= 0) return;
+		if (meshlist.length <= 0) { return; }
 		
 		newlist = [];
-		for(i = 0 ; i < meshlist.length; i++) {
-			if(meshlist[i].name !== name) {
+		for (i = 0; i < meshlist.length; i = i + 1) {
+			if (meshlist[i].name !== name) {
 				newlist.push(meshlist[i]);
 			} else {
 				console.log('DELETE MESH : ', meshlist[i].name);
@@ -58,13 +60,13 @@
 
 	function updateDataTree(data) {
 		console.log(meshlist);
-		var i;
-		var k;
+		var i,
+			k;
 		for (i = 0; i < meshlist.length; i = i + 1) {
-		console.log(meshlist[i].name, data.name);
+			console.log(meshlist[i].name, data.name);
 			if (meshlist[i].name === data.name) {
 				console.log(data);
-				for (k = 0 ; k < data.input.length; k = k + 1) {
+				for (k = 0; k < data.input.length; k = k + 1) {
 					if (data.input[k].name === 'trans') {
 						meshlist[i].trans = data.input[k].value;
 					}
@@ -101,7 +103,7 @@
 			length    = 0;
 		console.log(data);
 		stlmesh      = render.createMeshObj(data);
-		data.name    = data.name;
+		//data.name    = data.name;
 		stlmesh.name = data.name;
 		stlmesh.setShader(mesh_shader);
 		
@@ -119,19 +121,19 @@
 			node.data.show = checkbox.checked;
 		} else {
 			console.log(node);
-			if(node.data.boundmin) {
+			if (node.data.boundmin) {
 				camera.setupLerp(node.data.boundmin, node.data.boundmax, node.data.trans);
 			}
 		}
 		
 		//update handsontable
-		if(node.type === 'text') {
+		if (node.type === 'text') {
 			window.hstable.loadData(node.data);
 		}
 	}
 
 	function updateMeshText(name, pos, type) {
-	  var mesh = {'position':pos},
+		var mesh = {'position' : pos},
 			bb,
 			child,
 			retmesh,
@@ -173,14 +175,15 @@
 	}
 
 	function onResize() {
-	  var i;
+		var i,
+			w;
+		
 		document.getElementById('OpenSTLFile').value = '';
-		var w = document.getElementById('consoleOutput').style.width = window.innerWidth + 'px';
+		w = document.getElementById('consoleOutput').style.width = window.innerWidth + 'px';
 		render.onResize();
 	}
 	
-	function resetTree()
-	{
+	function resetTree() {
 		var gridmesh     = null,
 			rootnode     = {};
 		gridmesh = render.createGridMesh(1000, 100, 0.5);
@@ -204,8 +207,7 @@
 	}
 	
 	
-	function resetAll()
-	{
+	function resetAll() {
 		resetShader();
 		resetTree();
 		
@@ -228,8 +230,7 @@
 		selectTreeNode(datatree.getRoot()[0]);
 	}
 	
-	function getViewProjMatrix()
-	{
+	function getViewProjMatrix() {
 		var camZ     = 0,
 			vpMatrix;
 		camZ = camera.getCamPosZ();
@@ -241,8 +242,7 @@
 		return vpMatrix;
 	}
 	
-	function IsHitMesh(o, d, mesh)
-	{
+	function IsHitMesh(o, d, mesh) {
 		var i,
 			ishit = false,
 			pos,
@@ -274,7 +274,7 @@
 			break;
 		}
 		*/
-		for (i = 0 ; i < triarray.length; i = i + 3) {
+		for (i = 0; i < triarray.length; i = i + 3) {
 			ishit = IntersectSphere(o, d, [triarray[i + 0], triarray[i + 1], triarray[i + 2] ], radius);
 			if (ishit === false) {
 				continue;
@@ -286,7 +286,7 @@
 			}
 		}
 		
-		return {'hit':hit, 't':t, 'index':index};
+		return {'hit' : hit, 't' : t, 'index' : index};
 	}
 	
 	function updatePopup() {
@@ -298,14 +298,15 @@
 			viewport = [0, 0,  canvas.width, canvas.height],
 			org   = [];
 		
-		if(popup.style.display === 'block') {
-			ppos = [parseInt(popup.style.left), canvas.height - parseInt(popup.style.top), 0.0, 1.0];
+		if (popup.style.display === 'block') {
+			ppos = [parseInt(popup.style.left, 10), canvas.height - parseInt(popup.style.top, 10), 0.0, 1.0];
 			mtx.inverse(vpM, vpMI);
 			UnProject(
-				[parseInt(popup.style.left), canvas.height - parseInt(popup.style.top), 0.0],
+				[parseInt(popup.style.left, 10), canvas.height - parseInt(popup.style.top, 10), 0.0],
 				vpMI,
 				viewport,
-				ppos);
+				ppos
+			);
 			console.log(ppos);
 			popup.style.left = ppos[0] + 'px';
 			popup.style.top  = ppos[1] + 'px';
@@ -313,8 +314,7 @@
 		}
 	}
 	
-	function createPopup(win_x, win_y, data)
-	{
+	function createPopup(win_x, win_y, data) {
 		var popup = document.getElementById('pickup'),
 			url;
 		popup.style.position = 'absolute';
@@ -322,9 +322,9 @@
 		popup.style.top      = win_y + 'px';
 		popup.style.display  = 'block';
 		popup.innerHTML      = "<i>index</i>:" + data.index + "<br>";
-		popup.innerHTML     += data.position + "<br>"; 
+		popup.innerHTML     += data.position + "<br>";
 
-		if(data.URL) {
+		if (data.URL) {
 			url = document.createElement('a');
 			url.title     = data.URL.title;
 			url.href      = data.URL.href;
@@ -342,17 +342,17 @@
 	}
 	
 	function createRayMesh(org, dir, t) {
-		var mesh = render.createMeshObj
-		(
+		var mesh = render.createMeshObj(
 			{
 				'pos' : [
-				org[0],
-				org[1],
-				org[2],
-				org[0] + dir[0] * t,
-				org[1] + dir[1] * t,
-				org[2] + dir[2] * t],
-				'color' : [1,0,0,1,1,0,0,1]
+					org[0],
+					org[1],
+					org[2],
+					org[0] + dir[0] * t,
+					org[1] + dir[1] * t,
+					org[2] + dir[2] * t
+				],
+				'color' : [1, 0, 0, 1, 1, 0, 0, 1]
 			}
 		);
 		mesh.setMode('Lines');
@@ -376,13 +376,13 @@
 			tidx     = 0,
 			mesh     = 0,
 			hitmesh  = -1,
-			info     = {'hit':false,'t':9999999, 'index':-1},
+			info     = {'hit' : false, 't' : 9999999, 'index' : -1},
 			testo    = [0, 0, 0],
 			testd    = [0, 0, 0],
-			resultpos= [9999999, 9999999, 9999999],
+			resultpos = [9999999, 9999999, 9999999],
 			linem    = [];
 
-		if (meshlist.length <= 0) return;
+		if (meshlist.length <= 0) { return; }
 
 		//create ray
 		vpM = getViewProjMatrix();
@@ -392,11 +392,11 @@
 		dir = Normalize(Sub(tar, org));
 		
 		//traverse mesh
-		for (mindex = 0 ; mindex < meshlist.length; mindex = mindex + 1) {
+		for (mindex = 0; mindex < meshlist.length; mindex = mindex + 1) {
 			mesh = meshlist[mindex];
 			if (mesh.mode === 'Triangles' && mesh.show === true) {
 				ishit = IsHitMesh(org, dir, mesh);
-				if (ishit === false) continue;
+				if (ishit === false) { continue; }
 				if (ishit.t < info.t) {
 					info = ishit;
 					hitmesh = mindex;
@@ -424,7 +424,8 @@
 		info.position.push(
 			mesh.pointposition[info.index + 0],
 			mesh.pointposition[info.index + 1],
-			mesh.pointposition[info.index + 2]);
+			mesh.pointposition[info.index + 2]
+		);
 		info.index /= 3;
 		console.log(resultpos, info);
 		
@@ -439,7 +440,9 @@
 	
 	function MouseClickFunc(evt) {
 		//console.log(evt.clientX, evt.clientY);
-		if (evt.button === 1) Pick(evt.clientX, evt.clientY);
+		if (evt.button === 1) {
+			Pick(evt.clientX, evt.clientY);
+		}
 	}
 	
 
@@ -447,8 +450,7 @@
 		//document.getElementById('progress').innerHTML = "updata
 	}
 
-	function KickDog()
-	{
+	function KickDog() {
 		render.swapBuffer()(KickDogFrame);
 	}
 
@@ -482,23 +484,23 @@
 		//check hstable header
 		headernames = clonetable[0].getElementsByClassName('colnames');
 		selectnames = clonetable[0].getElementsByClassName('colselectbox');
-		for (i = 0 ; i < selectnames.length; i = i + 1) {
+		for (i = 0; i < selectnames.length; i = i + 1) {
 			
 			console.log(selectnames[i].value);
 			if (selectnames[i].value === 'X') {
-				colinfo.push({'index':i, 'attr':0});
+				colinfo.push({'index' : i, 'attr' : 0});
 			}
 			if (selectnames[i].value === 'Y') {
-				colinfo.push({'index':i, 'attr':1});
+				colinfo.push({'index' : i, 'attr' : 1});
 			}
 			if (selectnames[i].value === 'Z') {
-				colinfo.push({'index':i, 'attr':2});
+				colinfo.push({'index' : i, 'attr' : 2});
 			}
 		}
 		
 		
 		//Create Name
-		for (i = 0 ; i < colinfo.length; i = i + 1) {
+		for (i = 0; i < colinfo.length; i = i + 1) {
 			name += headernames[colinfo[i].index].value + '_';
 		}
 		
@@ -507,17 +509,17 @@
 			return;
 		}
 
-		for (i = 0 ; i < colinfo.length; i = i + 1) {
+		for (i = 0; i < colinfo.length; i = i + 1) {
 			attr    = colinfo[i].attr;
 			col     = window.hstable.getCol(colinfo[i].index);
 			if (attr === 0 || attr === 1 || attr === 2) {
-				for (j = 0 ; j < col.length - 1; j = j + 1) {
+				for (j = 0; j < col.length - 1; j = j + 1) {
 					pos[j * 3 + attr] = parseFloat(col[j]);
 				}
 				continue;
 			}
 		}
-		for (j = 0 ; j < pos.length; j = j + 1) {
+		for (j = 0; j < pos.length; j = j + 1) {
 			if (pos[j] === undefined) {
 				pos[j] = 0;
 			}
@@ -529,23 +531,22 @@
 	
 	
 	function addLine(e) {
-		addGroup('Line')
+		addGroup('Line');
 	}
 	
 	function addPoint(e) {
-		addGroup('Point')
+		addGroup('Point');
 	}
 	
-	
 	function drawGizmo() {
-		var mtx      = new MatIV();
-		var mRotate  = camera.RotateMatrix;
-		var mLook    = mtx.identity(mtx.create());
-		var mProj    = mtx.identity(mtx.create());
-		var vpM      = mtx.identity(mtx.create());
-		var aspect   = canvas.width / canvas.height;
+		var mtx      = new MatIV(),
+			mRotate  = camera.RotateMatrix,
+			mLook    = mtx.identity(mtx.create()),
+			mProj    = mtx.identity(mtx.create()),
+			vpM      = mtx.identity(mtx.create()),
+			aspect   = canvas.width / canvas.height;
 		mtx.lookAt([0, 0, 1], [0, 0, 0], [0, 1, 0], mLook);
-		mtx.ortho(-1 * aspect, 1 * aspect, -1, 1, 0.1, 100, mProj);
+		mtx.ortho(-1 * aspect, aspect, -1, 1, 0.1, 100, mProj);
 		mtx.multiply(mProj, mLook, vpM);
 		mtx.multiply(vpM, mRotate, vpM);
 
@@ -591,7 +592,7 @@
 	function openSwitch(e) {
 		var openwindow = document.getElementById('OpenWindow');
 		$toggle(openwindow, 100);
-		if(openstate === 0) {
+		if (openstate === 0) {
 			window.scene.groupTab(false);
 			openstate = 1;
 		} else {
@@ -608,21 +609,19 @@
 	}
 	
 	
-	function loadTXT(e)
-	{
+	function loadTXT(e) {
 		window.hstable.openText(e);
 		openSwitch();
 		document.getElementById('OpenTextFile').innerHTML = '';
 		
-		if(consolestate === 0) {
+		if (consolestate === 0) {
 			consolestate = 1;
 			window.scene.consoleTab(true);
 		}
 	}
 	
 	
-	function updateconsole(change)
-	{
+	function updateconsole(change) {
 		
 	}
 	
@@ -637,7 +636,10 @@
 			sideviewx   = document.getElementById('viewLeft'),
 			sideviewy   = document.getElementById('viewTop'),
 			sideviewz   = document.getElementById('viewFront'),
-			deletegroup = document.getElementById('DeleteGroup');
+			deletegroup = document.getElementById('DeleteGroup'),
+			propertyTab,
+			groupTab,
+			consoleTab;
 
 		canvas = document.getElementById('canvas');
 
@@ -669,25 +671,25 @@
 		sideviewz.onclick = sideViewZ;
 		
 		// Create Tab
-		var propertyTab = window.animtab.create('right', {
+		propertyTab = window.animtab.create('right', {
 			'rightTab' : { min : '0px', max : 'auto' }
 		}, {
 			'menuTab' : { min : '0px', max : '400px' }
 		}, 'Property');
 		propertyTab(false);
 
-		var groupTab = window.animtab.create('left', {
+		groupTab = window.animtab.create('left', {
 			'leftTab' : { min : '0px', max : 'auto' }
 		}, {
 			'groupTab' : { min : '0px', max : '280px' }
 		}, 'Groups');
 
-		var consoleTab = window.animtab.create('bottom', {
+		consoleTab = window.animtab.create('bottom', {
 			'bottomTab' : { min : '10px', max : '400' }
 		}, {
 			'consoleOutput' : { min : '0px', max : '400px' }
 		}, 'console');
-		consoleTab(false)
+		consoleTab(false);
 
 		window.scene.consoleTab        = consoleTab;
 		window.scene.propertyTab       = propertyTab;
@@ -695,7 +697,7 @@
 		setTimeout(startGL, 50);
 	}
 	
-	document.addEventListener("click" , MouseClickFunc);
+	document.addEventListener("click", MouseClickFunc);
 	window.onload                  = init;
 	window.onresize                = onResize;
 	window.scene                   = scene;
@@ -703,7 +705,7 @@
 	window.scene.selectTreeNode    = selectTreeNode;
 	window.scene.updateconsole     = updateconsole;
 	window.scene.delMesh           = delMesh;
-	window.scene.delData           = delData;
+	window.scene.delData           = delData; //datatree.delData ?
 	
 	window.scene.KickDog           = KickDog;
 }(window.loadSTLB));
