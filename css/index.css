@@ -153,8 +153,9 @@ body {
 	z-index: 100;
 }
 
-#hstable { 
-	height          :400px;
+#hstable {
+	top :  0px;
+	height         :365px;
 	background-color:rgba(200, 200, 100, 1.0);
 }
 
@@ -577,7 +578,7 @@ DustBox{
 
 .consoleTextBlock
 {
-		overflow: auto;
+	overflow: auto;
 	bottom:30px;
 	/*height:400px;*/
 	display: table-cell;
