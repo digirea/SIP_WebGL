@@ -920,7 +920,7 @@ Normalize, Sub */
 			'bottomTab' : { min : '10px', max : '400' }
 		}, {
 			'consoleOutput' : { min : '0px', max : '400px' },
-			'consoleTextBlockArea' :  { min : '0px', max : '370px' }
+			'consoleTextBlockArea' :  { min : '0px', max : '365px' }
 		}, 'DataView');
 		consoleTab(false);
 
