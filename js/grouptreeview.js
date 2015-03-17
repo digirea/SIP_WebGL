@@ -88,7 +88,7 @@
 	/**
 	 * クリック時に呼ばれるメソッド
 	 * @method clickfunc
-	 * @param {node} node
+	 * @param {node} node 対象ノード
 	 * @return FunctionExpression
 	 */
 	function clickfunc(node) {

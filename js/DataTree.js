@@ -7,12 +7,12 @@
 		dataid   = 0;
 
 	/**
-	 * Description
+	 *　ノードの作成
 	 * @method makeNode
-	 * @param {} type
-	 * @param {} name
-	 * @param {} data
-	 * @return node
+	 * @param {String} type　ノードタイプ.
+	 * @param {String} name　ノード名.この名前がそのまま使われる.
+	 * @param {data} data データ
+	 * @return node 作成されたノード
 	 */
 	function makeNode(type, name, data) {
 		var node = {
@@ -31,10 +31,10 @@
 	
 	
 	/**
-	 * Description
+	 * 入力名からノード名用の文字列を作成して返す.
 	 * @method GetName
-	 * @param {} base
-	 * @return BinaryExpression
+	 * @param {String} base 入力文字列
+	 * @return BinaryExpression 作成されたノード名用文字列.
 	 */
 	function GetName(base) {
 		var ret = dataid;
@@ -43,12 +43,12 @@
 	}
 
 	/**
-	 * Description
+	 * ルートの作成
 	 * @method createRoot
-	 * @param {} type
-	 * @param {} name
-	 * @param {} data
-	 * @return r
+	 * @param {String} type ノードタイプ
+	 * @param {String} name ノード名.実際にはこの名前にID等が付け加えられた名前のノードが作られる.
+	 * @param {data} data データ
+	 * @return r 作成されたノード.
 	 */
 	function createRoot(type, name, data) {
 		var r = makeNode(type, GetName(name), data);
@@ -58,12 +58,12 @@
 	}
 
 	/**
-	 * Description
+	 * 子ノードの作成.
 	 * @method createChild
-	 * @param {} type
-	 * @param {} name
-	 * @param {} data
-	 * @return child
+	 * @param {String} type ノードタイプ
+	 * @param {String} name 作成するノード名
+	 * @param {data} data データ.
+	 * @return child 作成されたノード
 	 */
 	function createChild(type, name, data) {
 		var parent,
@@ -75,10 +75,10 @@
 	}
 	
 	/**
-	 * Description
+	 * 入力されたノード以下のノードから指定した名前のノードを削除.
 	 * @method delDataChild
-	 * @param {} name
-	 * @param {} node
+	 * @param {String} name 削除対象ノード名.
+	 * @param {node} node 再帰用親ノードパラメータ
 	 */
 	function delDataChild(name, node) {
 		var i,
@@ -100,10 +100,10 @@
 	}
 
 	/**
-	 * Description
+	 * データの削除.
 	 * @method delData
-	 * @param {} name
-	 * @return root
+	 * @param {String} name 削除するデータのノード名.
+	 * @return root 作成された新規ルートノードリスト.
 	 */
 	function delData(name) {
 		var i,
@@ -124,10 +124,10 @@
 	}
 
 	/**
-	 * Description
+	 * ルートノード直下のノードの検索
 	 * @method findRoot
-	 * @param {} name
-	 * @return Literal
+	 * @param {String} name ノード名
+	 * @return Literal　nullまたは取得したノード.
 	 */
 	function findRoot(name) {
 		var i;
@@ -145,10 +145,10 @@
 	}
 
 	/**
-	 * Description
+	 * 子ノードの追加
 	 * @method addChild
-	 * @param {} rootname
-	 * @param {} child
+	 * @param {String} rootname 追加先のルートノード名
+	 * @param {node} child 追加するノード
 	 */
 	function addChild(rootname, child) {
 		var node = findRoot(rootname);
@@ -158,34 +158,19 @@
 	}
 
 	/**
-	 * Description
-	 * @method findTree
-	 * @param {} name
-	 * @param {} node
-	 * @return CallExpression
-	 */
-	function findTree(name, node) {
-		if (!node) { return null; }
-		if (node.name === name) {
-			return node;
-		}
-		return findTree(node.child);
-	}
-
-	/**
-	 * Description
+	 * ルートノードを取得.
 	 * @method getRoot
-	 * @return root
+	 * @return root ルートノード
 	 */
 	function getRoot() {
 		return root;
 	}
 
 	/**
-	 * Description
+	 * 指定した名前のデータの取得
 	 * @method getData
-	 * @param {} name
-	 * @return Literal
+	 * @param {String} name 取得するデータ名
+	 * @return Literal nullまたは取得したデータ.
 	 */
 	function getData(name) {
 		var i,
