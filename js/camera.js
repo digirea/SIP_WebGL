@@ -201,7 +201,7 @@ var test_time = 0;
 	};
 
 	camera.prototype.getAtDistance = function () {
-		return Distance(this.camAtStart - this.camPosStart);
+		return Distance(Sub(this.camAtStart, this.camPosStart));
 	};
 	
 	camera.prototype.LeapCamera = function () {
@@ -223,6 +223,11 @@ var test_time = 0;
 			this.lerpTime = 0.0;
 		}
 	};
+
+	camera.prototype.getEyeDirection = function () {
+		return Normalize(Sub(this.camPos, this.camAt));
+		
+	}
 
 	camera.prototype.updateRotateMatrix = function (r, y, x) {
 		var qt = this.qtn.identity(this.qtn.create()),

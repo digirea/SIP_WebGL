@@ -1,5 +1,5 @@
 /*jslint devel:true*/
-/*global Float32Array, ArrayBuffer, Int16Array, QtnIV, MatIV*/
+/*global Float32Array, ArrayBuffer, Int16Array, QtnIV, Sub, MatIV*/
 
 
 function MatIV() {
