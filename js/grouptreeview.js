@@ -77,9 +77,11 @@
 	 * @param {node} node 対象ノード
 	 */
 	function focusProperty(node) {
+		var canonical_name = node.name.replace(/ID[0-9]*_/, "");
+		
 		doSelectNode(node);
 		propertylistview.showProperty({
-			name : node.name,
+			name  : canonical_name,
 			input : getPropertyValues(node)
 		});
 	}
@@ -93,10 +95,11 @@
 	 */
 	function clickfunc(node) {
 		return function (e) {
+			var canonical_name = node.name.replace(/ID[0-9]*_/, "");
 			e.preventDefault();
 			doSelectNode(node);
 			propertylistview.showProperty({
-				name : node.name,
+				name : canonical_name,
 				input : getPropertyValues(node)
 			});
 		};
@@ -142,6 +145,7 @@
 			console.log("------NAME:", node.name);
 			root = window.datatree.delData(node.name);
 			window.grouptreeview.update(root, null);
+			propertylistview.clearProperty();
 		};
 	}
 	
@@ -160,6 +164,7 @@
 			ul,
 			ele,
 			box,
+			canonical_name,
 			link;
 
 		for (i = 0; i < root.length; i = i + 1) {
@@ -169,7 +174,8 @@
 			link = document.createElement("a");
 			link.href = "#" + node.name;
 			link.onclick = (clickfunc(node));
-			link.innerHTML = node.name;
+			canonical_name = node.name.replace(/ID[0-9]*_/, "");
+			link.innerHTML = canonical_name;
 			li.appendChild(link);
 			elem.appendChild(li);
 

@@ -203,6 +203,14 @@
 	}
 	 */
 	
+	/**
+	 * プロパティの表示のクリア
+	 * @method showProperty
+	 */
+	function clearProperty(data) {
+		var to = document.getElementById("property");
+		to.innerHTML = ''; // clear
+	}
 
 	/**
 	 * プロパティの表示.
@@ -323,6 +331,7 @@
 
 	init();
 	window.propertylistview = propertylist;
-	window.propertylistview.showProperty = showProperty;
+	window.propertylistview.showProperty  = showProperty;
+	window.propertylistview.clearProperty = clearProperty;
 
 }(window.scene));
