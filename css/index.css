@@ -426,7 +426,7 @@ DustBox{
 
 .colnames { 
 	width :80px;
-	height:24px;
+	height:16px;
 }
 
 .colcheckbox {
@@ -435,7 +435,7 @@ DustBox{
 }
 
 .colselectbox {
-	height:32px;
+	height:20px;
 }
 
 
