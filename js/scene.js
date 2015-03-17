@@ -197,13 +197,13 @@ Normalize, Sub */
 
 		if (type === 'Line') {
 			retmesh  = render.createLineMesh(mesh, 8, 1.0);
-			retmesh.name = name + 'LINE';
+			retmesh.name = name + 'Line';
 			retmesh.setShader(mesh_shader);
 		}
 
 		if (type === 'Point') {
 			retmesh = render.createPointMesh(mesh, 1.0, 8, 4);
-			retmesh.name = name + 'SPHERE';
+			retmesh.name = name + 'Point';
 			retmesh.setShader(mesh_shader);
 		}
 		retmesh.urllist = urllist;
