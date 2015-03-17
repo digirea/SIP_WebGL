@@ -15,17 +15,16 @@
 	 * @return node
 	 */
 	function makeNode(type, name, data) {
-		var node =
-		{
-			'child' :[],
-			'type'  :type,
-			'name'  :name,
-			'data'  :data,
-			'trans' :[0, 0, 0],
-			'scale' :[1, 1, 1],
-			'rotate':[0, 0, 0],
-			'color' :[1, 1, 1, 1],
-			'radius':[1],
+		var node = {
+			'child' : [],
+			'type'  : type,
+			'name'  : name,
+			'data'  : data,
+			'trans' : [0, 0, 0],
+			'scale' : [1, 1, 1],
+			'rotate': [0, 0, 0],
+			'color' : [1, 1, 1, 1],
+			'radius': [1]
 		};
 		return node;
 	}
@@ -40,7 +39,7 @@
 	function GetName(base) {
 		var ret = dataid;
 		dataid = dataid + 1;
-		return  'ID' + ret + '_' + base;
+		return 'ID' + ret + '_' + base;
 	}
 
 	/**
@@ -82,12 +81,12 @@
 	 * @param {} node
 	 */
 	function delDataChild(name, node) {
-		var i;
-		var newchild = [];
+		var i,
+			newchild = [];
 
-		if(node.child && node.child.length > 0) {
-			for(i = 0 ; i < node.child.length; i = i + 1) {
-				if(name !== node.child[i].name) {
+		if (node.child && node.child.length > 0) {
+			for (i = 0; i < node.child.length; i = i + 1) {
+				if (name !== node.child[i].name) {
 					newchild.push(node.child[i]);
 				} else {
 					console.log("DELETE CHILD ", name, node.child[i].name);
@@ -109,13 +108,13 @@
 	function delData(name) {
 		var i,
 			newroot;
-		if (root.length <= 0) return ;
+		if (root.length <= 0) { return; }
 		newroot = [];
-		for (i = 0 ; i < root.length; i++) {
+		for (i = 0; i < root.length; i = i + 1) {
 			window.scene.delMesh(name);
 			console.log(root[i].name, name);
 			delDataChild(name, root[i]);
-			if(root[i].name !== name) {
+			if (root[i].name !== name) {
 				newroot.push(root[i]);
 			}
 		}
@@ -132,12 +131,12 @@
 	 */
 	function findRoot(name) {
 		var i;
-		if(root.length < 0) {
+		if (root.length < 0) {
 			console.log('root length is zero.');
 			return null;
 		}
-		for(i = 0 ; i < root.length ; i++) {
-			if(root[i].name == name) {
+		for (i = 0; i < root.length; i = i + 1) {
+			if (root[i].name === name) {
 				return root[i];
 			}
 		}
@@ -153,9 +152,9 @@
 	 */
 	function addChild(rootname, child) {
 		var node = findRoot(rootname);
-		if(!node) return ;
+		if (!node) { return; }
 		node.child.push(child);
-		return ;
+		return;
 	}
 
 	/**
@@ -166,8 +165,8 @@
 	 * @return CallExpression
 	 */
 	function findTree(name, node) {
-		if(!node) return null;
-		if(node.name === name) {
+		if (!node) { return null; }
+		if (node.name === name) {
 			return node;
 		}
 		return findTree(node.child);
@@ -192,10 +191,10 @@
 		var i,
 			n,
 			selectnode;
-		for(i = 0 ; i < root.length; i = i + 1) {
+		for (i = 0; i < root.length; i = i + 1) {
 			selectnode = root[i];
-			for(n = 0 ; n < selectnode.child.length; n = n + 1) {
-				if(selectnode.child[n].name === name) {
+			for (n = 0; n < selectnode.child.length; n = n + 1) {
+				if (selectnode.child[n].name === name) {
 					return selectnode.child[n];
 				}
 			}
