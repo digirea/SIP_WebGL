@@ -86,7 +86,7 @@ Normalize, Sub */
 						meshlist[i].radius = parseFloat(data.input[k].value);
 					}
 				}
-				camera.setupLerp(meshlist[i].boundmin, meshlist[i].boundmax, meshlist[i].trans);
+				camera.setupLerp(meshlist[i].boundmin, meshlist[i].boundmax, meshlist[i].trans, meshlist[i].scale);
 			}
 		}
 	}
@@ -107,6 +107,9 @@ Normalize, Sub */
 		stlmesh.name = data.name;
 		stlmesh.setShader(mesh_shader);
 		
+		//type is stl
+		stlmesh.type = 'stl';
+		
 		//add root
 		node = datatree.createRoot('mesh', data.name, stlmesh);
 		window.grouptreeview.update(datatree.getRoot(), node);
@@ -122,7 +125,7 @@ Normalize, Sub */
 		} else {
 			console.log(node);
 			if (node.data.boundmin) {
-				camera.setupLerp(node.data.boundmin, node.data.boundmax, node.data.trans);
+				camera.setupLerp(node.data.boundmin, node.data.boundmax, node.data.trans, node.data.scale);
 			}
 		}
 		
@@ -132,7 +135,7 @@ Normalize, Sub */
 		}
 	}
 
-	function updateMeshText(name, pos, type) {
+	function updateMeshText(name, pos, type, urllist) {
 		var mesh = {'position' : pos},
 			bb,
 			child,
@@ -150,6 +153,7 @@ Normalize, Sub */
 			retmesh.name = name + 'SPHERE';
 			retmesh.setShader(mesh_shader);
 		}
+		retmesh.urllist = urllist;
 
 		child = datatree.createChild('mesh', retmesh.name, retmesh);
 		datatree.addChild(selectnode.name, child);
@@ -189,6 +193,7 @@ Normalize, Sub */
 		gridmesh = render.createGridMesh(1000, 100, 0.5);
 		
 		gridmesh.setMode('Lines');
+		gridmesh.type = 'stl';
 		gridmesh.setShader(line_shader);
 		gridmesh.boundmin = Mul(gridmesh.boundmin, [0.25, 0.25, 0.25]);
 		gridmesh.boundmax = Mul(gridmesh.boundmax, [0.25, 0.25, 0.25]);
@@ -404,12 +409,6 @@ Normalize, Sub */
 		resultpos[1] = meshlist[hitmesh].position[info.index + 1];
 		resultpos[2] = meshlist[hitmesh].position[info.index + 2];
 
-		//RAY TEST START----------------------------
-		/*
-		createRayMesh
-		*/
-		//RAY TEST END----------------------------
-		
 		mesh = meshlist[hitmesh];
 		info.position = [];
 		info.position.push(
@@ -420,10 +419,12 @@ Normalize, Sub */
 		info.index /= 3;
 		console.log(resultpos, info);
 		
-		//TEST URL
-		info.URL = {};
-		info.URL.title = "http://pouet.net";
-		info.URL.href  = "http://pouet.net";
+		if (mesh.urllist.length > 0) {
+			info.URL = {};
+			info.URL.title = mesh.urllist[info.index];
+			info.URL.href  = mesh.urllist[info.index];
+		}
+
 		
 		createPopup(win_x, win_y, info);
 	}
@@ -447,9 +448,11 @@ Normalize, Sub */
 
 	function addGroup(type) {
 		var colinfo   = [],
+			colURL    = -1,
 			colaxis   = [],
 			coldata   = [],
 			pos       = [],
+			urllist   = [],
 			vtemp     = [],
 			name      = '',
 			colnum,
@@ -475,6 +478,9 @@ Normalize, Sub */
 		//check hstable header
 		headernames = clonetable[0].getElementsByClassName('colnames');
 		selectnames = clonetable[0].getElementsByClassName('colselectbox');
+		
+		
+		//Create Select Info
 		for (i = 0; i < selectnames.length; i = i + 1) {
 			
 			console.log(selectnames[i].value);
@@ -487,8 +493,13 @@ Normalize, Sub */
 			if (selectnames[i].value === 'Z') {
 				colinfo.push({'index' : i, 'attr' : 2});
 			}
+			
+			if(colURL < 0) {
+				if (selectnames[i].value === 'URL') {
+					colURL = i;
+				}
+			}
 		}
-		
 		
 		//Create Name
 		for (i = 0; i < colinfo.length; i = i + 1) {
@@ -510,14 +521,28 @@ Normalize, Sub */
 				continue;
 			}
 		}
+
+		if(colURL >= 0) {
+			col = window.hstable.getCol(colURL);
+			for (j = 0; j < col.length - 1; j = j + 1) {
+				urllist.push(col[j]);
+			}
+		}
+
 		for (j = 0; j < pos.length; j = j + 1) {
 			if (pos[j] === undefined) {
 				pos[j] = 0;
 			}
 		}
 
+		for (j = 0; j < urllist.length; j = j + 1) {
+			if (urllist[j] === undefined) {
+				urllist[j] = 'NULL';
+			}
+		}
+
 		//Create Name
-		updateMeshText(name, pos, type);
+		updateMeshText(name, pos, type, urllist);
 	}
 	
 	

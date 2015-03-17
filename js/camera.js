@@ -128,16 +128,31 @@ var test_time = 0;
 		return this.camRot;
 	};
 
-	camera.prototype.setupLerp = function (min, max, trans, axis) {
-		var len = 0;
+	camera.prototype.setupLerp = function (min, max, trans, scale) {
+		var len = 0,
+			i,
+			temp,
+			maxscale = 1;
+
 		this.camWorldPosStart   = this.camWorldPos;
 		this.camWorldPosEnd     = [(max[0] + min[0]) / 2, (max[1] + min[1]) / 2, (max[2] + min[2]) / 2];
 
+		console.log('setupLerp : ', min, max, trans, scale);
 		if (trans) {
 			this.camWorldPosEnd[0] += parseFloat(trans[0]);
 			this.camWorldPosEnd[1] += parseFloat(trans[1]);
 			this.camWorldPosEnd[2] += parseFloat(trans[2]);
 		}
+		
+		if (scale) {
+			for(i = 0 ; i < scale.length; i++) {
+				temp = parseFloat(scale[i]);
+				if(maxscale < temp) {
+					maxscale = temp;
+				}
+			}
+		}
+		console.log('maxscale : ', maxscale);
 		
 		this.camWorldPosEnd     = Negative(this.camWorldPosEnd);
 
@@ -153,11 +168,7 @@ var test_time = 0;
 		this.camPosEnd[1]       = 0;
 		this.camPosEnd[2]       = 0;
 		
-		if (axis) {
-			this.camPosEnd[axis]    = -Distance(max, min);
-		} else {
-			this.camPosEnd[2]       = -Distance(max, min);
-		}
+		this.camPosEnd[2]       = -Distance(max, min) * maxscale;
 		
 		this.lerpTime           = 0;
 		this.lerpTimeDelta      = 1.0 / 30.0;

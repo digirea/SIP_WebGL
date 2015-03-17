@@ -40,11 +40,13 @@
 			color.value = node.color;
 			values.push(color);
 		}
-		if (node.radius) {
-			radius.name = "radius";
-			radius.type = "float";
-			radius.value = node.radius;
-			values.push(radius);
+		if (node.data.type === 'data') {
+			if (node.radius) {
+				radius.name = "radius";
+				radius.type = "float";
+				radius.value = node.radius;
+				values.push(radius);
+			}
 		}
 		return values;
 	}

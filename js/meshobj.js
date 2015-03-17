@@ -6,6 +6,7 @@ var MeshObj;
 	"use strict";
 	var mesh = function () {
 		this.name          = 'undef';
+		this.type          = 'data';
 		this.position      = [];
 		this.normal        = [];
 		this.color         = [];
@@ -26,6 +27,7 @@ var MeshObj;
 		this.scale         = [1,1,1];
 		this.rotate        = [0,0,0];
 		this.diffColor     = [1,1,1,1];
+		
 		
 		//for raytrace
 		this.pointposition = [];

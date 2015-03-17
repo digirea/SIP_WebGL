@@ -34,10 +34,11 @@ int main()
 	//for(int j = 0 ; j < 100000; j++) {
 	//for(int j = 0 ; j < 50000; j++) {
 	//for(int j = 0 ; j < 25000; j++) {
-	for(int j = 0 ; j < 10000; j++) {
+	for(int j = 0 ; j < 1024; j++) {
 		printf("%f,%f,%f,", cos(t * 0.3) * 100, -sin(t * 0.4) * 100, -cos(t * 0.6) * 100);
 		printf("%f,%f,%f,", sin(t * 0.007) * 200, -cos(t * 0.009) * 200, -sin(t * 0.012) * 200);
 		printf("%f,%f,%f,", frand() * 300, frand() * 300, frand() * 300);
+		printf("http://google.%d.com", random());
 		printf("\n");
 		t += 7.3;;
 	}
