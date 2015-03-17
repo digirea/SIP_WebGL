@@ -877,7 +877,8 @@ function Normalize(p) {
  * @return ArrayExpression
  */
 function Negative(p) {
-	return [-p[0], -p[1], -p[2]];
+	var ret = [-p[0], -p[1], -p[2]];
+	return ret;
 }
 
 

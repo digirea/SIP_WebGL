@@ -225,17 +225,9 @@ var test_time = 0;
 		var len = 0,
 			i,
 			temp,
+			tempmin = [1,1,1],
+			tempmax = [1,1,1],
 			maxscale = 0;
-
-		this.camWorldPosStart   = this.camWorldPos;
-		this.camWorldPosEnd     = [(max[0] + min[0]) / 2, (max[1] + min[1]) / 2, (max[2] + min[2]) / 2];
-
-		console.log('setupLerp : ', min, max, trans, scale);
-		if (trans) {
-			this.camWorldPosEnd[0] += parseFloat(trans[0]);
-			this.camWorldPosEnd[1] += parseFloat(trans[1]);
-			this.camWorldPosEnd[2] += parseFloat(trans[2]);
-		}
 		
 		if (scale) {
 			for(i = 0 ; i < scale.length; i++) {
@@ -245,8 +237,32 @@ var test_time = 0;
 				}
 			}
 		}
-		console.log('maxscale : ', maxscale);
 		
+		if(maxscale === 0) {
+			maxscale = 1;
+		}
+
+		tempmin[0] = min[0] * maxscale * Math.sign(parseFloat(scale[0]));
+		tempmin[1] = min[1] * maxscale * Math.sign(parseFloat(scale[1]));
+		tempmin[2] = min[2] * maxscale * Math.sign(parseFloat(scale[2]));
+		tempmax[0] = max[0] * maxscale * Math.sign(parseFloat(scale[0]));
+		tempmax[1] = max[1] * maxscale * Math.sign(parseFloat(scale[1]));
+		tempmax[2] = max[2] * maxscale * Math.sign(parseFloat(scale[2]));
+
+		this.camWorldPosStart[0]   = this.camWorldPos[0];
+		this.camWorldPosStart[1]   = this.camWorldPos[1];
+		this.camWorldPosStart[2]   = this.camWorldPos[2];
+		this.camWorldPosEnd[0]     = (tempmax[0] + tempmin[0]) / 2;
+		this.camWorldPosEnd[1]     = (tempmax[1] + tempmin[1]) / 2;
+		this.camWorldPosEnd[2]     = (tempmax[2] + tempmin[2]) / 2;
+
+		console.log('setupLerp : ', min, max, trans, scale);
+		if (trans) {
+			this.camWorldPosEnd[0] += parseFloat(trans[0]);
+			this.camWorldPosEnd[1] += parseFloat(trans[1]);
+			this.camWorldPosEnd[2] += parseFloat(trans[2]);
+		}
+
 		this.camWorldPosEnd     = Negative(this.camWorldPosEnd);
 
 		this.camPosStart[0]     = this.camPos[0];
@@ -260,11 +276,8 @@ var test_time = 0;
 		this.camPosEnd[0]       = 0;
 		this.camPosEnd[1]       = 0;
 		this.camPosEnd[2]       = 0;
-		
-		if(maxscale === 0) {
-			maxscale = 1;
-		}
-		this.camPosEnd[2]       = -Distance(max, min) * maxscale;
+
+		this.camPosEnd[2]       = -Distance(tempmax, tempmin);
 
 		this.lerpTime           = 0;
 		this.lerpTimeDelta      = 1.0 / 30.0;
