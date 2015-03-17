@@ -214,20 +214,11 @@ Normalize, Sub */
 		camera.resetView();
 	}
 	
-	
-	function sideViewX(e) {
-		camera.ViewSide('x');
-		selectTreeNode(datatree.getRoot()[0]);
-	}
-	
-	function sideViewY(e) {
-		camera.ViewSide('y');
-		selectTreeNode(datatree.getRoot()[0]);
-	}
-	
-	function sideViewZ(e) {
-		camera.ViewSide('z');
-		selectTreeNode(datatree.getRoot()[0]);
+	function sideViewChange(axis) {
+		return function (e) {
+			camera.ViewSide(axis);
+			selectTreeNode(datatree.getRoot()[0]);
+		};
 	}
 	
 	function getViewProjMatrix() {
@@ -636,6 +627,10 @@ Normalize, Sub */
 			sideviewx   = document.getElementById('viewLeft'),
 			sideviewy   = document.getElementById('viewTop'),
 			sideviewz   = document.getElementById('viewFront'),
+			sideviewx_   = document.getElementById('viewRight'),
+			sideviewy_   = document.getElementById('viewBottom'),
+			sideviewz_   = document.getElementById('viewBack'),
+			
 			deletegroup = document.getElementById('DeleteGroup'),
 			propertyTab,
 			groupTab,
@@ -666,9 +661,12 @@ Normalize, Sub */
 		addline.onclick  = addLine;
 		addpoint.onclick = addPoint;
 
-		sideviewx.onclick = sideViewX;
-		sideviewy.onclick = sideViewY;
-		sideviewz.onclick = sideViewZ;
+		sideviewx.onclick = (sideViewChange)("x");
+		sideviewy.onclick = (sideViewChange)("y");
+		sideviewz.onclick = (sideViewChange)("z");
+		sideviewx_.onclick = (sideViewChange)("x-");
+		sideviewy_.onclick = (sideViewChange)("y-");
+		sideviewz_.onclick = (sideViewChange)("z-");
 		
 		// Create Tab
 		propertyTab = window.animtab.create('right', {

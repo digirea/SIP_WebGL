@@ -72,6 +72,24 @@ var test_time = 0;
 			this.camPos[1] = 0;
 			this.camPos[2] = -z;
 		}
+		if (type === 'x-') {
+			this.camPos[0] = -z;
+			this.camPos[1] = 0;
+			this.camPos[2] = 0;
+			this.mtx.rotate(this.RotateMatrix, (Math.PI * 90.0) / 180.0, [0, 1, 0], this.RotateMatrix);
+		}
+		if (type === 'y-') {
+			this.camPos[0] = 0;
+			this.camPos[1] = -z;
+			this.camPos[2] = 0;
+			this.mtx.rotate(this.RotateMatrix, (Math.PI * 90.0) / 180.0, [1, 0, 0], this.RotateMatrix);
+		}
+		if (type === 'z-') {
+			this.camPos[0] = 0;
+			this.camPos[1] = 0;
+			this.camPos[2] = z;
+			this.mtx.rotate(this.RotateMatrix, (Math.PI * 180.0) / 180.0, [0, 1, 0], this.RotateMatrix);
+		}
 
 	};
 	camera.prototype.pos = function (x, y, z) {

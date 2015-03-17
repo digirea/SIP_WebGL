@@ -321,20 +321,44 @@ DustBox{
 
 #viewFront {
 	position        :absolute;
-	left            :300px;
+	left            :305px;
 	top             :0px;
+	background-color: #345678;
 }
 
 #viewLeft {
 	position        :absolute;
-	left            :450px;
+	left            :455px;
 	top             :0px;
+	background-color: #234567;
 }
 
 #viewTop {
 	position        :absolute;
-	left            :600px;
+	left            :605px;
 	top             :0px;
+	background-color: #123456;
+}
+
+#viewBack {
+	position        :absolute;
+	left            :305px;
+	top             :30px;
+	background-color: #974365;
+}
+
+#viewRight {
+	position        :absolute;
+	left            :455px;
+	top             :30px;
+	background-color: #763254;
+}
+
+#viewBottom {
+	position        :absolute;
+	left            :605px;
+	top             :30px;
+	background-color: #652143;
 }
 
 #ApplyProperty {
