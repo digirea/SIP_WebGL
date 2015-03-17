@@ -248,9 +248,9 @@
 				return false;
 			}
 		}, false);
-		document.addEventListener('mousewheel',     mouseWheel);
-		document.addEventListener('DOMMouseScroll', mouseWheel);
-		document.addEventListener("keydown", keyEvent, false);
+		canvas.addEventListener('mousewheel',     mouseWheel);
+		canvas.addEventListener('DOMMouseScroll', mouseWheel);
+		canvas.addEventListener("keydown", keyEvent, false);
 		keycallback = keycb;
 		resetView();
 	}

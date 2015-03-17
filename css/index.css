@@ -104,6 +104,18 @@ body {
 	cursor: pointer;
 }
 
+.menuTable {
+	display:table;
+	padding: 0px;
+	margin: 0px;
+}
+
+.menuItem {
+	display:table-cell;
+    vertical-align:middle;
+    text-align:center;
+}
+
 /* --- TODO: beautiful----*/
 .AddButton {
 	/*position:absolute;
@@ -238,7 +250,7 @@ DustBox{
 	/*position:absolute;
 	right:150px;
 	top:28px;*/
-	margin: 10px;
+	margin: 5px;
 	width: 150px;
 	height:25px;
 	background-color:#e50e78;
@@ -250,7 +262,7 @@ DustBox{
 	/*position:absolute;
 	right:150px;
 	top:28px;*/
-	margin: 10px;
+	margin: 5px;
 	width: 150px;
 	height:25px;
 	background-color:#155e98;
@@ -560,12 +572,12 @@ DustBox{
 	height:400px;
 	bottom:0px;
 	background-color:rgba(100, 100, 100, 0.5);
-	overflow: auto;
 }
 
 
 .consoleTextBlock
 {
+		overflow: auto;
 	bottom:30px;
 	/*height:400px;*/
 	display: table-cell;
@@ -636,7 +648,7 @@ DustBox{
 .bottomTab
 {
 	left : 10px;
-	bottom : 400px;
+	/*bottom : 400px;*/
 	width: 80px;
 	height: 20px;
 	padding: 3px;
