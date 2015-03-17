@@ -38,6 +38,8 @@ var MeshObj;
 		
 		//for info
 		this.urllist       = [];
+		this.colinfo       = [];
+		this.primtype      = 'mesh';
 	};
 
 	/**
