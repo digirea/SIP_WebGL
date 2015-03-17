@@ -1,4 +1,4 @@
-/*jslint devel:true*/
+﻿/*jslint devel:true*/
 /**
  * global Float32Array, ArrayBuffer, Int16Array, QtnIV, Sub, MatIV
  * @method MatIV
@@ -7,18 +7,18 @@ function MatIV() {
 	"use strict";
 
 	/**
-	 * Description
+	 * 行列の作成
 	 * @method create
-	 * @return NewExpression
+	 * @return array 行列
 	 */
 	this.create = function () {
 		return new Float32Array(16);
 	};
 	/**
-	 * Description
+	 * 単位行列に設定
 	 * @method identity
-	 * @param {} dest
-	 * @return dest
+	 * @param {Array} dest 設定する行列
+	 * @return dest 行列
 	 */
 	this.identity = function (dest) {
 		dest[0]  = 1;
@@ -40,12 +40,12 @@ function MatIV() {
 		return dest;
 	};
 	/**
-	 * Description
+	 * 行列の乗算
 	 * @method multiply
-	 * @param {} mat1
-	 * @param {} mat2
-	 * @param {} dest
-	 * @return dest
+	 * @param {Array} mat1 行列
+	 * @param {Array} mat2 行列
+	 * @param {Array} dest 結果を格納する行列
+	 * @return dest 結果を格納する行列
 	 */
 	this.multiply = function (mat1, mat2, dest) {
 		var a = mat1[0],  b = mat1[1],  c = mat1[2],  d = mat1[3],
@@ -75,12 +75,12 @@ function MatIV() {
 		return dest;
 	};
 	/**
-	 * Description
+	 * 行列のスケーリング
 	 * @method scale
-	 * @param {} mat
-	 * @param {} vec
-	 * @param {} dest
-	 * @return dest
+	 * @param {Array} mat 行列
+	 * @param {Array} vec ベクトル
+	 * @param {Array} dest 結果を格納する行列
+	 * @return dest 結果を格納する行列
 	 */
 	this.scale = function (mat, vec, dest) {
 		dest[0]  = mat[0]  * vec[0];
@@ -102,12 +102,12 @@ function MatIV() {
 		return dest;
 	};
 	/**
-	 * Description
+	 * 行列の移動
 	 * @method translate
-	 * @param {} mat
-	 * @param {} vec
-	 * @param {} dest
-	 * @return dest
+	 * @param {Array} mat 行列
+	 * @param {Array} vec 移動量
+	 * @param {Array} dest 結果を格納する行列
+	 * @return dest 結果を格納する行列
 	 */
 	this.translate = function (mat, vec, dest) {
 		dest[0] = mat[0];
@@ -129,13 +129,13 @@ function MatIV() {
 		return dest;
 	};
 	/**
-	 * Description
+	 * 行列の回転
 	 * @method rotate
-	 * @param {} mat
-	 * @param {} angle
-	 * @param {} axis
-	 * @param {} dest
-	 * @return dest
+	 * @param {Array} mat 行列
+	 * @param {Array} angle 角度
+	 * @param {Array} axis 軸
+	 * @param {Array} dest 結果を格納する行列
+	 * @return dest 結果を格納する行列
 	 */
 	this.rotate = function (mat, angle, axis, dest) {
 		var sq = Math.sqrt(axis[0] * axis[0] + axis[1] * axis[1] + axis[2] * axis[2]),
@@ -202,13 +202,13 @@ function MatIV() {
 		return dest;
 	};
 	/**
-	 * Description
+	 * ビュー行列の生成
 	 * @method lookAt
-	 * @param {} eye
-	 * @param {} center
-	 * @param {} up
-	 * @param {} dest
-	 * @return dest
+	 * @param {Array} eye 視線ベクトル
+	 * @param {Array} center 位置ベクトル
+	 * @param {Array} up アップベクトル
+	 * @param {Array} dest 結果を格納する行列
+	 * @return dest 結果を格納する行列
 	 */
 	this.lookAt = function (eye, center, up, dest) {
 		var eyeX    = eye[0],    eyeY    = eye[1],    eyeZ    = eye[2],
@@ -274,14 +274,14 @@ function MatIV() {
 	};
 	
 	/**
-	 * Description
+	 * 射影行列の計算
 	 * @method perspective
-	 * @param {} fovy
-	 * @param {} aspect
-	 * @param {} near
-	 * @param {} far
-	 * @param {} dest
-	 * @return dest
+	 * @param {Number} fovy 縦方向視野角
+	 * @param {Number} aspect アスペクト
+	 * @param {Number} near ニアクリップ
+	 * @param {Number} far ファークリップ
+	 * @param {Array} dest 結果を格納する行列
+	 * @return dest 結果を格納する行列
 	 */
 	this.perspective = function (fovy, aspect, near, far, dest) {
 		var t = near * Math.tan(fovy * Math.PI / 360),
@@ -309,16 +309,16 @@ function MatIV() {
 	};
 
 	/**
-	 * Description
+	 * フラスタムの計算
 	 * @method frust
-	 * @param {} left
-	 * @param {} right
-	 * @param {} bottom
-	 * @param {} top
-	 * @param {} near
-	 * @param {} far
-	 * @param {} dest
-	 * @return dest
+	 * @param {Number} left 左
+	 * @param {Number} right 右
+	 * @param {Number} bottom 下
+	 * @param {Number} top 上
+	 * @param {Number} near ニア
+	 * @param {Number} far ファー
+	 * @param {Array} dest 結果を格納する行列
+	 * @return dest 結果を格納する行列
 	 */
 	this.frust = function (left, right, bottom, top, near, far, dest) {
 		var rl   =  (right - left),
@@ -345,14 +345,14 @@ function MatIV() {
 
 
 	/**
-	 * Description
+	 * 射影行列の計算
 	 * @method persp2
-	 * @param {} id
-	 * @param {} fovy
-	 * @param {} aspect
-	 * @param {} near
-	 * @param {} far
-	 * @param {} dest
+	 * @param {Number} id ID
+	 * @param {Number} fovy 縦方向視野角
+	 * @param {Number} aspect アスペクト
+	 * @param {Number} near ニア
+	 * @param {Number} far ファー
+	 * @param {Array} dest 結果を格納する行列
 	 */
 	this.persp2 = function (id, fovy, aspect, near, far, dest) {
 		var top       = near * Math.tan(fovy * Math.PI / 180),
@@ -376,16 +376,16 @@ function MatIV() {
 	};
 
 	/**
-	 * Description
+	 * 正投影行列の計算
 	 * @method ortho
-	 * @param {} left
-	 * @param {} right
-	 * @param {} top
-	 * @param {} bottom
-	 * @param {} near
-	 * @param {} far
-	 * @param {} dest
-	 * @return dest
+	 * @param {Number} left 左
+	 * @param {Number} right 右
+	 * @param {Number} top 上
+	 * @param {Number} bottom 下
+	 * @param {Number} near ニア
+	 * @param {Number} far ファー
+	 * @param {Array} dest 結果を格納する行列
+	 * @return dest 結果を格納する行列
 	 */
 	this.ortho = function (left, right, top, bottom, near, far, dest) {
 		var h = (right - left),
@@ -410,11 +410,11 @@ function MatIV() {
 		return dest;
 	};
 	/**
-	 * Description
+	 * 行列の転置
 	 * @method transpose
-	 * @param {} mat
-	 * @param {} dest
-	 * @return dest
+	 * @param {Array} mat 行列
+	 * @param {Array} dest 結果を格納する行列
+	 * @return dest 結果を格納する行列
 	 */
 	this.transpose = function (mat, dest) {
 		dest[0]  = mat[0];
@@ -436,11 +436,11 @@ function MatIV() {
 		return dest;
 	};
 	/**
-	 * Description
+	 * 逆行列の計算
 	 * @method inverse
-	 * @param {} mat
-	 * @param {} dest
-	 * @return dest
+	 * @param {Array} mat 行列
+	 * @param {Array} dest 結果を格納する行列
+	 * @return dest 結果を格納する行列
 	 */
 	this.inverse = function (mat, dest) {
 		var a = mat[0],  b = mat[1],  c = mat[2],  d = mat[3],
@@ -475,25 +475,25 @@ function MatIV() {
 }
 
 /**
- * Description
+ * クオータニオン
  * @method QtnIV
  */
 function QtnIV() {
 	"use strict";
 
 	/**
-	 * Description
+	 * 作成
 	 * @method create
-	 * @return NewExpression
+	 * @return array クオータニオン
 	 */
 	this.create = function () {
 		return new Float32Array(4);
 	};
 	/**
-	 * Description
+	 * 初期化
 	 * @method identity
-	 * @param {} dest
-	 * @return dest
+	 * @param {Array} dest 結果を格納するクオータニオン
+	 * @return dest 結果を格納するクオータニオン
 	 */
 	this.identity = function (dest) {
 		dest[0] = 0;
@@ -503,11 +503,11 @@ function QtnIV() {
 		return dest;
 	};
 	/**
-	 * Description
+	 * 逆回転の計算
 	 * @method inverse
-	 * @param {} qtn
-	 * @param {} dest
-	 * @return dest
+	 * @param {Array} qtn クオータニオン
+	 * @param {Array} dest 結果を格納するクオータニオン
+	 * @return dest 結果を格納するクオータニオン
 	 */
 	this.inverse = function (qtn, dest) {
 		dest[0] = -qtn[0];
@@ -517,10 +517,10 @@ function QtnIV() {
 		return dest;
 	};
 	/**
-	 * Description
+	 * 正規化
 	 * @method normalize
-	 * @param {} dest
-	 * @return dest
+	 * @param {Array} dest 結果を格納するクオータニオン
+	 * @return dest 結果を格納するクオータニオン
 	 */
 	this.normalize = function (dest) {
 		var x = dest[0],
@@ -544,12 +544,12 @@ function QtnIV() {
 		return dest;
 	};
 	/**
-	 * Description
+	 * クオータニオンの積
 	 * @method multiply
-	 * @param {} qtn1
-	 * @param {} qtn2
-	 * @param {} dest
-	 * @return dest
+	 * @param {Array} qtn1 クオータニオン
+	 * @param {Array} qtn2 クオータニオン
+	 * @param {Array} dest 結果を格納するクオータニオン
+	 * @return dest 結果を格納するクオータニオン
 	 */
 	this.multiply = function (qtn1, qtn2, dest) {
 		var ax = qtn1[0], ay = qtn1[1], az = qtn1[2], aw = qtn1[3],
@@ -561,12 +561,12 @@ function QtnIV() {
 		return dest;
 	};
 	/**
-	 * Description
+	 * クオータニオンの回転
 	 * @method rotate
-	 * @param {} angle
-	 * @param {} axis
-	 * @param {} dest
-	 * @return dest
+	 * @param {Number} angle アングル
+	 * @param {Array} axis 軸
+	 * @param {Array} dest 結果を格納するクオータニオン
+	 * @return dest 結果を格納するクオータニオン
 	 */
 	this.rotate = function (angle, axis, dest) {
 		var sq = Math.sqrt(axis[0] * axis[0] + axis[1] * axis[1] + axis[2] * axis[2]),
@@ -594,12 +594,12 @@ function QtnIV() {
 		return dest;
 	};
 	/**
-	 * Description
+	 * ベクトルに変換
 	 * @method toVecIII
-	 * @param {} vec
-	 * @param {} qtn
-	 * @param {} dest
-	 * @return dest
+	 * @param {Array} vec ベクトル
+	 * @param {Array} qtn クオータニオン
+	 * @param {Array} dest 結果を格納するクオータニオン
+	 * @return dest 結果を格納するクオータニオン
 	 */
 	this.toVecIII = function (vec, qtn, dest) {
 		var qp = this.create(),
@@ -617,11 +617,11 @@ function QtnIV() {
 		return dest;
 	};
 	/**
-	 * Description
+	 * マトリックスに変換
 	 * @method toMatIV
-	 * @param {} qtn
-	 * @param {} dest
-	 * @return dest
+	 * @param {Array} qtn クオータニオン
+	 * @param {Array} dest 結果を格納するクオータニオン
+	 * @return dest 結果を格納するクオータニオン
 	 */
 	this.toMatIV = function (qtn, dest) {
 		var x = qtn[0], y = qtn[1], z = qtn[2], w = qtn[3],
@@ -656,13 +656,13 @@ function QtnIV() {
 		return dest;
 	};
 	/**
-	 * Description
+	 * 球面線形保管
 	 * @method slerp
-	 * @param {} qtn1
-	 * @param {} qtn2
-	 * @param {} time
-	 * @param {} dest
-	 * @return dest
+	 * @param {Array} qtn1 クオータニオン
+	 * @param {Array} qtn2 クオータニオン
+	 * @param {Number} time 補間値
+	 * @param {Array} dest 結果を格納するクオータニオン
+	 * @return dest 結果を格納するクオータニオン
 	 */
 	this.slerp = function (qtn1, qtn2, time, dest) {
 		var ht = qtn1[0] * qtn2[0] + qtn1[1] * qtn2[1] + qtn1[2] * qtn2[2] + qtn1[3] * qtn2[3],
@@ -701,10 +701,10 @@ function QtnIV() {
 
 
 /**
- * Description
+ * 値のクランプ
  * @method saturate
- * @param {} x
- * @return ConditionalExpression
+ * @param {Number} x 値
+ * @return number クランプされた値
  */
 function saturate(x)
 {
@@ -712,12 +712,12 @@ function saturate(x)
 }
 	
 /**
- * Description
+ * エルミート補間
  * @method smoothstep
- * @param {} a
- * @param {} b
- * @param {} x
- * @return BinaryExpression
+ * @param {Number} a 最小値
+ * @param {Number} b 最大値
+ * @param {Number} x 補間値
+ * @return number 補間された値
  */
 function smoothstep (a, b, x)
 {
@@ -728,12 +728,12 @@ function smoothstep (a, b, x)
 
 //http://freespace.virgin.net/hugo.elias/models/m_perlin.htm
 /**
- * Description
+ * コサイン補間
  * @method CosInter
- * @param {} a
- * @param {} b
- * @param {} x
- * @return BinaryExpression
+ * @param {Number} a 最小値
+ * @param {Number} b 最大値
+ * @param {Number} x 補間値
+ * @return number 補間された値
  */
 function CosInter(a, b, x) {
 	var ft = x * Math.PI,
@@ -744,10 +744,10 @@ function CosInter(a, b, x) {
 /**
  * Description
  * @method CosInter3v
- * @param {} a
- * @param {} b
- * @param {} x
- * @return arr
+ * @param {Array} a 最小値
+ * @param {Array} b 最大値
+ * @param {Array} x 補間値
+ * @return number 補間された値
  */
 function CosInter3v(a, b, x) {
 	var arr = 
@@ -761,11 +761,11 @@ function CosInter3v(a, b, x) {
 
 
 /**
- * Description
+ * ベクトルの加算
  * @method Add
- * @param {} p0
- * @param {} p1
- * @return ret
+ * @param {Array} p0 ベクトル
+ * @param {Array} p1 ベクトル
+ * @return ret 計算結果のベクトル
  */
 function Add(p0, p1) {
 	var ret = [];
@@ -774,11 +774,11 @@ function Add(p0, p1) {
 }
 
 /**
- * Description
+ * ベクトルの減算
  * @method Sub
- * @param {} p0
- * @param {} p1
- * @return ret
+ * @param {Array} p0 ベクトル
+ * @param {Array} p1 ベクトル
+ * @return ret 計算結果のベクトル
  */
 function Sub(p0, p1) {
 	var ret = [];
@@ -790,11 +790,11 @@ function Sub(p0, p1) {
 }
 
 /**
- * Description
+ * ベクトルの積算
  * @method Mul
- * @param {} p0
- * @param {} p1
- * @return ret
+ * @param {Array} p0 ベクトル
+ * @param {Array} p1 ベクトル
+ * @return ret 計算結果のベクトル
  */
 function Mul(p0, p1) {
 	var ret = [];
@@ -803,11 +803,11 @@ function Mul(p0, p1) {
 }
 
 /**
- * Description
+ * ベクトルの除算
  * @method Div
- * @param {} p0
- * @param {} p1
- * @return ret
+ * @param {Array} p0 ベクトル
+ * @param {Array} p1 ベクトル
+ * @return ret 計算結果のベクトル
  */
 function Div(p0, p1) {
 	var ret = [];
@@ -816,10 +816,10 @@ function Div(p0, p1) {
 }
 
 /**
- * Description
+ * ベクトルの正規化
  * @method Normalize
- * @param {} p
- * @return ArrayExpression
+ * @param {Array} p ベクトル
+ * @return Array 計算結果のベクトル
  */
 function Normalize(p) {
 	var length = Math.sqrt(p[0] * p[0] + p[1] * p[1] + p[2] * p[2]);
@@ -827,32 +827,32 @@ function Normalize(p) {
 }
 
 /**
- * Description
+ * ベクトルの内積
  * @method Dot
- * @param {} p0
- * @param {} p1
- * @return BinaryExpression
+ * @param {Array} p0 ベクトル
+ * @param {Array} p1 ベクトル
+ * @return ret 計算結果のベクトル
  */
 function Dot(p0, p1) {
 	return (p0[0] * p1[0]) + (p0[1] * p1[1]) + (p0[2] * p1[2]);
 }
 
 /**
- * Description
+ * ベクトルの大きさ
  * @method Length
- * @param {} p
- * @return CallExpression
+ * @param {Array} p ベクトル
+ * @return number ベクトルの大きさ
  */
 function Length(p) {
 	return Math.sqrt(Dot(p, p));
 }
 
 /**
- * Description
+ * ベクトルの距離
  * @method Distance
- * @param {} p0
- * @param {} p1
- * @return CallExpression
+ * @param {Array} p0 ベクトル
+ * @param {Array} p1 ベクトル
+ * @return number ベクトルの距離
  */
 function Distance(p0, p1) {
 	var p = [p0[0] - p1[0], p0[1] - p1[1], p0[2] - p1[2]];
@@ -860,10 +860,10 @@ function Distance(p0, p1) {
 }
 
 /**
- * Description
+ * ベクトルを正規化
  * @method Normalize
- * @param {} p
- * @return ArrayExpression
+ * @param {Array} p ベクトル
+ * @return Array 正規化されたベクトル
  */
 function Normalize(p) {
 	var length = Length(p);
@@ -871,10 +871,10 @@ function Normalize(p) {
 }
 
 /**
- * Description
+ * ベクトルの反転
  * @method Negative
- * @param {} p
- * @return ArrayExpression
+ * @param {Array} p ベクトル
+ * @return Array 反転されたベクトル
  */
 function Negative(p) {
 	var ret = [-p[0], -p[1], -p[2]];
@@ -883,11 +883,11 @@ function Negative(p) {
 
 
 /**
- * Description
+ * ベクトルの外積
  * @method Cross
- * @param {} p0
- * @param {} p1
- * @return ArrayExpression
+ * @param {Array} p0 ベクトル
+ * @param {Array} p1 ベクトル
+ * @return Array 計算結果のベクトル
  */
 function Cross(p0, p1)
 {
@@ -900,11 +900,11 @@ function Cross(p0, p1)
 
 
 /**
- * Description
+ * 最小最大値の取得
  * @method GetMinMax
- * @param {} min
- * @param {} max
- * @param {} pos
+ * @param {Array} min 取得したベクトル
+ * @param {Array} max 取得したベクトル
+ * @param {Array} pos 位置ベクトル
  */
 function GetMinMax(min, max, pos)
 {
@@ -919,14 +919,14 @@ function GetMinMax(min, max, pos)
 
 // Intersect Triagle
 /**
- * Description
+ * 三角形の交差判定
  * @method IntersectTriangle
- * @param {} org
- * @param {} dir
- * @param {} v0
- * @param {} v1
- * @param {} v2
- * @return ObjectExpression
+ * @param {Array} org 基点位置ベクトル
+ * @param {Array} dir 方向ベクトル
+ * @param {Array} v0 頂点1
+ * @param {Array} v1 頂点2
+ * @param {Array} v2 頂点3
+ * @return Object 重心座標及びorg + t * dirのt値を返す. 交差しなかった場合はfalseを返す.
  */
 function IntersectTriangle(org, dir, v0, v1, v2)
 {
@@ -972,13 +972,13 @@ function IntersectTriangle(org, dir, v0, v1, v2)
 
 
 /**
- * Description
+ * 球の交差判定
  * @method IntersectSphere
- * @param {} org
- * @param {} dir
- * @param {} point
- * @param {} radius
- * @return Literal
+ * @param {Array} org 基点位置ベクトル
+ * @param {Array} dir 方向ベクトル
+ * @param {Number} point 球の中心点
+ * @param {Number} radius 球の半径
+ * @return org + t * dirのt値を返す. 交差しなかった場合はfalseを返す.
  */
 function IntersectSphere(org, dir, point, radius)
 {
@@ -1021,11 +1021,11 @@ function IntersectSphere(org, dir, point, radius)
 
 ///vec4 outpos = invMatrix * inpos;
 /**
- * Description
+ * 行列とベクトルの積算
  * @method MultMatrixVec4
- * @param {} a
- * @param {} b
- * @return ret
+ * @param {Array} a 行列
+ * @param {Array} b ベクトル
+ * @return ret ベクトル
  */
 function MultMatrixVec4(a, b)
 {
@@ -1040,12 +1040,12 @@ function MultMatrixVec4(a, b)
 
 //https://github.com/g-truc/glm/blob/88f4a5ed827c316b5f6179bc51193a874a3a96ee/glm/gtc/matrix_transform.inl#L423
 /**
- * Description
+ * 逆射影変換
  * @method UnProject
- * @param {} winpos
- * @param {} invMatrix
- * @param {} viewport
- * @param {} ray
+ * @param {Array} winpos スクリーン座標
+ * @param {Array} invMatrix 変換用行列
+ * @param {Array} viewport ビューポート
+ * @param {Array} ray レイ
  */
 function UnProject(winpos,
 					invMatrix,
@@ -1078,12 +1078,13 @@ function UnProject(winpos,
 
 //https://github.com/g-truc/glm/blob/88f4a5ed827c316b5f6179bc51193a874a3a96ee/glm/gtc/matrix_transform.inl#L423
 /**
- * Description
- * @method UnProject
- * @param {} winpos
- * @param {} invMatrix
- * @param {} viewport
- * @param {} ray
+ * 逆射影変換ローカル版
+ * @method UnProjectWithLocal
+ * @param {Array} winpos スクリーン座標
+ * @param {Array} invMatrix 変換用行列
+ * @param {Array} localInvMatrix 変換用行列
+ * @param {Array} viewport ビューポート
+ * @param {Array} ray レイ
  */
 function UnProjectWithLocal(winpos,
 					invMatrix,

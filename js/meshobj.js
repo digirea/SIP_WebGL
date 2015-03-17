@@ -5,7 +5,7 @@ var MeshObj;
 (function () {
 	"use strict";
 	/**
-	 * Description
+	 * コンストラクタ
 	 * @method mesh
 	 */
 	var mesh = function () {
@@ -43,11 +43,11 @@ var MeshObj;
 	};
 
 	/**
-	 * Description
+	 * 移動量の設定
 	 * @method setTrans
-	 * @param {} x
-	 * @param {} y
-	 * @param {} z
+	 * @param {Number} x x
+	 * @param {Number} y y 
+	 * @param {Number} z z
 	 */
 	mesh.prototype.setTrans = function (x, y, z) {
 		this.trans[0] = x;
@@ -56,11 +56,11 @@ var MeshObj;
 	}
 
 	/**
-	 * Description
+	 * スケールの設定
 	 * @method setScale
-	 * @param {} x
-	 * @param {} y
-	 * @param {} z
+	 * @param {Number} x x
+	 * @param {Number} y y 
+	 * @param {Number} z z
 	 */
 	mesh.prototype.setScale = function (x, y, z) {
 		this.scale[0] = x;
@@ -69,11 +69,11 @@ var MeshObj;
 	}
 
 	/**
-	 * Description
+	 * 回転量の設定
 	 * @method setRotate
-	 * @param {} x
-	 * @param {} y
-	 * @param {} z
+	 * @param {Number} x x
+	 * @param {Number} y y 
+	 * @param {Number} z z
 	 */
 	mesh.prototype.setRotate = function (x, y, z) {
 		this.rotate[0] = x;
@@ -82,18 +82,18 @@ var MeshObj;
 	}
 
 	/**
-	 * Description
+	 * モードの設定
 	 * @method setMode
-	 * @param {} m
+	 * @param {String} m モード
 	 */
 	mesh.prototype.setMode = function (m) {
 		this.mode = m;
 	};
 
 	/**
-	 * Description
+	 * シェーダの設定
 	 * @method setShader
-	 * @param {} s
+	 * @param {ShaderObj} s シェーダオブジェクト
 	 */
 	mesh.prototype.setShader = function (s) {
 		console.log('Setup Shader', s);
@@ -101,12 +101,12 @@ var MeshObj;
 	};
 
 	/**
-	 * Description
+	 * 拡散色の設定
 	 * @method setDiffColor
-	 * @param {} r
-	 * @param {} g
-	 * @param {} b
-	 * @param {} a
+	 * @param {Number} r 赤
+	 * @param {Number} g 緑
+	 * @param {Number} b 青
+	 * @param {Number} a 透明度
 	 */
 	mesh.prototype.setDiffColor = function (r, g, b, a) {
 		this.diffColor[0] = r;
