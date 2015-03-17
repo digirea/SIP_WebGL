@@ -843,29 +843,14 @@ var WGLRender;
 	};
     
 	
-	
-	//---------------------------------------------------------------------
-	// DrawMesh
-	//---------------------------------------------------------------------
-	/**
-	 * Description
-	 * @method drawMesh
-	 * @param {} mesh
-	 */
-	render.prototype.drawMesh = function (mesh) {
-		var primnum     = 0,
-			lMatrix     = this.mtx.identity(this.mtx.create()),
+	render.prototype.getLocalMatrixFromMesh = function (mesh) {
+		var lMatrix     = this.mtx.identity(this.mtx.create()),
 			tMatrix     = this.mtx.identity(this.mtx.create()),
 			sMatrix     = this.mtx.identity(this.mtx.create()),
 			rMatrixX    = this.mtx.identity(this.mtx.create()),
 			rMatrixY    = this.mtx.identity(this.mtx.create()),
 			rMatrixZ    = this.mtx.identity(this.mtx.create()),
-			rMatrix     = this.mtx.identity(this.mtx.create()),
-			program     = mesh.shader.program,
-			shader      = mesh.shader,
-			uniformname = ['mvpMatrix', 'uColor', 'Radius'],
-			attLocation = [],
-			uniLocation = [];
+			rMatrix     = this.mtx.identity(this.mtx.create());
 
 		//create translate matrix
 		this.mtx.translate(tMatrix,  mesh.trans, tMatrix);
@@ -885,6 +870,27 @@ var WGLRender;
 		this.mtx.multiply(sMatrix,  lMatrix, lMatrix);
 		this.mtx.multiply(rMatrix,  lMatrix, lMatrix);
 		this.mtx.multiply(tMatrix,  lMatrix, lMatrix);
+		
+		return lMatrix;
+	}
+	
+	
+	//---------------------------------------------------------------------
+	// DrawMesh
+	//---------------------------------------------------------------------
+	/**
+	 * Description
+	 * @method drawMesh
+	 * @param {} mesh
+	 */
+	render.prototype.drawMesh = function (mesh) {
+		var primnum     = 0,
+			lMatrix     = this.getLocalMatrixFromMesh(mesh),
+			program     = mesh.shader.program,
+			shader      = mesh.shader,
+			uniformname = ['mvpMatrix', 'uColor', 'Radius'],
+			attLocation = [],
+			uniLocation = [];
 
 		//create trasnfrom matrix
 		this.mtx.multiply(this.vpMat, lMatrix, lMatrix);

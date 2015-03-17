@@ -983,6 +983,7 @@ function IntersectTriangle(org, dir, v0, v1, v2)
 function IntersectSphere(org, dir, point, radius)
 {
 	//https://code.google.com/p/aobench/
+	/*
 	var t = 0;
 		B = 0,
 		C = 0,
@@ -998,7 +999,7 @@ function IntersectSphere(org, dir, point, radius)
 			return {'t' : t };
 		}
 	}
-	/*
+	*/
 	var temp  = Sub(org, point),
 		a,
 		b,
@@ -1015,7 +1016,6 @@ function IntersectSphere(org, dir, point, radius)
 			return {'t' : t };
 		}
 	}
-	*/
 	return false;
 }
 
@@ -1076,3 +1076,32 @@ function UnProject(winpos,
 	ray[2] = outpos[2] / outpos[3];
 }
 
+//https://github.com/g-truc/glm/blob/88f4a5ed827c316b5f6179bc51193a874a3a96ee/glm/gtc/matrix_transform.inl#L423
+/**
+ * Description
+ * @method UnProject
+ * @param {} winpos
+ * @param {} invMatrix
+ * @param {} viewport
+ * @param {} ray
+ */
+function UnProjectWithLocal(winpos,
+					invMatrix,
+					localInvMatrix,
+					viewport,
+					ray)
+{
+	var raytemp = [],
+		inpos   = [],
+		outpos  = [];
+	UnProject(winpos, invMatrix, viewport, raytemp);
+	inpos[0] = raytemp[0];
+	inpos[1] = raytemp[1];
+	inpos[2] = raytemp[2];
+	inpos[3] = 1.0;
+
+	outpos = MultMatrixVec4(localInvMatrix, inpos);
+	ray[0] = outpos[0] / outpos[3];
+	ray[1] = outpos[1] / outpos[3];
+	ray[2] = outpos[2] / outpos[3];
+}

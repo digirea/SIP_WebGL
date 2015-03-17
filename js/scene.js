@@ -1,6 +1,6 @@
 /*jslint devel:true*/
 /*global Float32Array, ArrayBuffer, Int16Array, QtnIV, MatIV,
-WGLRender, Camera, ReqFile, datatree, Mul, IntersectSphere, UnProject,
+WGLRender, Camera, ReqFile, datatree, Mul, IntersectSphere, UnProject, UnProjectWithLocal
 Normalize, Sub */
 
 (function (loadSTLB) {
@@ -77,6 +77,14 @@ Normalize, Sub */
 		meshlist = newlist;
 	}
 
+	
+	function updateMeshDataProp(meshprop, value) {
+		var i;
+		for (i = 0; i < meshprop.length; i = i + 1) {
+			meshprop[i] = parseFloat(value[i]);
+		}
+	}
+	
 	/**
 	 * Description
 	 * @method updateDataTree
@@ -85,6 +93,7 @@ Normalize, Sub */
 	function updateDataTree(data) {
 		console.log(meshlist);
 		var i,
+			j,
 			k;
 		for (i = 0; i < meshlist.length; i = i + 1) {
 			console.log(meshlist[i].name, data.name);
@@ -92,14 +101,15 @@ Normalize, Sub */
 				console.log(data);
 				for (k = 0; k < data.input.length; k = k + 1) {
 					if (data.input[k].name === 'trans') {
-						meshlist[i].trans = data.input[k].value;
+						updateMeshDataProp(meshlist[i].trans, data.input[k].value);
 					}
+
 					if (data.input[k].name === 'rotate') {
-						meshlist[i].rotate = data.input[k].value;
+						updateMeshDataProp(meshlist[i].rotate, data.input[k].value);
 					}
 
 					if (data.input[k].name === 'scale') {
-						meshlist[i].scale = data.input[k].value;
+						updateMeshDataProp(meshlist[i].scale, data.input[k].value);
 					}
 
 					if (data.input[k].name === 'color') {
@@ -110,7 +120,7 @@ Normalize, Sub */
 						meshlist[i].radius = parseFloat(data.input[k].value);
 					}
 				}
-				camera.setupLerp(meshlist[i].boundmin, meshlist[i].boundmax, meshlist[i].trans, meshlist[i].scale);
+				camera.setupLerp(meshlist[i].boundmin, meshlist[i].boundmax, meshlist[i].trans, meshlist[i].scale, meshlist[i].rotate);
 			}
 		}
 	}
@@ -160,7 +170,7 @@ Normalize, Sub */
 		} else {
 			console.log(node);
 			if (node.data.boundmin) {
-				camera.setupLerp(node.data.boundmin, node.data.boundmax, node.data.trans, node.data.scale);
+				camera.setupLerp(node.data.boundmin, node.data.boundmax, node.data.trans, node.data.scale, node.data.rotate);
 			}
 		}
 		
@@ -186,7 +196,7 @@ Normalize, Sub */
 			selectnode = window.grouptreeview.getSelectNode();
 
 		if (type === 'Line') {
-			retmesh  = render.createLineMesh(mesh, 8, 0.5);
+			retmesh  = render.createLineMesh(mesh, 8, 1.0);
 			retmesh.name = name + 'LINE';
 			retmesh.setShader(mesh_shader);
 		}
@@ -333,36 +343,25 @@ Normalize, Sub */
 		var i,
 			ishit = false,
 			pos,
-			triarray = mesh.pointposition,
-			radius   = mesh.radius,
+			triarray    = mesh.pointposition,
+			tri         = [0,0,0,1],
+			tritrans    = [0,0,0,1],
 			t        = 9999999.0,
 			index    = 0,
+			localMatrix = render.getLocalMatrixFromMesh(mesh),
 			hit      = false;
-		//console.log('ray parameter :', o, d);
 
-		/*
-		for (i = 0 ; i < triarray.length; i = i + 9) {
-			ishit = IntersectTriangle(
-				o,
-				d,
-				[
-					triarray[i + 0], triarray[i + 1], triarray[i + 2]
-				],
-				[
-					triarray[i + 3], triarray[i + 4], triarray[i + 5]
-				],
-				[
-					triarray[i + 6], triarray[i + 7], triarray[i + 8]
-				]
-			);
-			if (ishit === false) {
-				continue;
-			}
-			break;
-		}
-		*/
 		for (i = 0; i < triarray.length; i = i + 3) {
-			ishit = IntersectSphere(o, d, [triarray[i + 0], triarray[i + 1], triarray[i + 2] ], radius);
+			tri[0]  = triarray[i + 0];
+			tri[1]  = triarray[i + 1];
+			tri[2]  = triarray[i + 2];
+			tri[3]  = 1.0;
+			//tritrans = MultMatrixVec4(localMatrix, tri);
+			//if( (i % 16) === 0) {
+			//console.log('tritrans : ', tritrans);
+			//}
+			//ishit = IntersectSphere(o, d, [tritrans[0], tritrans[1], tritrans[2]], mesh.radius);
+			ishit = IntersectSphere(o, d, [tri[0], tri[1], tri[2]], mesh.radius);
 			if (ishit === false) {
 				continue;
 			}
@@ -480,6 +479,8 @@ Normalize, Sub */
 			vpM      = mtx.identity(mtx.create()),
 			vpMI     = mtx.identity(mtx.create()),
 			mcheck   = mtx.identity(mtx.create()),
+			localMatrix   = mtx.identity(mtx.create()),
+			localInvMatrix   = mtx.identity(mtx.create()),
 			nwinpos  = [win_x, canvas.height - win_y, 0.0],
 			fwinpos  = [win_x, canvas.height - win_y, 1.0],
 			viewport = [0, 0,  canvas.width, canvas.height],
@@ -488,28 +489,29 @@ Normalize, Sub */
 			tar      = [0, 0, 0],
 			dir      = [0, 0, 0],
 			mindex   = 0,
-			tidx     = 0,
 			mesh     = 0,
 			hitmesh  = -1,
 			info     = {'hit' : false, 't' : 9999999, 'index' : -1},
-			testo    = [0, 0, 0],
-			testd    = [0, 0, 0],
-			resultpos = [9999999, 9999999, 9999999],
-			linem    = [];
+			resultpos = [9999999, 9999999, 9999999];
 
 		if (meshlist.length <= 0) { return; }
 
 		//create ray
 		vpM = getViewProjMatrix();
 		mtx.inverse(vpM, vpMI);
-		UnProject(nwinpos, vpMI, viewport, org);
-		UnProject(fwinpos, vpMI, viewport, tar);
-		dir = Normalize(Sub(tar, org));
-		
+
 		//traverse mesh
 		for (mindex = 0; mindex < meshlist.length; mindex = mindex + 1) {
 			mesh = meshlist[mindex];
 			if (mesh.mode === 'Triangles' && mesh.show === true) {
+				localMatrix = render.getLocalMatrixFromMesh(mesh);
+				//mtx.inverse(localMatrix, localInvMatrix);
+				mtx.inverse(localMatrix, localInvMatrix);
+				//localInvMatrix = localMatrix;
+				UnProjectWithLocal(nwinpos, vpMI, localInvMatrix, viewport, org);
+				UnProjectWithLocal(fwinpos, vpMI, localInvMatrix, viewport, tar);
+				dir = Normalize(Sub(tar, org));
+				console.log('Ray parameter', org, dir);
 				ishit = IsHitMesh(org, dir, mesh);
 				if (ishit === false) { continue; }
 				if (ishit.t < info.t) {
@@ -832,7 +834,6 @@ Normalize, Sub */
 	 * @param {} change
 	 */
 	function updateconsole(change) {
-		
 	}
 	
 	/**

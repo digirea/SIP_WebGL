@@ -221,13 +221,18 @@ var test_time = 0;
 	 * @param {} trans
 	 * @param {} scale
 	 */
-	camera.prototype.setupLerp = function (min, max, trans, scale) {
+	camera.prototype.setupLerp = function (min, max, trans, scale, rotate) {
 		var len = 0,
 			i,
 			temp,
-			tempmin    = [1,1,1],
-			tempmax    = [1,1,1],
-			scalesign  = [1,1,1],
+			tempmin    = [1,1,1,1],
+			tempmax    = [1,1,1,1],
+			scalesign  = [1,1,1,1],
+			mtx        = new MatIV(),
+			rMatrixX   = mtx.identity(mtx.create()),
+			rMatrixY   = mtx.identity(mtx.create()),
+			rMatrixZ   = mtx.identity(mtx.create()),
+			rMatrix    = mtx.identity(mtx.create()),
 			maxscale   = 0;
 		
 		if (scale) {
@@ -249,12 +254,35 @@ var test_time = 0;
 			maxscale = 1;
 		}
 
+		//scale
 		tempmin[0] = min[0] * maxscale * scalesign[0];
 		tempmin[1] = min[1] * maxscale * scalesign[1];
 		tempmin[2] = min[2] * maxscale * scalesign[2];
 		tempmax[0] = max[0] * maxscale * scalesign[0];
 		tempmax[1] = max[1] * maxscale * scalesign[1];
 		tempmax[2] = max[2] * maxscale * scalesign[2];
+
+		//create rotate matrix
+		if(rotate) {
+			mtx.rotate(rMatrixX, (Math.PI * rotate[0]) / 180.0, [1, 0, 0], rMatrixX);
+			mtx.rotate(rMatrixY, (Math.PI * rotate[1]) / 180.0, [0, 1, 0], rMatrixY);
+			mtx.rotate(rMatrixZ, (Math.PI * rotate[2]) / 180.0, [0, 0, 1], rMatrixZ);
+			mtx.multiply(rMatrixX,  rMatrix, rMatrix);
+			mtx.multiply(rMatrixY,  rMatrix, rMatrix);
+			mtx.multiply(rMatrixZ,  rMatrix, rMatrix);
+
+			//apply
+			tempmin = MultMatrixVec4(rMatrix, tempmin);
+			tempmin[0] /= tempmin[3];
+			tempmin[1] /= tempmin[3];
+			tempmin[2] /= tempmin[3];
+			
+			tempmax = MultMatrixVec4(rMatrix, tempmax);
+			tempmax[0] /= tempmax[3];
+			tempmax[1] /= tempmax[3];
+			tempmax[2] /= tempmax[3];
+			console.log(tempmax, tempmin);
+		}
 
 		this.camWorldPosStart[0]   = this.camWorldPos[0];
 		this.camWorldPosStart[1]   = this.camWorldPos[1];
