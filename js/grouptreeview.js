@@ -7,6 +7,12 @@
 		selectnode    = null,
 		treeRootElem  = document.getElementById('tree');
 
+	/**
+	 * Description
+	 * @method getPropertyValues
+	 * @param {} node
+	 * @return values
+	 */
 	function getPropertyValues(node) {
 		var values = [],
 			trans  = {},
@@ -52,6 +58,11 @@
 	}
 	
 	
+	/**
+	 * Description
+	 * @method doSelectNode
+	 * @param {} node
+	 */
 	function doSelectNode(node) {
 		if(node.type === 'text') {
 			selectnode = node;
@@ -60,6 +71,11 @@
 		scene.selectTreeNode(node);
 	}
 	
+	/**
+	 * Description
+	 * @method focusProperty
+	 * @param {} node
+	 */
 	function focusProperty(node) {
 		doSelectNode(node);
 		propertylistview.showProperty({
@@ -69,6 +85,12 @@
 	}
 	
 	
+	/**
+	 * Description
+	 * @method clickfunc
+	 * @param {} node
+	 * @return FunctionExpression
+	 */
 	function clickfunc(node) {
 		return function (e) {
 			e.preventDefault();
@@ -80,6 +102,13 @@
 		};
 	};
 
+	/**
+	 * Description
+	 * @method checkboxfunc
+	 * @param {} node
+	 * @param {} box
+	 * @return FunctionExpression
+	 */
 	function checkboxfunc(node, box) {
 		return function (e) {
 			//e.preventDefault();
@@ -96,6 +125,12 @@
 	};
 	
 
+	/**
+	 * Description
+	 * @method delbuttonfunc
+	 * @param {} node
+	 * @return FunctionExpression
+	 */
 	function delbuttonfunc(node) {
 		return function (e) {
 			var temproot = datatree.getRoot();
@@ -112,6 +147,13 @@
 	};
 	
 
+	/**
+	 * Description
+	 * @method createTree
+	 * @param {} elem
+	 * @param {} root
+	 * @param {} makebox
+	 */
 	function createTree(elem, root, makebox) {
 		var node,
 			temproot = datatree.getRoot(),
@@ -165,6 +207,11 @@
 		}
 	}
 	
+	/**
+	 * Description
+	 * @method dump
+	 * @param {} root
+	 */
 	function dump(root) {
 		var node,
 			i;
@@ -178,6 +225,12 @@
 		}
 	}
 	
+	/**
+	 * Description
+	 * @method update
+	 * @param {} node
+	 * @param {} child
+	 */
 	function update(node, child) {
 		var elem;
 		console.log(node);
@@ -198,12 +251,21 @@
 		}
 	}
 	
+	/**
+	 * Description
+	 * @method getSelectNode
+	 * @return selectnode
+	 */
 	function getSelectNode()
 	{
 		console.log('getSelectNode : ', selectnode);
 		return selectnode;
 	}
 	
+	/**
+	 * Description
+	 * @method init
+	 */
 	function init() {
 		(function ($) {
 			$(function () {

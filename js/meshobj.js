@@ -4,6 +4,10 @@ var MeshObj;
 
 (function () {
 	"use strict";
+	/**
+	 * Description
+	 * @method mesh
+	 */
 	var mesh = function () {
 		this.name          = 'undef';
 		this.type          = 'data';
@@ -36,33 +40,72 @@ var MeshObj;
 		this.urllist       = [];
 	};
 
+	/**
+	 * Description
+	 * @method setTrans
+	 * @param {} x
+	 * @param {} y
+	 * @param {} z
+	 */
 	mesh.prototype.setTrans = function (x, y, z) {
 		this.trans[0] = x;
 		this.trans[1] = y;
 		this.trans[2] = z;
 	}
 
+	/**
+	 * Description
+	 * @method setScale
+	 * @param {} x
+	 * @param {} y
+	 * @param {} z
+	 */
 	mesh.prototype.setScale = function (x, y, z) {
 		this.scale[0] = x;
 		this.scale[1] = y;
 		this.scale[2] = z;
 	}
 
+	/**
+	 * Description
+	 * @method setRotate
+	 * @param {} x
+	 * @param {} y
+	 * @param {} z
+	 */
 	mesh.prototype.setRotate = function (x, y, z) {
 		this.rotate[0] = x;
 		this.rotate[1] = y;
 		this.rotate[2] = z;
 	}
 
+	/**
+	 * Description
+	 * @method setMode
+	 * @param {} m
+	 */
 	mesh.prototype.setMode = function (m) {
 		this.mode = m;
 	};
 
+	/**
+	 * Description
+	 * @method setShader
+	 * @param {} s
+	 */
 	mesh.prototype.setShader = function (s) {
 		console.log('Setup Shader', s);
 		this.shader = s;
 	};
 
+	/**
+	 * Description
+	 * @method setDiffColor
+	 * @param {} r
+	 * @param {} g
+	 * @param {} b
+	 * @param {} a
+	 */
 	mesh.prototype.setDiffColor = function (r, g, b, a) {
 		this.diffColor[0] = r;
 		this.diffColor[1] = g;

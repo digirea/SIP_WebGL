@@ -14,10 +14,22 @@
 		multWheelCoef = 1.0,
 		mouseState  = {"Left": false, "Center": false, "Right": false };
 	
+	/**
+	 * Description
+	 * @method resetMouseState
+	 */
 	function resetMouseState() {
 		mouseState  = {"Left": false, "Center": false, "Right": false };
 	}
 	
+	/**
+	 * Description
+	 * @method setMoveMult
+	 * @param {} x
+	 * @param {} y
+	 * @param {} r
+	 * @param {} w
+	 */
 	function setMoveMult(x, y, r, w)
 	{
 		multX       = x;
@@ -26,10 +38,19 @@
 		multWheel   = w;
 	}
 
+	/**
+	 * Description
+	 * @method setCamera
+	 * @param {} cam
+	 */
 	function setCamera(cam) {
 		camera.push(cam);
 	}
 
+	/**
+	 * Description
+	 * @method resetView
+	 */
 	function resetView() {
 		var i;
 		if (camera.length <= 0) {
@@ -40,10 +61,20 @@
 		}
 	}
 
+	/**
+	 * Description
+	 * @method mouseOut
+	 * @param {} e
+	 */
 	function mouseOut(e) {
 		resetMouseState();
 	}
 
+	/**
+	 * Description
+	 * @method mouseDown
+	 * @param {} e
+	 */
 	function mouseDown(e) {
 		if (e.button === 0) {
 			mouseState.Left = true;
@@ -57,6 +88,11 @@
 		}
 	}
 
+	/**
+	 * Description
+	 * @method mouseUp
+	 * @param {} e
+	 */
 	function mouseUp(e) {
 		if (e.button === 0) {
 			mouseState.Left = false;
@@ -70,6 +106,11 @@
 		}
 	}
 
+	/**
+	 * Description
+	 * @method mouseMove
+	 * @param {} e
+	 */
 	function mouseMove(e) {
 		var i,
 			movementX  = 0,
@@ -111,6 +152,12 @@
 		prevEvent = e;
 	}
 
+	/**
+	 * Description
+	 * @method mouseWheel
+	 * @param {} e
+	 * @return Literal
+	 */
 	function mouseWheel(e) {
 		var i,
 			info,
@@ -149,6 +196,11 @@
 		return false;
 	}
 
+	/**
+	 * Description
+	 * @method keyEvent
+	 * @param {} e
+	 */
 	function keyEvent(e) {
 		//F5
 		if (e.keyCode === 116) {
@@ -158,7 +210,19 @@
 		keycallback(e);
 	}
 
+	/**
+	 * Description
+	 * @method init
+	 * @param {} document
+	 * @param {} canvas
+	 * @param {} keycb
+	 */
 	function init(document, canvas, keycb) {
+		/**
+		 * Description
+		 * @method mouseUpFunc
+		 * @param {} evt
+		 */
 		var mouseUpFunc = function (evt) {
 			resetMouseState();
 			window.removeEventListener('mousemove', mouseMove, false);

@@ -5,6 +5,10 @@ var ShaderObj;
 
 (function () {
 	"use strict";
+	/**
+	 * Description
+	 * @method shaderobj
+	 */
 	var shaderobj = function () {
 		this.v_shader    = null;
 		this.f_shader    = null;

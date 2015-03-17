@@ -21,15 +21,30 @@ Normalize, Sub */
 		openviewtypestate     = 0,
 		consolestate   = 0;
 	
+	/**
+	 * Description
+	 * @method resetShader
+	 */
 	function resetShader() {
 		mesh_shader        = render.createShaderObj('vs_mesh', 'fs_mesh');
 		line_shader        = render.createShaderObj('vs_line', 'fs_line');
 	}
 
+	/**
+	 * Description
+	 * @method callbackResetView
+	 * @param {} e
+	 */
 	function callbackResetView(e) {
 		resetShader();
 	}
 
+	/**
+	 * Description
+	 * @method updateInfo
+	 * @param {} vnum
+	 * @param {} pnum
+	 */
 	function updateInfo(vnum, pnum) {
 		var vnumElem = document.getElementById('vertexNum'),
 			pnumElem = document.getElementById('polygonNum');
@@ -42,6 +57,11 @@ Normalize, Sub */
 		}
 	}
 
+	/**
+	 * Description
+	 * @method delMesh
+	 * @param {} name
+	 */
 	function delMesh(name) {
 		var i,
 			newlist;
@@ -60,6 +80,11 @@ Normalize, Sub */
 		meshlist = newlist;
 	}
 
+	/**
+	 * Description
+	 * @method updateDataTree
+	 * @param {} data
+	 */
 	function updateDataTree(data) {
 		console.log(meshlist);
 		var i,
@@ -95,6 +120,11 @@ Normalize, Sub */
 
 	/// updateMesh  call back function for loadSTL
 	/// @param data STL data, pos, normal...
+	/**
+	 * Description
+	 * @method updateMesh
+	 * @param {} data
+	 */
 	function updateMesh(data) {
 		var point_p   = data.pos,
 			point_n   = data.normal,
@@ -121,6 +151,12 @@ Normalize, Sub */
 		camera.setupLerp(data.min, data.max);
 	}
 
+	/**
+	 * Description
+	 * @method selectTreeNode
+	 * @param {} node
+	 * @param {} checkbox
+	 */
 	function selectTreeNode(node, checkbox) {
 		if (checkbox) {
 			node.data.show = checkbox.checked;
@@ -137,6 +173,14 @@ Normalize, Sub */
 		}
 	}
 
+	/**
+	 * Description
+	 * @method updateMeshText
+	 * @param {} name
+	 * @param {} pos
+	 * @param {} type
+	 * @param {} urllist
+	 */
 	function updateMeshText(name, pos, type, urllist) {
 		var mesh = {'position' : pos},
 			bb,
@@ -169,6 +213,11 @@ Normalize, Sub */
 	}
   
   
+	/**
+	 * Description
+	 * @method loadSTL
+	 * @param {} evt
+	 */
 	function loadSTL(evt) {
 		if (evt === '') {
 			return;
@@ -180,6 +229,10 @@ Normalize, Sub */
 		});
 	}
 
+	/**
+	 * Description
+	 * @method onResize
+	 */
 	function onResize() {
 		var i,
 			w;
@@ -189,6 +242,10 @@ Normalize, Sub */
 		render.onResize();
 	}
 	
+	/**
+	 * Description
+	 * @method resetTree
+	 */
 	function resetTree() {
 		var gridmesh     = null,
 			rootnode     = {};
@@ -214,6 +271,10 @@ Normalize, Sub */
 	}
 	
 	
+	/**
+	 * Description
+	 * @method resetAll
+	 */
 	function resetAll() {
 		resetShader();
 		resetTree();
@@ -221,6 +282,12 @@ Normalize, Sub */
 		camera.resetView();
 	}
 	
+	/**
+	 * Description
+	 * @method sideViewChange
+	 * @param {} axis
+	 * @return FunctionExpression
+	 */
 	function sideViewChange(axis) {
 		return function (e) {
 			camera.ViewSide(axis);
@@ -228,6 +295,11 @@ Normalize, Sub */
 		};
 	}
 	
+	/**
+	 * Description
+	 * @method getViewProjMatrix
+	 * @return vpMatrix
+	 */
 	function getViewProjMatrix() {
 		var camZ     = 0,
 			vpMatrix;
@@ -240,6 +312,14 @@ Normalize, Sub */
 		return vpMatrix;
 	}
 	
+	/**
+	 * Description
+	 * @method IsHitMesh
+	 * @param {} o
+	 * @param {} d
+	 * @param {} mesh
+	 * @return ObjectExpression
+	 */
 	function IsHitMesh(o, d, mesh) {
 		var i,
 			ishit = false,
@@ -287,6 +367,10 @@ Normalize, Sub */
 		return {'hit' : hit, 't' : t, 'index' : index};
 	}
 	
+	/**
+	 * Description
+	 * @method updatePopup
+	 */
 	function updatePopup() {
 		var vpM   = getViewProjMatrix(),
 			vpMI  = getViewProjMatrix(),
@@ -312,6 +396,13 @@ Normalize, Sub */
 		}
 	}
 	
+	/**
+	 * Description
+	 * @method createPopup
+	 * @param {} win_x
+	 * @param {} win_y
+	 * @param {} data
+	*/
 	function createPopup(win_x, win_y, data) {
 		var popup = document.getElementById('pickup'),
 			url;
@@ -332,6 +423,10 @@ Normalize, Sub */
 		}
 	}
 	
+	/**
+	 * Description
+	 * @method hidePopup
+	 */
 	function hidePopup() {
 		var popup = document.getElementById('pickup');
 		if (popup) {
@@ -339,6 +434,13 @@ Normalize, Sub */
 		}
 	}
 	
+	/**
+	 * Description
+	 * @method createRayMesh
+	 * @param {} org
+	 * @param {} dir
+	 * @param {} t
+	 */
 	function createRayMesh(org, dir, t) {
 		var mesh = render.createMeshObj(
 			{
@@ -358,6 +460,12 @@ Normalize, Sub */
 		meshlist.push(mesh);
 	}
 
+	/**
+	 * Description
+	 * @method Pick
+	 * @param {} win_x
+	 * @param {} win_y
+	 */
 	function Pick(win_x, win_y) {
 		var mtx      = new MatIV(),
 			vpM      = mtx.identity(mtx.create()),
@@ -432,6 +540,11 @@ Normalize, Sub */
 	}
 	
 	
+	/**
+	 * Description
+	 * @method MouseClickFunc
+	 * @param {} evt
+	 */
 	function MouseClickFunc(evt) {
 		//console.log(evt.clientX, evt.clientY);
 		if (evt.button === 1) {
@@ -440,14 +553,27 @@ Normalize, Sub */
 	}
 	
 
+	/**
+	 * Description
+	 * @method KickDogFrame
+	 */
 	function KickDogFrame() {
 		//document.getElementById('progress').innerHTML = "updata
 	}
 
+	/**
+	 * Description
+	 * @method KickDog
+	 */
 	function KickDog() {
 		render.swapBuffer()(KickDogFrame);
 	}
 
+	/**
+	 * Description
+	 * @method addGroup
+	 * @param {} type
+	 */
 	function addGroup(type) {
 		var colinfo   = [],
 			colURL    = -1,
@@ -548,14 +674,28 @@ Normalize, Sub */
 	}
 	
 	
+	/**
+	 * Description
+	 * @method addLine
+	 * @param {} e
+	 */
 	function addLine(e) {
 		addGroup('Line');
 	}
 	
+	/**
+	 * Description
+	 * @method addPoint
+	 * @param {} e
+	 */
 	function addPoint(e) {
 		addGroup('Point');
 	}
 	
+	/**
+	 * Description
+	 * @method drawGizmo
+	 */
 	function drawGizmo() {
 		var mtx      = new MatIV(),
 			mRotate  = camera.RotateMatrix,
@@ -576,6 +716,10 @@ Normalize, Sub */
 		render.drawMesh(gizmomesh);
 	}
 
+	/**
+	 * Description
+	 * @method updateFrame
+	 */
 	function updateFrame() {
 		var cw            = canvas.width,
 			ch            = canvas.height,
@@ -600,6 +744,10 @@ Normalize, Sub */
 		render.swapBuffer()(updateFrame);
 	}
 
+	/**
+	 * Description
+	 * @method startGL
+	 */
 	function startGL() {
 		console.log('startGL');
 		onResize();
@@ -607,6 +755,11 @@ Normalize, Sub */
 		updateFrame();
 	}
 
+	/**
+	 * Description
+	 * @method openSwitch
+	 * @param {} e
+	 */
 	function openSwitch(e) {
 		var openwindow = document.getElementById('OpenWindow');
 		$toggle(openwindow, 100);
@@ -619,6 +772,11 @@ Normalize, Sub */
 		}
 	}
 	
+	/**
+	 * Description
+	 * @method openViewDirection
+	 * @param {} e
+	 */
 	function openViewDirection(e) {
 		var viewdir = document.getElementById('ViewDirection');
 		$toggle(viewdir, 100);
@@ -629,6 +787,11 @@ Normalize, Sub */
 		}
 	}
 	
+	/**
+	 * Description
+	 * @method openViewType
+	 * @param {} e
+	 */
 	function openViewType(e) {
 		var viewtype = document.getElementById('ViewType');
 		$toggle(viewtype, 100);
@@ -640,6 +803,11 @@ Normalize, Sub */
 		}
 	}
 	
+	/**
+	 * Description
+	 * @method consoleSwitch
+	 * @param {} e
+	 */
 	function consoleSwitch(e) {
 		var openwindow = document.getElementById('console');
 		$toggle(openwindow, 100);
@@ -647,6 +815,11 @@ Normalize, Sub */
 	}
 	
 	
+	/**
+	 * Description
+	 * @method loadTXT
+	 * @param {} e
+	 */
 	function loadTXT(e) {
 		window.hstable.openText(e);
 		openSwitch();
@@ -659,10 +832,19 @@ Normalize, Sub */
 	}
 	
 	
+	/**
+	 * Description
+	 * @method updateconsole
+	 * @param {} change
+	 */
 	function updateconsole(change) {
 		
 	}
 	
+	/**
+	 * Description
+	 * @method init
+	 */
 	function init() {
 		var i,
 			openswitch  = document.getElementById('OpenSwitch'),

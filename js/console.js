@@ -5,6 +5,12 @@
 			hstable = {};
 
 	//http://www.hp-stylelink.com/news/2014/08/20140826.php
+	/**
+	 * Description
+	 * @method csv2Array
+	 * @param {} csvData
+	 * @return csvArray
+	 */
 	function csv2Array(csvData) {
 			var tempArray = csvData.split("\n");
 			var csvArray = new Array();
@@ -14,6 +20,11 @@
 			return csvArray;
 	}
 	
+	/**
+	 * Description
+	 * @method countCols
+	 * @return Literal
+	 */
 	function countCols() {
 		if(grid) {
 			return grid.countCols();
@@ -21,6 +32,12 @@
 		return 0;
 	}
 	
+	/**
+	 * Description
+	 * @method getCol
+	 * @param {} index
+	 * @return Literal
+	 */
 	function getCol(index) {
 		if(grid) {
 			return grid.getDataAtCol(index);
@@ -28,6 +45,10 @@
 		return null;
 	}
 	
+	/**
+	 * Description
+	 * @method resetData
+	 */
 	function resetData() {
 		if(grid) {
 			delete grid;
@@ -38,6 +59,11 @@
 		}
 	}
 	
+	/**
+	 * Description
+	 * @method loadData
+	 * @param {} data
+	 */
 	function loadData(data) {
 		var header     = [];
 		var headerhtml = '';
@@ -48,6 +74,12 @@
 				rowHeaders   : true,
 				colHeaders   : true,
 				fillHandle   : false,
+				/**
+				 * Description
+				 * @method onChange
+				 * @param {} change
+				 * @param {} source
+				 */
 				onChange: function(change, source) {
 					console.log('チェンジされました', change, source);
 					if(grid) {
@@ -85,6 +117,11 @@
 		}
 	}
 
+	/**
+	 * Description
+	 * @method updateGridData
+	 * @param {} data
+	 */
 	function updateGridData(data) {
 		var rootnode   = {};
 		loadData(data);
@@ -92,12 +129,22 @@
 		window.grouptreeview.update(datatree.getRoot(), rootnode);
 	}
 
+	/**
+	 * Description
+	 * @method openText
+	 * @param {} evt
+	 */
 	function openText(evt) {
 		var files = evt.target.files;
 		var reader = new FileReader();
 		if (evt === '') {
 			return;
 		}
+		/**
+		 * Description
+		 * @method onloadend
+		 * @param {} e
+		 */
 		reader.onloadend = (function(e) {
 			var csvArray = csv2Array(e.target.result);
 			var i;
@@ -111,6 +158,10 @@
 		reader.readAsText(files[0], "UTF-8");
 	}
 
+	/**
+	 * Description
+	 * @method init
+	 */
 	function init() {
 		tbl = document.getElementById('hstable');
 	}

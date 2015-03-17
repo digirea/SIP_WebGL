@@ -6,6 +6,14 @@
 		root     = [],
 		dataid   = 0;
 
+	/**
+	 * Description
+	 * @method makeNode
+	 * @param {} type
+	 * @param {} name
+	 * @param {} data
+	 * @return node
+	 */
 	function makeNode(type, name, data) {
 		var node =
 		{
@@ -23,19 +31,41 @@
 	}
 	
 	
+	/**
+	 * Description
+	 * @method GetName
+	 * @param {} base
+	 * @return BinaryExpression
+	 */
 	function GetName(base) {
 		var ret = dataid;
 		dataid = dataid + 1;
 		return  'ID' + ret + '_' + base;
 	}
 
+	/**
+	 * Description
+	 * @method createRoot
+	 * @param {} type
+	 * @param {} name
+	 * @param {} data
+	 * @return r
+	 */
 	function createRoot(type, name, data) {
 		var r = makeNode(type, GetName(name), data);
 		root.push(r);
 		data.name = r.name;
 		return r;
-	};
+	}
 
+	/**
+	 * Description
+	 * @method createChild
+	 * @param {} type
+	 * @param {} name
+	 * @param {} data
+	 * @return child
+	 */
 	function createChild(type, name, data) {
 		var parent,
 			child,
@@ -43,8 +73,14 @@
 		child = makeNode(type, GetName(name), data);
 		data.name = child.name;
 		return child;
-	};
-
+	}
+	
+	/**
+	 * Description
+	 * @method delDataChild
+	 * @param {} name
+	 * @param {} node
+	 */
 	function delDataChild(name, node) {
 		var i;
 		var newchild = [];
@@ -64,6 +100,12 @@
 		}
 	}
 
+	/**
+	 * Description
+	 * @method delData
+	 * @param {} name
+	 * @return root
+	 */
 	function delData(name) {
 		var i,
 			newroot;
@@ -82,6 +124,12 @@
 		return root;
 	}
 
+	/**
+	 * Description
+	 * @method findRoot
+	 * @param {} name
+	 * @return Literal
+	 */
 	function findRoot(name) {
 		var i;
 		if(root.length < 0) {
@@ -97,6 +145,12 @@
 		return null;
 	}
 
+	/**
+	 * Description
+	 * @method addChild
+	 * @param {} rootname
+	 * @param {} child
+	 */
 	function addChild(rootname, child) {
 		var node = findRoot(rootname);
 		if(!node) return ;
@@ -104,6 +158,13 @@
 		return ;
 	}
 
+	/**
+	 * Description
+	 * @method findTree
+	 * @param {} name
+	 * @param {} node
+	 * @return CallExpression
+	 */
 	function findTree(name, node) {
 		if(!node) return null;
 		if(node.name === name) {
@@ -112,10 +173,21 @@
 		return findTree(node.child);
 	}
 
+	/**
+	 * Description
+	 * @method getRoot
+	 * @return root
+	 */
 	function getRoot() {
 		return root;
 	}
 
+	/**
+	 * Description
+	 * @method getData
+	 * @param {} name
+	 * @return Literal
+	 */
 	function getData(name) {
 		var i,
 			n,

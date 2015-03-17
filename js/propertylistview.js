@@ -7,6 +7,14 @@
 		currentData = null,
 		changedValueFuncs = [];
 	
+	/**
+	 * Description
+	 * @method makeItemNode
+	 * @param {} name
+	 * @param {} text
+	 * @param {} top
+	 * @return itemNode
+	 */
 	function makeItemNode(name, text, top) {
 		var itemNode = document.createElement('div'),
 			nameNode = document.createElement('div'),
@@ -26,6 +34,15 @@
 		return itemNode;
 	}
 	
+	/**
+	 * Description
+	 * @method makeItemTextNode
+	 * @param {} name
+	 * @param {} text
+	 * @param {} node
+	 * @param {} type
+	 * @return itemNode
+	 */
 	function makeItemTextNode(name, text, node, type) {
 		var itemNode = document.createElement('div'),
 			nameNode = document.createElement('div'),
@@ -43,6 +60,13 @@
 		itemNode.appendChild(nameNode);
 		itemNode.appendChild(textNode);
 		
+		/**
+		 * Description
+		 * @method valChange
+		 * @param {} data
+		 * @param {} txt
+		 * @return FunctionExpression
+		 */
 		function valChange(data, txt) {
 			return function (e) {
 				console.log(data);
@@ -60,6 +84,14 @@
 		return itemNode;
 	}
 	
+	/**
+	 * Description
+	 * @method makeItemArrayNumNode
+	 * @param {} name
+	 * @param {} text
+	 * @param {} node
+	 * @return itemNode
+	 */
 	function makeItemArrayNumNode(name, text, node) {
 		var itemNode = document.createElement('div'),
 			nameNode = document.createElement('div'),
@@ -96,6 +128,15 @@
 		return itemNode;
 	}
 	
+	/**
+	 * Description
+	 * @method makeItemVecNode
+	 * @param {} name
+	 * @param {} vals
+	 * @param {} node
+	 * @param {} n
+	 * @return itemNode
+	 */
 	function makeItemVecNode(name, vals, node, n) {
 		var itemNode = document.createElement('div'),
 			nameNode = document.createElement('div'),
@@ -107,6 +148,14 @@
 		nameNode.classList.add('nodePropertyName');
 		itemNode.appendChild(nameNode);
 
+		/**
+		 * Description
+		 * @method valChange
+		 * @param {} data
+		 * @param {} txt
+		 * @param {} i
+		 * @return FunctionExpression
+		 */
 		function valChange(data, txt, i) {
 			return function (e) {
 				console.log(data, i, txt.value);
@@ -131,6 +180,11 @@
 		return itemNode;
 	}
 	
+	/**
+	 * Description
+	 * @method doApply
+	 * @param {} data
+	 */
 	function doApply(data) {
 		var i,
 			func;
@@ -146,12 +200,22 @@
 	}
 	
 	
+	/**
+	 * Description
+	 * @method doDelete
+	 * @param {} data
+	 */
 	function doDelete(data) {
 		console.log(currentData)
 	}
 	
 
-	// data - name, varname, 
+	// data - name, varname,
+	/**
+	 * Description
+	 * @method showProperty
+	 * @param {} data
+	 */
 	function showProperty(data) {
 		//console.log(data);
 		var to = document.getElementById("property"),
@@ -199,6 +263,13 @@
 			return;
 		}
 		
+		/**
+		 * Description
+		 * @method addArrayItem
+		 * @param {} inode
+		 * @param {} n
+		 * @return itemNode
+		 */
 		function addArrayItem(inode, n) {
 			var itemNode;
 			if (inode.type === 'string') {
@@ -216,6 +287,12 @@
 			}
 			return itemNode;
 		}
+		/**
+		 * Description
+		 * @method addItems
+		 * @param {} inode
+		 * @return itemNode
+		 */
 		function addItems(inode) {
 			var itemNode;
 			if (inode.type === 'string') {
@@ -250,6 +327,10 @@
 		}
 	}
 	
+	/**
+	 * Description
+	 * @method init
+	 */
 	function init() {
 		(function ($) {
 			$(function () {

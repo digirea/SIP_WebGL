@@ -95,6 +95,10 @@ $ready(function () {
 
 (function () {
 	"use strict";
+	/**
+	 * Description
+	 * @method resize
+	 */
 	function resize() {
 		var SizeWidth            = window.innerWidth,
 			SizeHeight           = window.innerHeight,
@@ -117,9 +121,18 @@ $ready(function () {
 		}
 	}
 
+	/**
+	 * Description
+	 * @method init
+	 */
 	function init() {
 		resize();
 		
+		/**
+		 * Description
+		 * @method onmousedrag
+		 * @param {} e
+		 */
 		$('DataViewButton').onmousedrag = function (e) {
 			console.log('aA');
 		};

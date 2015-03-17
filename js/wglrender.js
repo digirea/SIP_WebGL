@@ -5,6 +5,10 @@ var WGLRender;
 
 (function () {
 	"use strict";
+	/**
+	 * Description
+	 * @method render
+	 */
 	var render = function () {
 		this.gl     = null;
 		this.window = null;
@@ -14,10 +18,21 @@ var WGLRender;
 		this.vpMat  = this.mtx.identity(this.mtx.create());
 	};
 
+	/**
+	 * Description
+	 * @method setViewProjection
+	 * @param {} m
+	 */
 	render.prototype.setViewProjection = function (m) {
 		this.vpMat = m;
 	};
 
+	/**
+	 * Description
+	 * @method init
+	 * @param {} canvas
+	 * @param {} window
+	 */
 	render.prototype.init = function (canvas, window) {
 		this.gl     = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
 		this.rAF    = window.requestAnimationFrame;
@@ -32,6 +47,10 @@ var WGLRender;
 		this.window = window;
 	};
 
+	/**
+	 * Description
+	 * @method onResize
+	 */
 	render.prototype.onResize = function () {
 		var w = window.innerWidth,
 			h = window.innerHeight;
@@ -44,28 +63,60 @@ var WGLRender;
 		}
 	};
 
+	/**
+	 * Description
+	 * @method clearColor
+	 * @param {} r
+	 * @param {} g
+	 * @param {} b
+	 * @param {} a
+	 */
 	render.prototype.clearColor = function (r, g, b, a) {
 		this.gl.clearColor(r, g, b, a);
 		this.gl.clear(this.gl.COLOR_BUFFER_BIT);
 	};
 
+	/**
+	 * Description
+	 * @method clearDepth
+	 * @param {} d
+	 */
 	render.prototype.clearDepth = function (d) {
 		this.gl.clearDepth(d);
 		this.gl.clear(this.gl.DEPTH_BUFFER_BIT);
 	};
 
+	/**
+	 * Description
+	 * @method getContext
+	 * @return MemberExpression
+	 */
 	render.prototype.getContext = function () {
 		return this.gl;
 	};
 	
+	/**
+	 * Description
+	 * @method Flush
+	 */
 	render.prototype.Flush = function () {
 		this.gl.flush();
 	};
 	
+	/**
+	 * Description
+	 * @method swapBuffer
+	 * @return MemberExpression
+	 */
 	render.prototype.swapBuffer = function () {
 		return this.rAF;
 	};
 
+	/**
+	 * Description
+	 * @method Depth
+	 * @param {} enable
+	 */
 	render.prototype.Depth = function (enable) {
 		if (enable === true) {
 			this.gl.enable(this.gl.DEPTH_TEST);
@@ -74,6 +125,11 @@ var WGLRender;
 		}
 	};
 	
+	/**
+	 * Description
+	 * @method Blend
+	 * @param {} enable
+	 */
 	render.prototype.Blend = function (enable) {
 		if (enable === true) {
 			this.gl.depthFunc(this.gl.LEQUAL);
@@ -85,6 +141,12 @@ var WGLRender;
 		}
 	};
 
+	/**
+	 * Description
+	 * @method createShader
+	 * @param {} type
+	 * @param {} text
+	 */
 	render.prototype.createShader = function (type, text) {
 		var shader,
 			shader_type;
@@ -109,6 +171,12 @@ var WGLRender;
 		}
 	};
 
+	/**
+	 * あいうえおカニ時
+	 * @method createShaderById
+	 * @param {} id
+	 * @return CallExpression
+	 */
 	render.prototype.createShaderById = function (id) {
 		var ele = document.getElementById(id);
 		if (!ele) {
@@ -117,6 +185,12 @@ var WGLRender;
 		return this.createShader(ele.type, ele.text);
 	};
 
+	/**
+	 * Description
+	 * @method createProgram
+	 * @param {} vs
+	 * @param {} fs
+	 */
 	render.prototype.createProgram = function (vs, fs) {
 		var program = this.gl.createProgram();
 		this.gl.attachShader(program, vs);
@@ -130,6 +204,12 @@ var WGLRender;
 		}
 	};
 
+	/**
+	 * Description
+	 * @method createVBO
+	 * @param {} data
+	 * @return vbo
+	 */
 	render.prototype.createVBO = function (data) {
 		var vbo = this.gl.createBuffer();
 		this.gl.bindBuffer(this.gl.ARRAY_BUFFER, vbo);
@@ -138,6 +218,12 @@ var WGLRender;
 		return vbo;
 	};
 
+	/**
+	 * Description
+	 * @method createIBO
+	 * @param {} data
+	 * @return ibo
+	 */
 	render.prototype.createIBO = function (data) {
 		var ibo = this.gl.createBuffer();
 		this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, ibo);
@@ -146,6 +232,13 @@ var WGLRender;
 		return ibo;
 	};
 
+	/**
+	 * Description
+	 * @method setAttribute
+	 * @param {} vbo
+	 * @param {} attL
+	 * @param {} attS
+	 */
 	render.prototype.setAttribute = function (vbo, attL, attS) {
 		var i;
 		for (i = 0; i < vbo.length; i = i + 1) {
@@ -157,6 +250,13 @@ var WGLRender;
 		}
 	};
 
+	/**
+	 * Description
+	 * @method getAttribList
+	 * @param {} prg
+	 * @param {} namearray
+	 * @return location
+	 */
 	render.prototype.getAttribList = function (prg, namearray) {
 		var i,
 			location = [];
@@ -167,10 +267,22 @@ var WGLRender;
 	};
 
 
+	/**
+	 * Description
+	 * @method lineWidth
+	 * @param {} w
+	 */
 	render.prototype.lineWidth = function (w) {
 		this.gl.lineWidth(w);
 	};
 	
+	/**
+	 * Description
+	 * @method getUniformList
+	 * @param {} prg
+	 * @param {} namearray
+	 * @return location
+	 */
 	render.prototype.getUniformList = function (prg, namearray) {
 		var i,
 			location = [];
@@ -180,6 +292,13 @@ var WGLRender;
 		return location;
 	};
 
+	/**
+	 * Description
+	 * @method setUniform
+	 * @param {} type
+	 * @param {} location
+	 * @param {} data
+	 */
 	render.prototype.setUniform = function (type, location, data) {
 		switch (type) {
 		case 'Matrix4fv':
@@ -200,6 +319,13 @@ var WGLRender;
 		}
 	};
 
+	/**
+	 * Description
+	 * @method drawArrays
+	 * @param {} type
+	 * @param {} index
+	 * @param {} primnum
+	 */
 	render.prototype.drawArrays = function (type, index, primnum) {
 		switch (type) {
 		case 'Lines':
@@ -226,6 +352,13 @@ var WGLRender;
 	//------------------------------------------------------------------------------
 	// SHADEROBJ
 	//------------------------------------------------------------------------------
+	/**
+	 * Description
+	 * @method createShaderObj
+	 * @param {} vs
+	 * @param {} fs
+	 * @return shaderobj
+	 */
 	render.prototype.createShaderObj = function (vs, fs) {
 		var shaderobj = new ShaderObj();
 		shaderobj.v_shader = this.createShaderById(vs);
@@ -239,15 +372,33 @@ var WGLRender;
 		return shaderobj;
 	};
 
+	/**
+	 * Description
+	 * @method getShaderUniformList
+	 * @param {} shader
+	 * @param {} namearray
+	 * @return CallExpression
+	 */
 	render.prototype.getShaderUniformList = function (shader, namearray) {
 		return this.getUniformList(shader.program, namearray);
 	};
 
+	/**
+	 * Description
+	 * @method setupShader
+	 * @param {} mesh
+	 * @param {} shader
+	 */
 	render.prototype.setupShader = function (mesh, shader) {
 		this.gl.useProgram(shader.program);
 		mesh.attlocation = this.getAttribList(shader.program, mesh.attrnames);
 	};
 
+	/**
+	 * Description
+	 * @method frontFace
+	 * @param {} isccw
+	 */
 	render.prototype.frontFace = function (isccw) {
 		this.gl.frontFace(this.gl.CCW);
 	};
@@ -255,6 +406,14 @@ var WGLRender;
 	//------------------------------------------------------------------------------
 	// getMeshBoundingBox
 	//------------------------------------------------------------------------------
+	/**
+	 * Description
+	 * @method getMeshBoundingBox
+	 * @param {} mesh
+	 * @param {} bmin
+	 * @param {} bmax
+	 * @return ObjectExpression
+	 */
 	render.prototype.getMeshBoundingBox = function (mesh, bmin, bmax) {
 		var i;
 		for (i = 0; i < mesh.position.length; i = i + 3) {
@@ -277,6 +436,12 @@ var WGLRender;
 	//------------------------------------------------------------------------------
 	// setupMeshBoundingBox
 	//------------------------------------------------------------------------------
+	/**
+	 * Description
+	 * @method setupMeshBoundingBox
+	 * @param {} mesh
+	 * @return ret
+	 */
 	render.prototype.setupMeshBoundingBox = function (mesh) {
 		var i,
 			maxValue       = 9999999,
@@ -297,6 +462,12 @@ var WGLRender;
 	//------------------------------------------------------------------------------
 	// MESHOBJ
 	//------------------------------------------------------------------------------
+	/**
+	 * Description
+	 * @method createMeshObj
+	 * @param {} data
+	 * @return mesh
+	 */
 	render.prototype.createMeshObj = function (data) {
 		var mesh        = new MeshObj();
 		if (data.pos) {
@@ -348,6 +519,14 @@ var WGLRender;
 	//------------------------------------------------------------------------------
 	// createLineMesh (Cylinder)
 	//------------------------------------------------------------------------------
+	/**
+	 * Description
+	 * @method createLineMesh
+	 * @param {} base
+	 * @param {} divide
+	 * @param {} radius
+	 * @return CallExpression
+	 */
 	render.prototype.createLineMesh = function (base, divide, radius) {
 		var qtn = new QtnIV(),
 			qt  = qtn.identity(qtn.create()),
@@ -494,6 +673,14 @@ var WGLRender;
 	//------------------------------------------------------------------------------
 	// createGridMesh
 	//------------------------------------------------------------------------------
+	/**
+	 * Description
+	 * @method createGridMesh
+	 * @param {} gridsize
+	 * @param {} gridshift
+	 * @param {} gridcol
+	 * @return CallExpression
+	 */
 	render.prototype.createGridMesh = function (gridsize, gridshift, gridcol) {
 		var i,
 			position     = [],
@@ -516,6 +703,12 @@ var WGLRender;
 	//------------------------------------------------------------------------------
 	// createGridMesh
 	//------------------------------------------------------------------------------
+	/**
+	 * Description
+	 * @method createGizmoMesh
+	 * @param {} size
+	 * @return mesh
+	 */
 	render.prototype.createGizmoMesh = function (size) {
 		var i,
 			l = size,
@@ -551,6 +744,15 @@ var WGLRender;
 	//------------------------------------------------------------------------------
 	// createPointMesh
 	//------------------------------------------------------------------------------
+	/**
+	 * Description
+	 * @method createPointMesh
+	 * @param {} base
+	 * @param {} rad
+	 * @param {} slices
+	 * @param {} stacks
+	 * @return mesh
+	 */
 	render.prototype.createPointMesh = function (base, rad, slices, stacks) {
 		var i,
 			ii,
@@ -645,6 +847,11 @@ var WGLRender;
 	//---------------------------------------------------------------------
 	// DrawMesh
 	//---------------------------------------------------------------------
+	/**
+	 * Description
+	 * @method drawMesh
+	 * @param {} mesh
+	 */
 	render.prototype.drawMesh = function (mesh) {
 		var primnum     = 0,
 			lMatrix     = this.mtx.identity(this.mtx.create()),
@@ -702,6 +909,12 @@ var WGLRender;
 	//---------------------------------------------------------------------
 	// DrawMeshList
 	//---------------------------------------------------------------------
+	/**
+	 * Description
+	 * @method drawMeshList
+	 * @param {} meshlist
+	 * @param {} result
+	 */
 	render.prototype.drawMeshList = function (meshlist, result) {
 		var primnum    = 0,
 			VertexNum  = 0,

@@ -8,17 +8,39 @@
 		initialOverflow = {},
 		isMoving = {};
 	
+	/**
+	 * Description
+	 * @method to_json
+	 * @param {} key
+	 * @param {} value
+	 * @return json
+	 */
 	function to_json(key, value) {
 		var json = {};
 		json[key] = value;
 		return json;
 	}
 	
+	/**
+	 * Description
+	 * @method to_num
+	 * @param {} pixelStr
+	 * @return CallExpression
+	 */
 	function to_num(pixelStr) {
 		return pixelStr.split('px').join('');
 	}
 	
 	/// initialize dialog and set separator 
+	/**
+	 * Description
+	 * @method setupSeparator
+	 * @param {} direction
+	 * @param {} separator
+	 * @param {} button
+	 * @param {} targets
+	 * @param {} whstr
+	 */
 	function setupSeparator(direction, separator, button, targets, whstr) {
 		var dragging = "no", // "no", "ready", "yes"
 			buttonID = Object.keys(button)[0],
@@ -29,6 +51,11 @@
 		diffButtonTargetMax = to_num(button[buttonID].max) - to_num(targets[targetID].max);
 		//console.log("diffButtonTargetMax" + diffButtonTargetMax);
 		
+		/**
+		 * Description
+		 * @method onmousedown
+		 * @param {} e
+		 */
 		separator.onmousedown = function (e) {
 			var target,
 				id;
@@ -43,6 +70,11 @@
 				}
 			}
 		};
+		/**
+		 * Description
+		 * @method onmouseover
+		 * @param {} e
+		 */
 		separator.onmouseover = function (e) {
 			//e.preventDefault();
 			
@@ -112,6 +144,17 @@
 		});
 	}
 	
+	/**
+	 * Description
+	 * @method create
+	 * @param {} direction
+	 * @param {} button
+	 * @param {} targets
+	 * @param {} textlabel
+	 * @param {} cbopen
+	 * @param {} cbclose
+	 * @return createAnimateButton
+	 */
 	function create(direction, button, targets, textlabel, cbopen, cbclose) {
 		var buttonElem = document.createElement("input"),
 			separatorElem = document.createElement("span"),
@@ -187,6 +230,11 @@
 		button[buttonID].min = buttonMin;
 		button[buttonID].max = buttonMax;
 		
+		/**
+		 * Description
+		 * @method createAnimateButton
+		 * @param {} isOpen
+		 */
 		function createAnimateButton(isOpen) {
 			var i = 0,
 				id,
@@ -209,24 +257,48 @@
 				state = 0;
 			}
 			
+			/**
+			 * Description
+			 * @method beforeTarget
+			 */
 			function beforeTarget() {
 				state = 2;
 			}
 			
+			/**
+			 * Description
+			 * @method afterTarget
+			 */
 			function afterTarget() {
 				targetElem.style.overflow = initialOverflow[id];
 				state = 0;
 			}
 			
+			/**
+			 * Description
+			 * @method beforeButton
+			 */
 			function beforeButton() {
 				//buttonElem.value = afterLabel;
 			}
 			
+			/**
+			 * Description
+			 * @method afterButton
+			 */
 			function afterButton() {
 				//buttonElem.value = beforeLabel;
 			}
 			
+			/**
+			 * Description
+			 * @method beforeSep
+			 */
 			function beforeSep() {}
+			/**
+			 * Description
+			 * @method afterSep
+			 */
 			function afterSep() {}
 			
 			for (id in targets) {
@@ -259,6 +331,12 @@
 		isMoving[separatorElem] = false;
 		setupSeparator(direction, separatorElem, button, targets, whstr);
 		
+		/**
+		 * Description
+		 * @method createButton
+		 * @param {} direction
+		 * @param {} targets
+		 */
 		function createButton(direction, targets) {
 			separatorElem.addEventListener('click', function () {
 				if (isMoving.hasOwnProperty(separatorElem)) {

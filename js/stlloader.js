@@ -9,6 +9,13 @@
 	var loadSTLB = {},
 			filename = '';
 
+	/**
+	 * Description
+	 * @method calcNormal
+	 * @param {} pos
+	 * @param {} i
+	 * @return normal
+	 */
 	function calcNormal(pos, i) {
 		var normal = [0, 0, 0],
 			x   = 0,
@@ -50,6 +57,12 @@
 	}
 
 
+	/**
+	 * Description
+	 * @method loadbinSTLA
+	 * @param {} dataview
+	 * @return ret
+	 */
 	function loadbinSTLA(dataview) {
 		var i              = 0,
 			datalen        = dataview.byteLength,
@@ -133,6 +146,12 @@
 	/// };
 	///
 	///---------------------------------------------------------------------------
+	/**
+	 * Description
+	 * @method loadbinSTLB
+	 * @param {} dataview
+	 * @return ObjectExpression
+	 */
 	function loadbinSTLB(dataview) {
 		var i           = 0,
 			inner       = 0,
@@ -233,6 +252,12 @@
 		};
 	}
 	
+	/**
+	 * Description
+	 * @method loadSTLInternal
+	 * @param {} dataview
+	 * @return CallExpression
+	 */
 	function loadSTLInternal(dataview) {
 		var i           = 0,
 			buf,
@@ -260,6 +285,12 @@
 		return loadbinSTLB(dataview);
 	}
 	
+	/**
+	 * Description
+	 * @method openBinary
+	 * @param {} evt
+	 * @param {} callback
+	 */
 	function openBinary(evt, callback) {
 		var files  = evt.target.files,
 			fr     = new FileReader(),
@@ -271,6 +302,12 @@
 			return;
 		}
 
+		/**
+		 * Description
+		 * @method onloadend
+		 * @param {} e
+
+		 */
 		fr.onloadend = function (e) {
 			var data    = e.target.result,
 				dataview;
@@ -282,6 +319,11 @@
 			}
 		};
 
+		/**
+		 * Description
+		 * @method onerror
+		 * @param {} error
+		 */
 		fr.onerror = function (error) {
 			alert('Brewsor not support FileReader.');
 			console.log(error);

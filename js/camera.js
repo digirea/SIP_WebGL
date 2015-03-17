@@ -5,6 +5,10 @@ var Camera;
 var test_time = 0;
 (function () {
 	"use strict";
+	/**
+	 * Description
+	 * @method camera
+	 */
 	var camera = function () {
 		this.qtn               = new QtnIV();
 		this.mtx               = new MatIV();
@@ -30,10 +34,19 @@ var test_time = 0;
 		this.lerpTimeDelta     = 0;
 	};
 
+	/**
+	 * Description
+	 * @method setupScreen
+	 * @param {} s
+	 */
 	camera.prototype.setupScreen = function (s) {
 		this.screen = s;
 	};
 
+	/**
+	 * Description
+	 * @method resetView
+	 */
 	camera.prototype.resetView = function () {
 		console.log('View Matrix RESET');
 		this.qtn               = new QtnIV();
@@ -50,6 +63,11 @@ var test_time = 0;
 		this.RotateMatrix      = this.mtx.identity(this.mtx.create());
 	};
 
+	/**
+	 * Description
+	 * @method ViewSide
+	 * @param {} type
+	 */
 	camera.prototype.ViewSide = function (type) {
 		var z = 1000;//this.getCamPosZ();
 		this.resetView();
@@ -92,21 +110,53 @@ var test_time = 0;
 		}
 
 	};
+	/**
+	 * Description
+	 * @method pos
+	 * @param {} x
+	 * @param {} y
+	 * @param {} z
+	 * @return MemberExpression
+	 */
 	camera.prototype.pos = function (x, y, z) {
 		this.camPos   = [x, y, z];
 		return this.camPos;
 	};
 	
+	/**
+	 * Description
+	 * @method at
+	 * @param {} x
+	 * @param {} y
+	 * @param {} z
+	 * @return MemberExpression
+	 */
 	camera.prototype.at = function (x, y, z) {
 		this.camAt   = [x, y, z];
 		return this.camAt;
 	};
 	
+	/**
+	 * Description
+	 * @method up
+	 * @param {} x
+	 * @param {} y
+	 * @param {} z
+	 * @return MemberExpression
+	 */
 	camera.prototype.up = function (x, y, z) {
 		this.camUp   = [x, y, z];
 		return this.camUp;
 	};
 
+	/**
+	 * Description
+	 * @method addPos
+	 * @param {} x
+	 * @param {} y
+	 * @param {} z
+	 * @return MemberExpression
+	 */
 	camera.prototype.addPos = function (x, y, z) {
 		this.camPos[0] += x;
 		this.camPos[1] += y;
@@ -114,6 +164,14 @@ var test_time = 0;
 		return this.camPos;
 	};
 
+	/**
+	 * Description
+	 * @method addAt
+	 * @param {} x
+	 * @param {} y
+	 * @param {} z
+	 * @return MemberExpression
+	 */
 	camera.prototype.addAt = function (x, y, z) {
 		this.camAt[0] += x;
 		this.camAt[1] += y;
@@ -121,6 +179,14 @@ var test_time = 0;
 		return this.camAt;
 	};
 
+	/**
+	 * Description
+	 * @method addRotate
+	 * @param {} x
+	 * @param {} y
+	 * @param {} z
+	 * @return MemberExpression
+	 */
 	camera.prototype.addRotate = function (x, y, z) {
 		this.camRot[0] += x;
 		this.camRot[1] += y;
@@ -128,6 +194,14 @@ var test_time = 0;
 		return this.camRot;
 	};
 
+	/**
+	 * Description
+	 * @method setupLerp
+	 * @param {} min
+	 * @param {} max
+	 * @param {} trans
+	 * @param {} scale
+	 */
 	camera.prototype.setupLerp = function (min, max, trans, scale) {
 		var len = 0,
 			i,
@@ -175,10 +249,24 @@ var test_time = 0;
 		this.lerpState          = true;
 	};
 
+	/**
+	 * Description
+	 * @method getCamPosZ
+	 * @return CallExpression
+	 */
 	camera.prototype.getCamPosZ = function () {
 		return Math.abs(this.camPos[2]);
 	};
 
+	/**
+	 * Description
+	 * @method getViewMatrix
+	 * @param {} fov
+	 * @param {} aspect
+	 * @param {} near
+	 * @param {} far
+	 * @return vpMatrix
+	 */
 	camera.prototype.getViewMatrix = function (fov, aspect, near, far) {
 		var mtx      = new MatIV(),
 			tMatrix  = mtx.identity(mtx.create()),
@@ -198,6 +286,15 @@ var test_time = 0;
 		return vpMatrix;
 	};
 
+	/**
+	 * Description
+	 * @method getViewRotateMatrix
+	 * @param {} fov
+	 * @param {} aspect
+	 * @param {} near
+	 * @param {} far
+	 * @return vpMatrix
+	 */
 	camera.prototype.getViewRotateMatrix = function (fov, aspect, near, far) {
 		var mtx      = new MatIV(),
 			tMatrix  = mtx.identity(mtx.create()),
@@ -211,10 +308,19 @@ var test_time = 0;
 		return vpMatrix;
 	};
 
+	/**
+	 * Description
+	 * @method getAtDistance
+	 * @return CallExpression
+	 */
 	camera.prototype.getAtDistance = function () {
 		return Distance(Sub(this.camAtStart, this.camPosStart));
 	};
 	
+	/**
+	 * Description
+	 * @method LeapCamera
+	 */
 	camera.prototype.LeapCamera = function () {
 		this.lerpTime = this.lerpTime + this.lerpTimeDelta;
 		if (this.lerpTime >= 1.0) {
@@ -235,11 +341,23 @@ var test_time = 0;
 		}
 	};
 
+	/**
+	 * Description
+	 * @method getEyeDirection
+	 * @return CallExpression
+	 */
 	camera.prototype.getEyeDirection = function () {
 		return Normalize(Sub(this.camPos, this.camAt));
 		
 	}
 
+	/**
+	 * Description
+	 * @method updateRotateMatrix
+	 * @param {} r
+	 * @param {} y
+	 * @param {} x
+	 */
 	camera.prototype.updateRotateMatrix = function (r, y, x) {
 		var qt = this.qtn.identity(this.qtn.create()),
 			qMatrixXY = this.mtx.identity(this.mtx.create());
@@ -251,6 +369,11 @@ var test_time = 0;
 		this.camRotPrev[2] = this.camRot[2];
 	};
 	
+	/**
+	 * Description
+	 * @method updateMatrix
+	 * @param {} wh
+	 */
 	camera.prototype.updateMatrix = function (wh) {
 		if (this.lerpState === false) {
 			var x        = this.camRot[0] - this.camRotPrev[0],
@@ -272,6 +395,10 @@ var test_time = 0;
 
 	};
 
+	/**
+	 * Description
+	 * @method init
+	 */
 	camera.prototype.init = function () {
 		this.resetView();
 	};

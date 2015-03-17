@@ -1,13 +1,25 @@
 /*jslint devel:true*/
-/*global Float32Array, ArrayBuffer, Int16Array, QtnIV, Sub, MatIV*/
-
-
+/**
+ * global Float32Array, ArrayBuffer, Int16Array, QtnIV, Sub, MatIV
+ * @method MatIV
+ */
 function MatIV() {
 	"use strict";
 
+	/**
+	 * Description
+	 * @method create
+	 * @return NewExpression
+	 */
 	this.create = function () {
 		return new Float32Array(16);
 	};
+	/**
+	 * Description
+	 * @method identity
+	 * @param {} dest
+	 * @return dest
+	 */
 	this.identity = function (dest) {
 		dest[0]  = 1;
 		dest[1]  = 0;
@@ -27,6 +39,14 @@ function MatIV() {
 		dest[15] = 1;
 		return dest;
 	};
+	/**
+	 * Description
+	 * @method multiply
+	 * @param {} mat1
+	 * @param {} mat2
+	 * @param {} dest
+	 * @return dest
+	 */
 	this.multiply = function (mat1, mat2, dest) {
 		var a = mat1[0],  b = mat1[1],  c = mat1[2],  d = mat1[3],
 		    e = mat1[4],  f = mat1[5],  g = mat1[6],  h = mat1[7],
@@ -54,6 +74,14 @@ function MatIV() {
 		dest[15] = M * d + N * h + O * l + P * p;
 		return dest;
 	};
+	/**
+	 * Description
+	 * @method scale
+	 * @param {} mat
+	 * @param {} vec
+	 * @param {} dest
+	 * @return dest
+	 */
 	this.scale = function (mat, vec, dest) {
 		dest[0]  = mat[0]  * vec[0];
 		dest[1]  = mat[1]  * vec[0];
@@ -73,6 +101,14 @@ function MatIV() {
 		dest[15] = mat[15];
 		return dest;
 	};
+	/**
+	 * Description
+	 * @method translate
+	 * @param {} mat
+	 * @param {} vec
+	 * @param {} dest
+	 * @return dest
+	 */
 	this.translate = function (mat, vec, dest) {
 		dest[0] = mat[0];
 		dest[1] = mat[1];
@@ -92,6 +128,15 @@ function MatIV() {
 		dest[15] = mat[3] * vec[0] + mat[7] * vec[1] + mat[11] * vec[2] + mat[15];
 		return dest;
 	};
+	/**
+	 * Description
+	 * @method rotate
+	 * @param {} mat
+	 * @param {} angle
+	 * @param {} axis
+	 * @param {} dest
+	 * @return dest
+	 */
 	this.rotate = function (mat, angle, axis, dest) {
 		var sq = Math.sqrt(axis[0] * axis[0] + axis[1] * axis[1] + axis[2] * axis[2]),
 			a = axis[0],
@@ -156,6 +201,15 @@ function MatIV() {
 		dest[11] = j * y + n * z + r * A;
 		return dest;
 	};
+	/**
+	 * Description
+	 * @method lookAt
+	 * @param {} eye
+	 * @param {} center
+	 * @param {} up
+	 * @param {} dest
+	 * @return dest
+	 */
 	this.lookAt = function (eye, center, up, dest) {
 		var eyeX    = eye[0],    eyeY    = eye[1],    eyeZ    = eye[2],
 			upX     = up[0],     upY     = up[1],     upZ     = up[2],
@@ -219,6 +273,16 @@ function MatIV() {
 		return dest;
 	};
 	
+	/**
+	 * Description
+	 * @method perspective
+	 * @param {} fovy
+	 * @param {} aspect
+	 * @param {} near
+	 * @param {} far
+	 * @param {} dest
+	 * @return dest
+	 */
 	this.perspective = function (fovy, aspect, near, far, dest) {
 		var t = near * Math.tan(fovy * Math.PI / 360),
 			r = t * aspect,
@@ -244,6 +308,18 @@ function MatIV() {
 		return dest;
 	};
 
+	/**
+	 * Description
+	 * @method frust
+	 * @param {} left
+	 * @param {} right
+	 * @param {} bottom
+	 * @param {} top
+	 * @param {} near
+	 * @param {} far
+	 * @param {} dest
+	 * @return dest
+	 */
 	this.frust = function (left, right, bottom, top, near, far, dest) {
 		var rl   =  (right - left),
 			tb   =  (top - bottom),
@@ -268,6 +344,16 @@ function MatIV() {
 	};
 
 
+	/**
+	 * Description
+	 * @method persp2
+	 * @param {} id
+	 * @param {} fovy
+	 * @param {} aspect
+	 * @param {} near
+	 * @param {} far
+	 * @param {} dest
+	 */
 	this.persp2 = function (id, fovy, aspect, near, far, dest) {
 		var top       = near * Math.tan(fovy * Math.PI / 180),
 			right     = top * aspect,
@@ -289,6 +375,18 @@ function MatIV() {
 		this.frust(-right, right, -top, top, near, far, dest);
 	};
 
+	/**
+	 * Description
+	 * @method ortho
+	 * @param {} left
+	 * @param {} right
+	 * @param {} top
+	 * @param {} bottom
+	 * @param {} near
+	 * @param {} far
+	 * @param {} dest
+	 * @return dest
+	 */
 	this.ortho = function (left, right, top, bottom, near, far, dest) {
 		var h = (right - left),
 			v = (top - bottom),
@@ -311,6 +409,13 @@ function MatIV() {
 		dest[15] = 1;
 		return dest;
 	};
+	/**
+	 * Description
+	 * @method transpose
+	 * @param {} mat
+	 * @param {} dest
+	 * @return dest
+	 */
 	this.transpose = function (mat, dest) {
 		dest[0]  = mat[0];
 		dest[1]  = mat[4];
@@ -330,6 +435,13 @@ function MatIV() {
 		dest[15] = mat[15];
 		return dest;
 	};
+	/**
+	 * Description
+	 * @method inverse
+	 * @param {} mat
+	 * @param {} dest
+	 * @return dest
+	 */
 	this.inverse = function (mat, dest) {
 		var a = mat[0],  b = mat[1],  c = mat[2],  d = mat[3],
 		    e = mat[4],  f = mat[5],  g = mat[6],  h = mat[7],
@@ -362,12 +474,27 @@ function MatIV() {
 	};
 }
 
+/**
+ * Description
+ * @method QtnIV
+ */
 function QtnIV() {
 	"use strict";
 
+	/**
+	 * Description
+	 * @method create
+	 * @return NewExpression
+	 */
 	this.create = function () {
 		return new Float32Array(4);
 	};
+	/**
+	 * Description
+	 * @method identity
+	 * @param {} dest
+	 * @return dest
+	 */
 	this.identity = function (dest) {
 		dest[0] = 0;
 		dest[1] = 0;
@@ -375,6 +502,13 @@ function QtnIV() {
 		dest[3] = 1;
 		return dest;
 	};
+	/**
+	 * Description
+	 * @method inverse
+	 * @param {} qtn
+	 * @param {} dest
+	 * @return dest
+	 */
 	this.inverse = function (qtn, dest) {
 		dest[0] = -qtn[0];
 		dest[1] = -qtn[1];
@@ -382,6 +516,12 @@ function QtnIV() {
 		dest[3] =  qtn[3];
 		return dest;
 	};
+	/**
+	 * Description
+	 * @method normalize
+	 * @param {} dest
+	 * @return dest
+	 */
 	this.normalize = function (dest) {
 		var x = dest[0],
 			y = dest[1],
@@ -403,6 +543,14 @@ function QtnIV() {
 		}
 		return dest;
 	};
+	/**
+	 * Description
+	 * @method multiply
+	 * @param {} qtn1
+	 * @param {} qtn2
+	 * @param {} dest
+	 * @return dest
+	 */
 	this.multiply = function (qtn1, qtn2, dest) {
 		var ax = qtn1[0], ay = qtn1[1], az = qtn1[2], aw = qtn1[3],
 			bx = qtn2[0], by = qtn2[1], bz = qtn2[2], bw = qtn2[3];
@@ -412,6 +560,14 @@ function QtnIV() {
 		dest[3] = aw * bw - ax * bx - ay * by - az * bz;
 		return dest;
 	};
+	/**
+	 * Description
+	 * @method rotate
+	 * @param {} angle
+	 * @param {} axis
+	 * @param {} dest
+	 * @return dest
+	 */
 	this.rotate = function (angle, axis, dest) {
 		var sq = Math.sqrt(axis[0] * axis[0] + axis[1] * axis[1] + axis[2] * axis[2]),
 			a = axis[0],
@@ -437,6 +593,14 @@ function QtnIV() {
 		dest[3] = Math.cos(angle * 0.5);
 		return dest;
 	};
+	/**
+	 * Description
+	 * @method toVecIII
+	 * @param {} vec
+	 * @param {} qtn
+	 * @param {} dest
+	 * @return dest
+	 */
 	this.toVecIII = function (vec, qtn, dest) {
 		var qp = this.create(),
 			qq = this.create(),
@@ -452,6 +616,13 @@ function QtnIV() {
 		dest[2] = qr[2];
 		return dest;
 	};
+	/**
+	 * Description
+	 * @method toMatIV
+	 * @param {} qtn
+	 * @param {} dest
+	 * @return dest
+	 */
 	this.toMatIV = function (qtn, dest) {
 		var x = qtn[0], y = qtn[1], z = qtn[2], w = qtn[3],
 			x2 = x + x,
@@ -484,6 +655,15 @@ function QtnIV() {
 		dest[15] = 1;
 		return dest;
 	};
+	/**
+	 * Description
+	 * @method slerp
+	 * @param {} qtn1
+	 * @param {} qtn2
+	 * @param {} time
+	 * @param {} dest
+	 * @return dest
+	 */
 	this.slerp = function (qtn1, qtn2, time, dest) {
 		var ht = qtn1[0] * qtn2[0] + qtn1[1] * qtn2[1] + qtn1[2] * qtn2[2] + qtn1[3] * qtn2[3],
 			hs = 1.0 - ht * ht,
@@ -520,11 +700,25 @@ function QtnIV() {
 }
 
 
+/**
+ * Description
+ * @method saturate
+ * @param {} x
+ * @return ConditionalExpression
+ */
 function saturate(x)
 {
 	return ((x < 0.0 ? 0.0 : x) > 1.0 ? 1.0 : x);
 }
 	
+/**
+ * Description
+ * @method smoothstep
+ * @param {} a
+ * @param {} b
+ * @param {} x
+ * @return BinaryExpression
+ */
 function smoothstep (a, b, x)
 {
 	x = saturate((x - a) / (b - a));
@@ -533,12 +727,28 @@ function smoothstep (a, b, x)
 
 
 //http://freespace.virgin.net/hugo.elias/models/m_perlin.htm
+/**
+ * Description
+ * @method CosInter
+ * @param {} a
+ * @param {} b
+ * @param {} x
+ * @return BinaryExpression
+ */
 function CosInter(a, b, x) {
 	var ft = x * Math.PI,
 		f  = (1 - Math.cos(ft)) * .5;
 	return a * (1 - f) + b * f;
 }
 
+/**
+ * Description
+ * @method CosInter3v
+ * @param {} a
+ * @param {} b
+ * @param {} x
+ * @return arr
+ */
 function CosInter3v(a, b, x) {
 	var arr = 
 	[
@@ -550,12 +760,26 @@ function CosInter3v(a, b, x) {
 }
 
 
+/**
+ * Description
+ * @method Add
+ * @param {} p0
+ * @param {} p1
+ * @return ret
+ */
 function Add(p0, p1) {
 	var ret = [];
 	ret.push(p0[0] + p1[0], p0[1] + p1[1], p0[2] + p1[2]);
 	return ret;
 }
 
+/**
+ * Description
+ * @method Sub
+ * @param {} p0
+ * @param {} p1
+ * @return ret
+ */
 function Sub(p0, p1) {
 	var ret = [];
 	ret.push(
@@ -565,46 +789,105 @@ function Sub(p0, p1) {
 	return ret;
 }
 
+/**
+ * Description
+ * @method Mul
+ * @param {} p0
+ * @param {} p1
+ * @return ret
+ */
 function Mul(p0, p1) {
 	var ret = [];
 	ret.push(p0[0] * p1[0], p0[1] * p1[1], p0[2] * p1[2]);
 	return ret;
 }
 
+/**
+ * Description
+ * @method Div
+ * @param {} p0
+ * @param {} p1
+ * @return ret
+ */
 function Div(p0, p1) {
 	var ret = [];
 	ret.push(p0[0] / p1[0], p0[1] / p1[1], p0[2] / p1[2]);
 	return ret;
 }
 
+/**
+ * Description
+ * @method Normalize
+ * @param {} p
+ * @return ArrayExpression
+ */
 function Normalize(p) {
 	var length = Math.sqrt(p[0] * p[0] + p[1] * p[1] + p[2] * p[2]);
 	return [p[0] / length, p[1] / length, p[2] / length];
 }
 
+/**
+ * Description
+ * @method Dot
+ * @param {} p0
+ * @param {} p1
+ * @return BinaryExpression
+ */
 function Dot(p0, p1) {
 	return (p0[0] * p1[0]) + (p0[1] * p1[1]) + (p0[2] * p1[2]);
 }
 
+/**
+ * Description
+ * @method Length
+ * @param {} p
+ * @return CallExpression
+ */
 function Length(p) {
 	return Math.sqrt(Dot(p, p));
 }
 
+/**
+ * Description
+ * @method Distance
+ * @param {} p0
+ * @param {} p1
+ * @return CallExpression
+ */
 function Distance(p0, p1) {
 	var p = [p0[0] - p1[0], p0[1] - p1[1], p0[2] - p1[2]];
 	return Math.sqrt(Dot(p, p));
 }
 
+/**
+ * Description
+ * @method Normalize
+ * @param {} p
+ * @return ArrayExpression
+ */
 function Normalize(p) {
 	var length = Length(p);
 	return [p[0] / length, p[1] / length, p[2] / length];
 }
 
+/**
+ * Description
+ * @method Negative
+ * @param {} p
+ * @return ArrayExpression
+ */
 function Negative(p) {
 	return [-p[0], -p[1], -p[2]];
 }
 
 
+/**
+ * Description
+ * @method Cross
+ * @param {} p0
+ * @param {} p1
+ * @return ArrayExpression
+ */
 function Cross(p0, p1)
 {
 	return [
@@ -615,6 +898,13 @@ function Cross(p0, p1)
 }
 
 
+/**
+ * Description
+ * @method GetMinMax
+ * @param {} min
+ * @param {} max
+ * @param {} pos
+ */
 function GetMinMax(min, max, pos)
 {
 	min[0] = Math.min(pos[0], min[0])
@@ -627,6 +917,16 @@ function GetMinMax(min, max, pos)
 }
 
 // Intersect Triagle
+/**
+ * Description
+ * @method IntersectTriangle
+ * @param {} org
+ * @param {} dir
+ * @param {} v0
+ * @param {} v1
+ * @param {} v2
+ * @return ObjectExpression
+ */
 function IntersectTriangle(org, dir, v0, v1, v2)
 {
 	var t       = 0,
@@ -670,6 +970,15 @@ function IntersectTriangle(org, dir, v0, v1, v2)
 }
 
 
+/**
+ * Description
+ * @method IntersectSphere
+ * @param {} org
+ * @param {} dir
+ * @param {} point
+ * @param {} radius
+ * @return Literal
+ */
 function IntersectSphere(org, dir, point, radius)
 {
 	//https://code.google.com/p/aobench/
@@ -710,6 +1019,13 @@ function IntersectSphere(org, dir, point, radius)
 }
 
 ///vec4 outpos = invMatrix * inpos;
+/**
+ * Description
+ * @method MultMatrixVec4
+ * @param {} a
+ * @param {} b
+ * @return ret
+ */
 function MultMatrixVec4(a, b)
 {
 	var ret = 
@@ -722,6 +1038,14 @@ function MultMatrixVec4(a, b)
 }
 
 //https://github.com/g-truc/glm/blob/88f4a5ed827c316b5f6179bc51193a874a3a96ee/glm/gtc/matrix_transform.inl#L423
+/**
+ * Description
+ * @method UnProject
+ * @param {} winpos
+ * @param {} invMatrix
+ * @param {} viewport
+ * @param {} ray
+ */
 function UnProject(winpos,
 					invMatrix,
 					viewport,
