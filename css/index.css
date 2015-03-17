@@ -326,7 +326,7 @@ DustBox{
 #viewOrtho {
 	position        :absolute;
 	left            :0px;
-	top             :0px;
+	top             :32px;
 	margin-bottom   : 0px;
 	background-color: darkorange;
 }
@@ -334,7 +334,7 @@ DustBox{
 #viewPers {
 	position        :absolute;
 	left            :0px;
-	top             :32px;
+	top             :0px;
 	background-color: darkcyan;
 }
 
