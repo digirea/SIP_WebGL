@@ -942,7 +942,6 @@ Normalize, Sub */
 		setTimeout(startGL, 50);
 	}
 	
-	document.addEventListener("click", MouseClickFunc);
 	window.onload                  = init;
 	window.onresize                = onResize;
 	window.scene                   = scene;
@@ -950,6 +949,7 @@ Normalize, Sub */
 	window.scene.selectTreeNode    = selectTreeNode;
 	window.scene.updateconsole     = updateconsole;
 	window.scene.delMesh           = delMesh;
+	window.scene.Pick              = Pick;
 	
 	window.scene.KickDog           = KickDog;
 }(window.loadSTLB));

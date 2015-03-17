@@ -12,6 +12,8 @@
 		multrotate  = 0.5,
 		multWheel   = 0.1,
 		multWheelCoef = 1.0,
+		moveX       = 0,
+		moveY       = 0,
 		mouseState  = {"Left": false, "Center": false, "Right": false };
 	
 	/**
@@ -78,6 +80,8 @@
 	function mouseDown(e) {
 		if (e.button === 0) {
 			mouseState.Left = true;
+			moveX = 0;
+			moveY = 0;
 		}
 		if (e.button === 2) {
 			mouseState.Right = true;
@@ -96,9 +100,16 @@
 	function mouseUp(e) {
 		if (e.button === 0) {
 			mouseState.Left = false;
+			console.log(moveX, moveY);
+			
+			//pick
+			if(Math.abs(moveX) < 10 && Math.abs(moveY) < 10) {
+				window.scene.Pick(e.clientX, e.clientY);
+			}
 		}
 		if (e.button === 2) {
 			mouseState.Right = false;
+
 		}
 		if (e.button === 1) {
 			mouseState.Center = false;
@@ -119,6 +130,8 @@
 		if (prevEvent) {
 			movementX = e.clientX - prevEvent.clientX;
 			movementY = e.clientY - prevEvent.clientY;
+			moveX += movementX;
+			moveY += movementY;
 		}
 		if (camera.length <= 0) {
 			return;
@@ -194,7 +207,7 @@
 		//F5
 		if (e.keyCode === 116) {
 			resetView();
-			e.preventDefault();
+			//e.preventDefault();
 		}
 		keycallback(e);
 	}
