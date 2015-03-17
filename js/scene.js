@@ -297,6 +297,18 @@ Normalize, Sub */
 	
 	/**
 	 * Description
+	 * @method sideViewChange
+	 * @param {} mode
+	 * @return FunctionExpression
+	 */
+	function viewModeChange(mode) {
+		return function (e) {
+			camera.ViewMode(mode);
+		};
+	}
+	
+	/**
+	 * Description
 	 * @method getViewProjMatrix
 	 * @return vpMatrix
 	 */
@@ -305,9 +317,9 @@ Normalize, Sub */
 			vpMatrix;
 		camZ = camera.getCamPosZ();
 		if (camZ === 0) {
-			vpMatrix = camera.getViewMatrix(90, canvas.width / canvas.height, 0.1, 2560);
+			vpMatrix = camera.getViewMatrix(60, canvas.width / canvas.height, 0.1, 2560);
 		} else {
-			vpMatrix = camera.getViewMatrix(90, canvas.width / canvas.height, camZ * 0.002, camZ * 10.0);
+			vpMatrix = camera.getViewMatrix(60, canvas.width / canvas.height, camZ * 0.02, camZ * 50.0);
 		}
 		return vpMatrix;
 	}
@@ -847,26 +859,29 @@ Normalize, Sub */
 	 */
 	function init() {
 		var i,
-			openswitch  = document.getElementById('OpenSwitch'),
+			openswitch     = document.getElementById('OpenSwitch'),
 			viewdirection  = document.getElementById('ViewDirectionSwitch'),
-			viewtype     = document.getElementById('ViewTypeSwitch'),
-			openstl     = document.getElementById('OpenSTL'),
-			opencsv     = document.getElementById('OpenCSV'),
-			addline     = document.getElementById('AddLine'),
-			addpoint    = document.getElementById('AddPoint'),
-			pickup      = document.getElementById('pickup'),
-			sideviewx   = document.getElementById('viewLeft'),
-			sideviewy   = document.getElementById('viewTop'),
-			sideviewz   = document.getElementById('viewFront'),
-			sideviewx_   = document.getElementById('viewRight'),
-			sideviewy_   = document.getElementById('viewBottom'),
-			sideviewz_   = document.getElementById('viewBack'),
+			viewtype       = document.getElementById('ViewTypeSwitch'),
+			viewortho      = document.getElementById('viewOrtho'),
+			viewpers       = document.getElementById('viewPers'),
+			openstl        = document.getElementById('OpenSTL'),
+			opencsv        = document.getElementById('OpenCSV'),
+			addline        = document.getElementById('AddLine'),
+			addpoint       = document.getElementById('AddPoint'),
+			pickup         = document.getElementById('pickup'),
+			sideviewx      = document.getElementById('viewLeft'),
+			sideviewy      = document.getElementById('viewTop'),
+			sideviewz      = document.getElementById('viewFront'),
+			sideviewx_     = document.getElementById('viewRight'),
+			sideviewy_     = document.getElementById('viewBottom'),
+			sideviewz_     = document.getElementById('viewBack'),
 			
-			deletegroup = document.getElementById('DeleteGroup'),
+			deletegroup    = document.getElementById('DeleteGroup'),
 			propertyTab,
 			groupTab,
 			consoleTab;
 
+		//init canvas
 		canvas = document.getElementById('canvas');
 
 		//init render
@@ -900,6 +915,9 @@ Normalize, Sub */
 		sideviewx_.onclick = (sideViewChange)("x-");
 		sideviewy_.onclick = (sideViewChange)("y-");
 		sideviewz_.onclick = (sideViewChange)("z-");
+		
+		viewortho.onclick = (viewModeChange)("ortho");
+		viewpers.onclick  = (viewModeChange)("pers");
 		
 		// Create Tab
 		propertyTab = window.animtab.create('right', {
