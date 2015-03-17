@@ -2,6 +2,25 @@
 	color          : #FFFF00
 }
 
+a {
+	text-decoration: none;
+	border:none;
+	color: #EEE;
+}
+a:link {
+	color: #EEE;
+}
+a:visited {
+	color: #EEE;
+}
+a:hover {
+	color: #33AAEE;
+	border-bottom:none;
+}
+a.active {
+	color: white;
+}
+
 .proparty  {
   font-family      : "Times New Roman", Times, serif;
   font-size        : 8px;
@@ -148,7 +167,7 @@ body {
 
 	left            :40px;
 	top             :0px;
-	background-color:#253e78;
+	background-color:#345678;
 	color           :#FFF;
 	z-index: 100;
 }
@@ -167,7 +186,7 @@ body {
 
 	left            :200px;
 	top             :0px;
-	background-color:#233232;
+	background-color:#345678;
 	color           :#FFF;
 	z-index: 100;
 }
