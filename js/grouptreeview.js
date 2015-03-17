@@ -8,10 +8,10 @@
 		treeRootElem  = document.getElementById('tree');
 
 	/**
-	 * Description
+	 * プロパティ値の取得
 	 * @method getPropertyValues
-	 * @param {} node
-	 * @return values
+	 * @param {node} node 対象ノード
+	 * @return values 取得した値
 	 */
 	function getPropertyValues(node) {
 		var values = [],
@@ -21,7 +21,7 @@
 			radius = {},
 			color  = {},
 			show   = {};
-		if(node.type === 'text') return null;
+		if (node.type === 'text') { return null; }
 		if (node.trans) {
 			trans.name = "trans";
 			trans.type = "vec3";
@@ -59,12 +59,12 @@
 	
 	
 	/**
-	 * Description
+	 * 選択ノード実行メソッド
 	 * @method doSelectNode
-	 * @param {} node
+	 * @param {node} node 対象ノード
 	 */
 	function doSelectNode(node) {
-		if(node.type === 'text') {
+		if (node.type === 'text') {
 			selectnode = node;
 			console.log('selectnode:', selectnode);
 		}
@@ -72,9 +72,9 @@
 	}
 	
 	/**
-	 * Description
+	 * 指定ノードにフォーカスする
 	 * @method focusProperty
-	 * @param {} node
+	 * @param {node} node 対象ノード
 	 */
 	function focusProperty(node) {
 		doSelectNode(node);
@@ -86,9 +86,9 @@
 	
 	
 	/**
-	 * Description
+	 * クリック時に呼ばれるメソッド
 	 * @method clickfunc
-	 * @param {} node
+	 * @param {node} node
 	 * @return FunctionExpression
 	 */
 	function clickfunc(node) {
@@ -100,13 +100,13 @@
 				input : getPropertyValues(node)
 			});
 		};
-	};
+	}
 
 	/**
-	 * Description
+	 * チェックボックス変更時に呼ばれるメソッド
 	 * @method checkboxfunc
-	 * @param {} node
-	 * @param {} box
+	 * @param {node} node ノード
+	 * @param {box} box ボックス
 	 * @return FunctionExpression
 	 */
 	function checkboxfunc(node, box) {
@@ -122,21 +122,20 @@
 			//console.log(box.checked);
 			scene.selectTreeNode(node, box);
 		};
-	};
+	}
 	
 
 	/**
-	 * Description
+	 * 削除ボタン実行メソッド
 	 * @method delbuttonfunc
-	 * @param {} node
+	 * @param {node} node 対象ノード
 	 * @return FunctionExpression
 	 */
 	function delbuttonfunc(node) {
 		return function (e) {
-			var temproot = datatree.getRoot();
-			var root;
-			if(node.name === temproot[0].name)
-			{
+			var temproot = datatree.getRoot(),
+				root;
+			if (node.name === temproot[0].name) {
 				return;
 			}
 			console.log("------NODE:", node);
@@ -144,17 +143,16 @@
 			root = window.datatree.delData(node.name);
 			window.grouptreeview.update(root, null);
 		};
-	};
+	}
 	
 
 	/**
-	 * Description
+	 * グループツリーの作成
 	 * @method createTree
-	 * @param {} elem
-	 * @param {} root
-	 * @param {} makebox
+	 * @param {Element} elem ツリーエレメント
+	 * @param {node} root ルートノード
 	 */
-	function createTree(elem, root, makebox) {
+	function createTree(elem, root) {
 		var node,
 			temproot = datatree.getRoot(),
 			i,
@@ -175,14 +173,14 @@
 			li.appendChild(link);
 			elem.appendChild(li);
 
-			if(node.type === 'mesh') {
+			if (node.type === 'mesh') {
 				ele = document.createElement("input");
 				ele.type  = "checkbox";
 				ele.name  = "name";
 				ele.value = "value";
-				ele.class = "groupcheckbox";
+				ele.className = "groupcheckbox";
 				if (node.data) {
-					if (node.data.show == true) {
+					if (node.data.show === true) {
 						ele.setAttribute('checked', 'checked');
 					}
 				}
@@ -208,9 +206,9 @@
 	}
 	
 	/**
-	 * Description
+	 * ノードのダンプ出力
 	 * @method dump
-	 * @param {} root
+	 * @param {node} root 対象ノードのルート
 	 */
 	function dump(root) {
 		var node,
@@ -226,44 +224,17 @@
 	}
 	
 	/**
-	 * Description
-	 * @method update
-	 * @param {} node
-	 * @param {} child
-	 */
-	function update(node, child) {
-		var elem;
-		console.log(node);
-		if (!node) { return; }
-		if (node.child && node.child.length > 0) {
-			elem = document.getElementById(node.name);
-			elem.innerHTML = "";
-			createTree(document.getElementById(node.name), node);
-		} else if (node.length > 0) {
-			elem = treeRootElem;
-			elem.innerHTML = "";
-			createTree(treeRootElem, node);
-		}
-
-		if(child)
-		{
-			focusProperty(child);
-		}
-	}
-	
-	/**
-	 * Description
+	 * 選択されたノードの取得
 	 * @method getSelectNode
-	 * @return selectnode
+	 * @return selectnode 選択されているノード
 	 */
-	function getSelectNode()
-	{
+	function getSelectNode() {
 		console.log('getSelectNode : ', selectnode);
 		return selectnode;
 	}
 	
 	/**
-	 * Description
+	 * ツリービューの初期化
 	 * @method init
 	 */
 	function init() {
@@ -277,6 +248,32 @@
 				});
 			});
 		}(jQuery));
+	}
+	
+	/**
+	 * ツリービューの更新
+	 * @method update
+	 * @param {node} node 対象ノード
+	 * @param {node} child 再帰用パラメータ 通常nullで良い.
+	 */
+	function update(node, child) {
+		var elem;
+		console.log("UPDATE", node);
+		if (!node) { return; }
+		if (node.child && node.child.length > 0) {
+			elem = document.getElementById(node.name);
+			elem.innerHTML = "";
+			createTree(document.getElementById(node.name), node);
+		} else if (node.length > 0) {
+			elem = treeRootElem;
+			elem.innerHTML = "";
+			createTree(treeRootElem, node);
+		}
+
+		if (child) {
+			focusProperty(child);
+		}
+		init();
 	}
 	
 	init();
