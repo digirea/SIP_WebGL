@@ -134,7 +134,7 @@ body {
 	width           :150px;
 	height          :25px;
 
-	left            :0px;
+	left            :40px;
 	top             :0px;
 	background-color:#253e78;
 	color           :#FFF;
@@ -146,21 +146,18 @@ body {
 	background-color:rgba(200, 200, 100, 1.0);
 }
 
-
-#ViewSwitch {
+#ViewTypeSwitch {
 	position        :absolute;
 	margin          :5px;
 	width           :150px;
 	height          :25px;
 
-	left            :150px;
+	left            :200px;
 	top             :0px;
 	background-color:#233232;
 	color           :#FFF;
 	z-index: 100;
 }
-
-
 
 DustBox{
 	width:100px;
@@ -178,10 +175,10 @@ DustBox{
 	position        :absolute;
 	margin          :5px;
 	width           :160px;
-	height          :80px;
-	left            :36px;
-	top             :32px;
-	background-color:rgba(200, 200, 100, 1.0);
+	height          :70px;
+	left            :35px;
+	top             :35px;
+	background-color:rgba(55, 55, 55, 0.7);
 	color           :#FFF;
 }
 
@@ -191,7 +188,7 @@ DustBox{
 	position        : relative;
 	padding         : 0px;
 	margin          : 5px;
-	margin-top      : 10px;
+	/*margin-top      : 10px;*/
 	margin-bottom   : 0px;
 	width           : 150px;
 	height          : 25px;
@@ -209,7 +206,7 @@ DustBox{
 	margin-bottom   : 10px;
 	width           : 150px;
 	height          : 25px;
-	background-color:#253e08;
+	background-color:#257708;
 	color           :#FFF;
 }
 
@@ -265,34 +262,6 @@ DustBox{
 	margin: 10px;
 }
 
-
-
-#SideViewX {
-	margin: 10px;
-	width: 150px;
-	height:25px;
-	background-color:#211111;
-	color:#FFFFFF;
-}
-
-#SideViewY {
-	margin: 10px;
-	width: 150px;
-	height:25px;
-	background-color:#112111;
-	color:#FFFFFF;
-}
-
-#SideViewZ {
-	margin: 10px;
-	width: 150px;
-	height:25px;
-	background-color:#111121;
-	color:#FFFFFF;
-}
-
-
-
 #DeleteGroup {
 	/*position:absolute;
 	right:10px;
@@ -319,44 +288,94 @@ DustBox{
 	width: 200px;
 }
 
+#ViewDirectionSwitch {
+	position        :absolute;
+	margin          :5px;
+	width           :150px;
+	height          :25px;
+
+	left            :360px;
+	top             :0px;
+	background-color:#345678;
+	color           :#FFF;
+	z-index: 100;
+}
+
+#ViewDirection {
+	position        :absolute;
+	margin          :5px;
+	width           :465px;
+	height          :70px;
+	left            :360px;
+	top             :35px;
+	background-color:rgba(55, 55, 55, 0.7);
+	color           :#FFF;
+}
+
+#ViewType {
+	position        :absolute;
+	margin          :5px;
+	width           :160px;
+	height          :70px;
+	left            :197px;
+	top             :35px;
+	background-color:rgba(55, 55, 55, 0.7);
+	color           :#FFF;
+}
+
+#viewOrtho {
+	position        :absolute;
+	left            :0px;
+	top             :0px;
+	margin-bottom   : 0px;
+	background-color: darkorange;
+}
+
+#viewPers {
+	position        :absolute;
+	left            :0px;
+	top             :32px;
+	background-color: darkcyan;
+}
+
 #viewFront {
 	position        :absolute;
-	left            :305px;
+	left            :0px;
 	top             :0px;
 	background-color: #345678;
 }
 
 #viewLeft {
 	position        :absolute;
-	left            :455px;
+	left            :150px;
 	top             :0px;
 	background-color: #234567;
 }
 
 #viewTop {
 	position        :absolute;
-	left            :605px;
+	left            :300px;
 	top             :0px;
 	background-color: #123456;
 }
 
 #viewBack {
 	position        :absolute;
-	left            :305px;
+	left            :0px;
 	top             :30px;
 	background-color: #974365;
 }
 
 #viewRight {
 	position        :absolute;
-	left            :455px;
+	left            :150px;
 	top             :30px;
 	background-color: #763254;
 }
 
 #viewBottom {
 	position        :absolute;
-	left            :605px;
+	left            :300px;
 	top             :30px;
 	background-color: #652143;
 }
@@ -558,7 +577,7 @@ DustBox{
 {
 	position: absolute;
 	width:280px;
-	top:36px;
+	top:40px;
 	bottom:430px;
 	background-color:rgba(180, 180, 180, 0.5);
 	overflow: auto;
@@ -633,7 +652,7 @@ DustBox{
 /*
 	top : 0px;
 */
-	top : 36px;
+	top : 40px;
 	left : 280px;
 	width: 80px;
 	height : 20px;
@@ -664,5 +683,15 @@ DustBox{
 	height          :25px;
 	background-color:#543210;
 	color           :#FFF;
+	z-index: 100;
+}
+
+.viewTypeButton {
+	margin          :5px;
+	width           :150px;
+	height          :25px;
+	background-color:#543210;
+	color           :#FFF;
+	padding: 0px;
 	z-index: 100;
 }

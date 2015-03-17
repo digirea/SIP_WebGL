@@ -107,13 +107,6 @@
 		<div id="AddPoint" class="menuButtonClass noneselect">Add-Point</div>
 		<div id="AddLine" class="menuButtonClass noneselect">Add-Line</div>
 		<div class="spacer"></div>
-
-		<!--
-			<div id="SideViewX" class="menuButtonClass noneselect">SideViewX</div>
-			<div id="SideViewY" class="menuButtonClass noneselect">SideViewY</div>
-			<div id="SideViewZ" class="menuButtonClass noneselect">SideViewZ</div>
-		-->
-
 		<div id="main">
 			<div id="sidetree">
 			<div id="sidetreecontrol"><a href="?#">Collapse All</a> | <a href="?#">Expand All</a></div>
@@ -145,13 +138,22 @@
 		<div id="OpenCSV" class="file menuButtonClass noneselect">CSV File<input type="file" value="OpenText" id="OpenTextFile"></div>
 	</div>
 
-	<div id="ViewSwitch" class="menuButtonClass noneselect">DisplayView</div>
-	<div id="viewFront" class="menuButtonClass viewDirButton noneselect">Front(Z+)</div>
-	<div id="viewLeft" class="menuButtonClass viewDirButton noneselect">Left(X+)</div>
-	<div id="viewTop" class="menuButtonClass viewDirButton noneselect">Top(Y+)</div>
-	<div id="viewBack" class="menuButtonClass viewDirButton noneselect">Back(Z-)</div>
-	<div id="viewRight" class="menuButtonClass viewDirButton noneselect">Right(X-)</div>
-	<div id="viewBottom" class="menuButtonClass viewDirButton noneselect">Bottom(Y-)</div>
+	<div id="ViewTypeSwitch" class="menuButtonClass noneselect">DisplayView</div>
+	<div id="ViewType" class="OpenWindow" style="display:none">
+		<div id="viewOrtho" class="menuButtonClass viewTypeButton noneselect">Ortho</div>
+		<div id="viewPers" class="menuButtonClass viewTypeButton noneselect">Perspective</div>
+	</div>
+	
+	<div id="ViewDirectionSwitch" class="menuButtonClass noneselect">ViewDirection</div>
+	<div id="ViewDirection" class="OpenWindow" style="display:none">
+		<div id="viewFront" class="menuButtonClass viewDirButton noneselect">Front(Z+)</div>
+		<div id="viewLeft" class="menuButtonClass viewDirButton noneselect">Left(X+)</div>
+		<div id="viewTop" class="menuButtonClass viewDirButton noneselect">Top(Y+)</div>
+		<div id="viewBack" class="menuButtonClass viewDirButton noneselect">Back(Z-)</div>
+		<div id="viewRight" class="menuButtonClass viewDirButton noneselect">Right(X-)</div>
+		<div id="viewBottom" class="menuButtonClass viewDirButton noneselect">Bottom(Y-)</div>
+	</div>
+	
 </div>
   <script type="text/javascript" src="./js/propertylistview.js"></script>
   <script type="text/javascript" src="./js/grouptreeview.js"></script>
