@@ -838,6 +838,7 @@ var WGLRender;
 		mesh = this.createMeshObj({'pos' : position, 'normal' : normal});
 		mesh.radius = rad;
 		mesh.pointposition = base.position;
+		mesh.primtype = 'point';
 		
 		return mesh;
 	};

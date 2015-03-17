@@ -81,7 +81,8 @@
 		
 		doSelectNode(node);
 		propertylistview.showProperty({
-			name  : canonical_name,
+			//name  : canonical_name,
+			name : node.name,
 			input : getPropertyValues(node)
 		});
 	}
@@ -99,7 +100,8 @@
 			e.preventDefault();
 			doSelectNode(node);
 			propertylistview.showProperty({
-				name : canonical_name,
+				//name : canonical_name,
+				name : node.name,
 				input : getPropertyValues(node)
 			});
 		};

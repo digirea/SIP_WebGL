@@ -188,7 +188,7 @@ Normalize, Sub */
 	 * @param {} type
 	 * @param {} urllist
 	 */
-	function updateMeshText(name, pos, type, urllist) {
+	function updateMeshText(name, pos, type, urllist, colinfo) {
 		var mesh = {'position' : pos},
 			bb,
 			child,
@@ -207,6 +207,7 @@ Normalize, Sub */
 			retmesh.setShader(mesh_shader);
 		}
 		retmesh.urllist = urllist;
+		retmesh.colinfo = colinfo;
 
 		child = datatree.createChild('mesh', retmesh.name, retmesh);
 		datatree.addChild(selectnode.name, child);
@@ -356,11 +357,6 @@ Normalize, Sub */
 			tri[1]  = triarray[i + 1];
 			tri[2]  = triarray[i + 2];
 			tri[3]  = 1.0;
-			//tritrans = MultMatrixVec4(localMatrix, tri);
-			//if( (i % 16) === 0) {
-			//console.log('tritrans : ', tritrans);
-			//}
-			//ishit = IntersectSphere(o, d, [tritrans[0], tritrans[1], tritrans[2]], mesh.radius);
 			ishit = IntersectSphere(o, d, [tri[0], tri[1], tri[2]], mesh.radius);
 			if (ishit === false) {
 				continue;
@@ -505,9 +501,7 @@ Normalize, Sub */
 			mesh = meshlist[mindex];
 			if (mesh.mode === 'Triangles' && mesh.show === true) {
 				localMatrix = render.getLocalMatrixFromMesh(mesh);
-				//mtx.inverse(localMatrix, localInvMatrix);
 				mtx.inverse(localMatrix, localInvMatrix);
-				//localInvMatrix = localMatrix;
 				UnProjectWithLocal(nwinpos, vpMI, localInvMatrix, viewport, org);
 				UnProjectWithLocal(fwinpos, vpMI, localInvMatrix, viewport, tar);
 				dir = Normalize(Sub(tar, org));
@@ -546,7 +540,6 @@ Normalize, Sub */
 			info.URL.href  = mesh.urllist[info.index];
 		}
 
-		
 		createPopup(win_x, win_y, info);
 	}
 	
@@ -681,7 +674,7 @@ Normalize, Sub */
 		}
 
 		//Create Name
-		updateMeshText(name, pos, type, urllist);
+		updateMeshText(name, pos, type, urllist, colinfo);
 	}
 	
 	
@@ -834,6 +827,7 @@ Normalize, Sub */
 	 * @param {} change
 	 */
 	function updateconsole(change) {
+		console.log(change);
 	}
 	
 	/**
