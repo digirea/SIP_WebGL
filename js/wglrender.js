@@ -1,4 +1,4 @@
-/*jslint devel:true*/
+﻿/*jslint devel:true*/
 /*global $, Float32Array, ArrayBuffer, Int16Array, QtnIV, MatIV, canvas, ShaderObj, MeshObj*/
 
 var WGLRender;
@@ -6,7 +6,7 @@ var WGLRender;
 (function () {
 	"use strict";
 	/**
-	 * Description
+	 * コンストラクタ
 	 * @method render
 	 */
 	var render = function () {
@@ -19,19 +19,19 @@ var WGLRender;
 	};
 
 	/**
-	 * Description
+	 * ビュープロジェクション行列の設定
 	 * @method setViewProjection
-	 * @param {} m
+	 * @param {Matrix} m ビュープロジェクション行列
 	 */
 	render.prototype.setViewProjection = function (m) {
 		this.vpMat = m;
 	};
 
 	/**
-	 * Description
+	 * 初期化
 	 * @method init
-	 * @param {} canvas
-	 * @param {} window
+	 * @param {Object} canvas キャンバスオブジェクト
+	 * @param {Object} window ウィンドウオブジェクト
 	 */
 	render.prototype.init = function (canvas, window) {
 		this.gl     = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
@@ -48,7 +48,7 @@ var WGLRender;
 	};
 
 	/**
-	 * Description
+	 * リサイズコールバック
 	 * @method onResize
 	 */
 	render.prototype.onResize = function () {
@@ -64,12 +64,12 @@ var WGLRender;
 	};
 
 	/**
-	 * Description
+	 * 画面クリア
 	 * @method clearColor
-	 * @param {} r
-	 * @param {} g
-	 * @param {} b
-	 * @param {} a
+	 * @param {Number} r 赤
+	 * @param {Number} g 緑
+	 * @param {Number} b 青
+	 * @param {Number} a アルファ
 	 */
 	render.prototype.clearColor = function (r, g, b, a) {
 		this.gl.clearColor(r, g, b, a);
@@ -77,9 +77,9 @@ var WGLRender;
 	};
 
 	/**
-	 * Description
+	 * 深度のクリア
 	 * @method clearDepth
-	 * @param {} d
+	 * @param {Number} d 深度値
 	 */
 	render.prototype.clearDepth = function (d) {
 		this.gl.clearDepth(d);
@@ -87,16 +87,16 @@ var WGLRender;
 	};
 
 	/**
-	 * Description
+	 * glコンテキストの取得
 	 * @method getContext
-	 * @return MemberExpression
+	 * @return gl glコンテキスト
 	 */
 	render.prototype.getContext = function () {
 		return this.gl;
 	};
 	
 	/**
-	 * Description
+	 * glフラッシュ
 	 * @method Flush
 	 */
 	render.prototype.Flush = function () {
@@ -104,18 +104,18 @@ var WGLRender;
 	};
 	
 	/**
-	 * Description
+	 * glスワップバッファ
 	 * @method swapBuffer
-	 * @return MemberExpression
+	 * @return RequestAnimationFrame リクエストアニメーションフレームファンクション
 	 */
 	render.prototype.swapBuffer = function () {
 		return this.rAF;
 	};
 
 	/**
-	 * Description
+	 * デプステストの有効無効の設定
 	 * @method Depth
-	 * @param {} enable
+	 * @param {Boolean} enable trueなら有効.falseなら無効.
 	 */
 	render.prototype.Depth = function (enable) {
 		if (enable === true) {
@@ -126,9 +126,9 @@ var WGLRender;
 	};
 	
 	/**
-	 * Description
+	 * BlendFuncの設定
 	 * @method Blend
-	 * @param {} enable
+	 * @param {Boolean} enable trueなら有効.falseなら無効.
 	 */
 	render.prototype.Blend = function (enable) {
 		if (enable === true) {
@@ -142,10 +142,10 @@ var WGLRender;
 	};
 
 	/**
-	 * Description
+	 * シェーダの作成
 	 * @method createShader
-	 * @param {} type
-	 * @param {} text
+	 * @param {String} type 作成するシェーダのタイプ
+	 * @param {String} text シェーダ文字列
 	 */
 	render.prototype.createShader = function (type, text) {
 		var shader,
@@ -172,10 +172,10 @@ var WGLRender;
 	};
 
 	/**
-	 * あいうえおカニ時
+	 * IDによりシェーダを作成する.
 	 * @method createShaderById
-	 * @param {} id
-	 * @return CallExpression
+	 * @param {String} id 対象エレメントのID
+	 * @return shader シェーダオブジェクト
 	 */
 	render.prototype.createShaderById = function (id) {
 		var ele = document.getElementById(id);
@@ -186,10 +186,11 @@ var WGLRender;
 	};
 
 	/**
-	 * Description
+	 * シェーダプログラムの作成
 	 * @method createProgram
-	 * @param {} vs
-	 * @param {} fs
+	 * @param {Object} vs 頂点シェーダオブジェクト
+	 * @param {Object} fs フラグメントシェーダオブジェクト
+	 * @return program シェーダプログラムオブジェクト
 	 */
 	render.prototype.createProgram = function (vs, fs) {
 		var program = this.gl.createProgram();
@@ -205,10 +206,10 @@ var WGLRender;
 	};
 
 	/**
-	 * Description
+	 * 頂点バッファオブジェクトの作成.
 	 * @method createVBO
-	 * @param {} data
-	 * @return vbo
+	 * @param {Array} data 頂点配列データ
+	 * @return vbo VBO
 	 */
 	render.prototype.createVBO = function (data) {
 		var vbo = this.gl.createBuffer();
@@ -219,9 +220,9 @@ var WGLRender;
 	};
 
 	/**
-	 * Description
+	 * インデックスバッファオブジェクトの作成
 	 * @method createIBO
-	 * @param {} data
+	 * @param {Array} data インデックス配列データ
 	 * @return ibo
 	 */
 	render.prototype.createIBO = function (data) {
@@ -233,11 +234,11 @@ var WGLRender;
 	};
 
 	/**
-	 * Description
+	 * アトリビュートの設定
 	 * @method setAttribute
-	 * @param {} vbo
-	 * @param {} attL
-	 * @param {} attS
+	 * @param {Object} vbo 頂点バッファオブジェクト
+	 * @param {Array} attL 頂点属性のインデックスのリスト
+	 * @param {Array} attS 頂点属性の要素数のリスト
 	 */
 	render.prototype.setAttribute = function (vbo, attL, attS) {
 		var i;
@@ -251,11 +252,11 @@ var WGLRender;
 	};
 
 	/**
-	 * Description
+	 * AttribuetLocationリストの取得
 	 * @method getAttribList
-	 * @param {} prg
-	 * @param {} namearray
-	 * @return location
+	 * @param {Object} prg シェーダプログラムオブジェクト
+	 * @param {Array} namearray IDリスト
+	 * @return location AttribuetLocationリスト
 	 */
 	render.prototype.getAttribList = function (prg, namearray) {
 		var i,
@@ -268,20 +269,20 @@ var WGLRender;
 
 
 	/**
-	 * Description
+	 * ライン幅の設定
 	 * @method lineWidth
-	 * @param {} w
+	 * @param {Number} w ライン幅
 	 */
 	render.prototype.lineWidth = function (w) {
 		this.gl.lineWidth(w);
 	};
 	
 	/**
-	 * Description
+	 * UnicormLocationのリストを取得
 	 * @method getUniformList
-	 * @param {} prg
-	 * @param {} namearray
-	 * @return location
+	 * @param {Object} prg シェーダプログラムオブジェクト
+	 * @param {Array} namearray IDリスト
+	 * @return location UnicormLocationのリスト
 	 */
 	render.prototype.getUniformList = function (prg, namearray) {
 		var i,
@@ -293,11 +294,11 @@ var WGLRender;
 	};
 
 	/**
-	 * Description
+	 * Uniform値の設定
 	 * @method setUniform
-	 * @param {} type
-	 * @param {} location
-	 * @param {} data
+	 * @param {String} type Uniformタイプ
+	 * @param {Number} location Uniform Location
+	 * @param {Object} data データ
 	 */
 	render.prototype.setUniform = function (type, location, data) {
 		switch (type) {
@@ -320,11 +321,11 @@ var WGLRender;
 	};
 
 	/**
-	 * Description
+	 * 描画.
 	 * @method drawArrays
-	 * @param {} type
-	 * @param {} index
-	 * @param {} primnum
+	 * @param {String} type 描画タイプ
+	 * @param {Number} index インデックス
+	 * @param {Number} primnum プリミティブ数
 	 */
 	render.prototype.drawArrays = function (type, index, primnum) {
 		switch (type) {
@@ -353,11 +354,11 @@ var WGLRender;
 	// SHADEROBJ
 	//------------------------------------------------------------------------------
 	/**
-	 * Description
+	 * シェーダオブジェクトの作成
 	 * @method createShaderObj
-	 * @param {} vs
-	 * @param {} fs
-	 * @return shaderobj
+	 * @param {String} vs 頂点シェーダID
+	 * @param {String} fs フラグメントシェーダID
+	 * @return ShaderObj シェーダオブジェクト
 	 */
 	render.prototype.createShaderObj = function (vs, fs) {
 		var shaderobj = new ShaderObj();
@@ -373,10 +374,10 @@ var WGLRender;
 	};
 
 	/**
-	 * Description
+	 * Uniformリストの取得
 	 * @method getShaderUniformList
-	 * @param {} shader
-	 * @param {} namearray
+	 * @param {ShaderObj} shader シェーダオブジェクト
+	 * @param {Array} namearray Unifrom ID リスト
 	 * @return CallExpression
 	 */
 	render.prototype.getShaderUniformList = function (shader, namearray) {
@@ -384,10 +385,10 @@ var WGLRender;
 	};
 
 	/**
-	 * Description
+	 * シェーダのセットアップ
 	 * @method setupShader
-	 * @param {} mesh
-	 * @param {} shader
+	 * @param {Object} mesh メッシュ
+	 * @param {ShaderObj} shader シェーダオブジェクト
 	 */
 	render.prototype.setupShader = function (mesh, shader) {
 		this.gl.useProgram(shader.program);
@@ -395,9 +396,9 @@ var WGLRender;
 	};
 
 	/**
-	 * Description
+	 * 前面の設定
 	 * @method frontFace
-	 * @param {} isccw
+	 * @param {Boolean} isccw trueなら反時計回りが表.falseなら時計回り.
 	 */
 	render.prototype.frontFace = function (isccw) {
 		this.gl.frontFace(this.gl.CCW);
@@ -407,11 +408,11 @@ var WGLRender;
 	// getMeshBoundingBox
 	//------------------------------------------------------------------------------
 	/**
-	 * Description
+	 * メッシュのBBoxを取得.
 	 * @method getMeshBoundingBox
-	 * @param {} mesh
-	 * @param {} bmin
-	 * @param {} bmax
+	 * @param {Object} mesh メッシュ
+	 * @param {Vector} bmin BBox最小値
+	 * @param {Vector} bmax BBox最大値
 	 * @return ObjectExpression
 	 */
 	render.prototype.getMeshBoundingBox = function (mesh, bmin, bmax) {
@@ -437,10 +438,10 @@ var WGLRender;
 	// setupMeshBoundingBox
 	//------------------------------------------------------------------------------
 	/**
-	 * Description
+	 * メッシュBBoxのセットアップ
 	 * @method setupMeshBoundingBox
-	 * @param {} mesh
-	 * @return ret
+	 * @param {Object} mesh メッシュ
+	 * @return ret BBox
 	 */
 	render.prototype.setupMeshBoundingBox = function (mesh) {
 		var i,
@@ -463,10 +464,10 @@ var WGLRender;
 	// MESHOBJ
 	//------------------------------------------------------------------------------
 	/**
-	 * Description
+	 * メッシュオブジェクトの作成
 	 * @method createMeshObj
-	 * @param {} data
-	 * @return mesh
+	 * @param {Object} data メッシュデータ
+	 * @return mesh メッシュオブジェクト
 	 */
 	render.prototype.createMeshObj = function (data) {
 		var mesh        = new MeshObj();
@@ -520,12 +521,12 @@ var WGLRender;
 	// createLineMesh (Cylinder)
 	//------------------------------------------------------------------------------
 	/**
-	 * Description
+	 * ラインメッシュの作成
 	 * @method createLineMesh
-	 * @param {} base
-	 * @param {} divide
-	 * @param {} radius
-	 * @return CallExpression
+	 * @param {Array} base 基準点リスト
+	 * @param {Number} divide 分割数
+	 * @param {Number} radius 半径
+	 * @return mesh メッシュオブジェクト
 	 */
 	render.prototype.createLineMesh = function (base, divide, radius) {
 		var qtn = new QtnIV(),
@@ -676,10 +677,10 @@ var WGLRender;
 	/**
 	 * Description
 	 * @method createGridMesh
-	 * @param {} gridsize
-	 * @param {} gridshift
-	 * @param {} gridcol
-	 * @return CallExpression
+	 * @param {Number} gridsize グリッドサイズ
+	 * @param {Number} gridshift グリッド間隔
+	 * @param {Number} gridcol グリッド色
+	 * @return mesh メッシュオブジェクト
 	 */
 	render.prototype.createGridMesh = function (gridsize, gridshift, gridcol) {
 		var i,
@@ -704,10 +705,10 @@ var WGLRender;
 	// createGridMesh
 	//------------------------------------------------------------------------------
 	/**
-	 * Description
+	 * 軸を示すギズモメッシュの作成
 	 * @method createGizmoMesh
-	 * @param {} size
-	 * @return mesh
+	 * @param {Number} size サイズ
+	 * @return mesh メッシュオブジェクト
 	 */
 	render.prototype.createGizmoMesh = function (size) {
 		var i,
@@ -745,13 +746,13 @@ var WGLRender;
 	// createPointMesh
 	//------------------------------------------------------------------------------
 	/**
-	 * Description
+	 * ポイントメッシュの作成
 	 * @method createPointMesh
-	 * @param {} base
-	 * @param {} rad
-	 * @param {} slices
-	 * @param {} stacks
-	 * @return mesh
+	 * @param {Array} base 頂点リスト
+	 * @param {Number} rad 半径
+	 * @param {Number} slices スライス数
+	 * @param {Number} stacks スタック数
+	 * @return mesh メッシュオブジェクト
 	 */
 	render.prototype.createPointMesh = function (base, rad, slices, stacks) {
 		var i,
@@ -880,9 +881,9 @@ var WGLRender;
 	// DrawMesh
 	//---------------------------------------------------------------------
 	/**
-	 * Description
+	 * メッシュ描画
 	 * @method drawMesh
-	 * @param {} mesh
+	 * @param {Object} mesh 描画するメッシュ
 	 */
 	render.prototype.drawMesh = function (mesh) {
 		var primnum     = 0,
@@ -919,8 +920,8 @@ var WGLRender;
 	/**
 	 * Description
 	 * @method drawMeshList
-	 * @param {} meshlist
-	 * @param {} result
+	 * @param {Array} meshlist メッシュリスト
+	 * @param {Array} result 描画した頂点数、ポリゴン数がpushされる
 	 */
 	render.prototype.drawMeshList = function (meshlist, result) {
 		var primnum    = 0,
