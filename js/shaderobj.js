@@ -6,7 +6,8 @@ var ShaderObj;
 (function () {
 	"use strict";
 	/**
-	 * Description
+	 * vertex shader, fragment shader, program のシェーダオブジェクト,<br>
+	 * uniform変数などのIDをまとめたオブジェクト.
 	 * @method shaderobj
 	 */
 	var shaderobj = function () {
