@@ -136,6 +136,10 @@
 
 			if (mouseState.Center) {
 				camera[i].addPos(0, 0, -movementY * multY );
+				if(camera[i].camPos[2] >= 0.0) {
+					camera[i].camPos[2] = -0.05;
+					return;
+				}
 				//camera[i].addAt(0,  0, -movementY * multY );
 			}
 
