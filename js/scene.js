@@ -16,9 +16,6 @@ Normalize, Sub */
 		mesh_shader    = null,
 		scene          = {},
 		model_id       = 0,
-		openstate      = 0,
-		openviewdirstate      = 0,
-		openviewtypestate     = 0,
 		consolestate   = 0;
 	
 	/**
@@ -763,13 +760,7 @@ Normalize, Sub */
 	function openSwitch(e) {
 		var openwindow = document.getElementById('OpenWindow');
 		$toggle(openwindow, 100);
-		if (openstate === 0) {
-			window.scene.groupTab(false);
-			openstate = 1;
-		} else {
-			//window.scene.groupTab(true);
-			openstate = 0;
-		}
+		window.scene.groupTab(false);
 	}
 	
 	/**
@@ -780,11 +771,7 @@ Normalize, Sub */
 	function openViewDirection(e) {
 		var viewdir = document.getElementById('ViewDirection');
 		$toggle(viewdir, 100);
-		if (openviewdirstate === 0) {
-			openviewdirstate = 1;
-		} else {
-			openviewdirstate = 0;
-		}
+		window.scene.groupTab(false);
 	}
 	
 	/**
@@ -795,12 +782,7 @@ Normalize, Sub */
 	function openViewType(e) {
 		var viewtype = document.getElementById('ViewType');
 		$toggle(viewtype, 100);
-		if (openviewtypestate === 0) {
-			window.scene.groupTab(false);
-			openviewtypestate = 1;
-		} else {
-			openviewtypestate = 0;
-		}
+		window.scene.groupTab(false);
 	}
 	
 	/**
@@ -914,17 +896,35 @@ Normalize, Sub */
 		}, {
 			'groupTab' : { min : '0px', max : '280px' }
 		}, 'Groups');
+		groupTab(false);
 
 		consoleTab = window.animtab.create('bottom', {
 			'bottomTab' : { min : '10px', max : '400' }
 		}, {
 			'consoleOutput' : { min : '0px', max : '400px' }
-		}, 'console');
+		}, 'DataView');
 		consoleTab(false);
 
 		window.scene.consoleTab        = consoleTab;
 		window.scene.propertyTab       = propertyTab;
-		window.scene.groupTab          = groupTab;
+		//window.scene.groupTab          = groupTab;
+		/* event hook */
+		function hideMenu(visible) {
+			var openwindow = document.getElementById('OpenWindow'),
+				viewdir = document.getElementById('ViewDirection'),
+				viewtype = document.getElementById('ViewType');
+			$hide(openwindow);
+			$hide(viewdir);
+			$hide(viewtype);
+		}
+		document.getElementById('leftTab').addEventListener('click', function(ev) {
+			hideMenu(false);
+		});
+		window.scene.groupTab = function (visible) {
+			hideMenu(false);
+			groupTab(visible);
+		}
+
 		setTimeout(startGL, 50);
 	}
 	
