@@ -16,9 +16,6 @@ Normalize, Sub */
 		mesh_shader    = null,
 		scene          = {},
 		model_id       = 0,
-		openstate      = 0,
-		openviewdirstate      = 0,
-		openviewtypestate     = 0,
 		consolestate   = 0;
 	
 	/**
@@ -297,6 +294,18 @@ Normalize, Sub */
 	
 	/**
 	 * Description
+	 * @method sideViewChange
+	 * @param {} mode
+	 * @return FunctionExpression
+	 */
+	function viewModeChange(mode) {
+		return function (e) {
+			camera.ViewMode(mode);
+		};
+	}
+	
+	/**
+	 * Description
 	 * @method getViewProjMatrix
 	 * @return vpMatrix
 	 */
@@ -305,9 +314,9 @@ Normalize, Sub */
 			vpMatrix;
 		camZ = camera.getCamPosZ();
 		if (camZ === 0) {
-			vpMatrix = camera.getViewMatrix(90, canvas.width / canvas.height, 0.1, 2560);
+			vpMatrix = camera.getViewMatrix(60, canvas.width / canvas.height, 0.1, 2560);
 		} else {
-			vpMatrix = camera.getViewMatrix(90, canvas.width / canvas.height, camZ * 0.002, camZ * 10.0);
+			vpMatrix = camera.getViewMatrix(60, canvas.width / canvas.height, camZ * 0.02, camZ * 50.0);
 		}
 		return vpMatrix;
 	}
@@ -763,13 +772,7 @@ Normalize, Sub */
 	function openSwitch(e) {
 		var openwindow = document.getElementById('OpenWindow');
 		$toggle(openwindow, 100);
-		if (openstate === 0) {
-			window.scene.groupTab(false);
-			openstate = 1;
-		} else {
-			//window.scene.groupTab(true);
-			openstate = 0;
-		}
+		window.scene.groupTab(false);
 	}
 	
 	/**
@@ -780,11 +783,7 @@ Normalize, Sub */
 	function openViewDirection(e) {
 		var viewdir = document.getElementById('ViewDirection');
 		$toggle(viewdir, 100);
-		if (openviewdirstate === 0) {
-			openviewdirstate = 1;
-		} else {
-			openviewdirstate = 0;
-		}
+		window.scene.groupTab(false);
 	}
 	
 	/**
@@ -795,12 +794,7 @@ Normalize, Sub */
 	function openViewType(e) {
 		var viewtype = document.getElementById('ViewType');
 		$toggle(viewtype, 100);
-		if (openviewtypestate === 0) {
-			window.scene.groupTab(false);
-			openviewtypestate = 1;
-		} else {
-			openviewtypestate = 0;
-		}
+		window.scene.groupTab(false);
 	}
 	
 	/**
@@ -847,26 +841,29 @@ Normalize, Sub */
 	 */
 	function init() {
 		var i,
-			openswitch  = document.getElementById('OpenSwitch'),
+			openswitch     = document.getElementById('OpenSwitch'),
 			viewdirection  = document.getElementById('ViewDirectionSwitch'),
-			viewtype     = document.getElementById('ViewTypeSwitch'),
-			openstl     = document.getElementById('OpenSTL'),
-			opencsv     = document.getElementById('OpenCSV'),
-			addline     = document.getElementById('AddLine'),
-			addpoint    = document.getElementById('AddPoint'),
-			pickup      = document.getElementById('pickup'),
-			sideviewx   = document.getElementById('viewLeft'),
-			sideviewy   = document.getElementById('viewTop'),
-			sideviewz   = document.getElementById('viewFront'),
-			sideviewx_   = document.getElementById('viewRight'),
-			sideviewy_   = document.getElementById('viewBottom'),
-			sideviewz_   = document.getElementById('viewBack'),
+			viewtype       = document.getElementById('ViewTypeSwitch'),
+			viewortho      = document.getElementById('viewOrtho'),
+			viewpers       = document.getElementById('viewPers'),
+			openstl        = document.getElementById('OpenSTL'),
+			opencsv        = document.getElementById('OpenCSV'),
+			addline        = document.getElementById('AddLine'),
+			addpoint       = document.getElementById('AddPoint'),
+			pickup         = document.getElementById('pickup'),
+			sideviewx      = document.getElementById('viewLeft'),
+			sideviewy      = document.getElementById('viewTop'),
+			sideviewz      = document.getElementById('viewFront'),
+			sideviewx_     = document.getElementById('viewRight'),
+			sideviewy_     = document.getElementById('viewBottom'),
+			sideviewz_     = document.getElementById('viewBack'),
 			
-			deletegroup = document.getElementById('DeleteGroup'),
+			deletegroup    = document.getElementById('DeleteGroup'),
 			propertyTab,
 			groupTab,
 			consoleTab;
 
+		//init canvas
 		canvas = document.getElementById('canvas');
 
 		//init render
@@ -901,6 +898,9 @@ Normalize, Sub */
 		sideviewy_.onclick = (sideViewChange)("y-");
 		sideviewz_.onclick = (sideViewChange)("z-");
 		
+		viewortho.onclick = (viewModeChange)("ortho");
+		viewpers.onclick  = (viewModeChange)("pers");
+		
 		// Create Tab
 		propertyTab = window.animtab.create('right', {
 			'rightTab' : { min : '0px', max : 'auto' }
@@ -914,17 +914,35 @@ Normalize, Sub */
 		}, {
 			'groupTab' : { min : '0px', max : '280px' }
 		}, 'Groups');
+		groupTab(false);
 
 		consoleTab = window.animtab.create('bottom', {
 			'bottomTab' : { min : '10px', max : '400' }
 		}, {
 			'consoleOutput' : { min : '0px', max : '400px' }
-		}, 'console');
+		}, 'DataView');
 		consoleTab(false);
 
 		window.scene.consoleTab        = consoleTab;
 		window.scene.propertyTab       = propertyTab;
-		window.scene.groupTab          = groupTab;
+		//window.scene.groupTab          = groupTab;
+		/* event hook */
+		function hideMenu(visible) {
+			var openwindow = document.getElementById('OpenWindow'),
+				viewdir = document.getElementById('ViewDirection'),
+				viewtype = document.getElementById('ViewType');
+			$hide(openwindow);
+			$hide(viewdir);
+			$hide(viewtype);
+		}
+		document.getElementById('leftTab').addEventListener('click', function(ev) {
+			hideMenu(false);
+		});
+		window.scene.groupTab = function (visible) {
+			hideMenu(false);
+			groupTab(visible);
+		}
+
 		setTimeout(startGL, 50);
 	}
 	

@@ -32,6 +32,7 @@ var test_time = 0;
 		this.lerpState         = false;
 		this.lerpTime          = 0;
 		this.lerpTimeDelta     = 0;
+		this.projmode          = 0;
 	};
 
 	/**
@@ -110,6 +111,24 @@ var test_time = 0;
 		}
 
 	};
+
+	/**
+	 * Description
+	 * @method ViewMode
+	 * @param {} type
+	 */
+	camera.prototype.ViewMode = function (mode) {
+		if (mode === 'pers') {
+			this.projmode = 0;
+		}
+
+		if (mode === 'ortho') {
+			this.projmode = 1;
+		}
+
+	};
+
+
 	/**
 	 * Description
 	 * @method pos
@@ -275,39 +294,21 @@ var test_time = 0;
 			tMatrix  = mtx.identity(mtx.create()),
 			vpMatrix = mtx.identity(mtx.create()),
 			vMatrix  = mtx.identity(mtx.create()),
-			pMatrix  = mtx.identity(mtx.create());
+			pMatrix  = mtx.identity(mtx.create()),
+			dist     = 1;
 		mtx.lookAt(this.camPos, this.camAt, [0, 1, 0], vMatrix);
-		mtx.perspective(fov, aspect, near, far, pMatrix);
-		//mtx.ortho(-screen[0] screen[0], -screen[1], screen[1], near, far, pMatrix);
-		//mtx.ortho(-1, 1, -1, 1, near, far, pMatrix);
+		if (this.projmode === 0) {
+			mtx.perspective(fov, aspect, near, far, pMatrix);
+		} else {
+			dist = Distance(this.camPos, this.camAt);
+			mtx.ortho(-dist * aspect, dist * aspect, dist, -dist, -far, far, pMatrix);
+		}
 		
 		mtx.multiply(pMatrix, vMatrix, vpMatrix);
 		
 		mtx.translate(tMatrix, this.camWorldPos,  tMatrix);
 		mtx.multiply(vpMatrix, this.RotateMatrix, vpMatrix);
 		mtx.multiply(vpMatrix, tMatrix,           vpMatrix);
-		return vpMatrix;
-	};
-
-	/**
-	 * Description
-	 * @method getViewRotateMatrix
-	 * @param {} fov
-	 * @param {} aspect
-	 * @param {} near
-	 * @param {} far
-	 * @return vpMatrix
-	 */
-	camera.prototype.getViewRotateMatrix = function (fov, aspect, near, far) {
-		var mtx      = new MatIV(),
-			tMatrix  = mtx.identity(mtx.create()),
-			vpMatrix = mtx.identity(mtx.create()),
-			vMatrix  = mtx.identity(mtx.create()),
-			pMatrix  = mtx.identity(mtx.create());
-		mtx.lookAt(this.camPos, this.camAt, [0, 1, 0], vMatrix);
-		mtx.perspective(fov, aspect, near, far, pMatrix);
-		mtx.multiply(pMatrix, vMatrix, vpMatrix);
-		mtx.multiply(vpMatrix, this.RotateMatrix, vpMatrix);
 		return vpMatrix;
 	};
 
