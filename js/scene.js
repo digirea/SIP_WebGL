@@ -954,7 +954,6 @@ Normalize, Sub */
 	window.scene.selectTreeNode    = selectTreeNode;
 	window.scene.updateconsole     = updateconsole;
 	window.scene.delMesh           = delMesh;
-	window.scene.delData           = delData; //datatree.delData ?
 	
 	window.scene.KickDog           = KickDog;
 }(window.loadSTLB));
