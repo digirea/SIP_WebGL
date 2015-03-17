@@ -103,7 +103,7 @@
 			console.log(moveX, moveY);
 			
 			//pick
-			if(Math.abs(moveX) < 10 && Math.abs(moveY) < 10) {
+			if(moveX < 5 && moveY < 5) {
 				window.scene.Pick(e.clientX, e.clientY);
 			}
 		}
@@ -130,8 +130,8 @@
 		if (prevEvent) {
 			movementX = e.clientX - prevEvent.clientX;
 			movementY = e.clientY - prevEvent.clientY;
-			moveX += movementX;
-			moveY += movementY;
+			moveX += Math.abs(movementX);
+			moveY += Math.abs(movementY);
 		}
 		if (camera.length <= 0) {
 			return;
