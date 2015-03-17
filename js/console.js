@@ -72,8 +72,6 @@
 				headerhtml += '<OPTION value="X">X</OPTION>';
 				headerhtml += '<OPTION value="Y">Y</OPTION>';
 				headerhtml += '<OPTION value="Z">Z</OPTION>';
-				headerhtml += '<OPTION value="COLOR">COLOR</OPTION>';
-				headerhtml += '<OPTION value="INDEX">INDEX</OPTION>';
 				headerhtml += '<OPTION value="URL">URL</OPTION>';
 				headerhtml += '</SELECT>';
 				header.push(headerhtml);
