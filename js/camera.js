@@ -225,29 +225,36 @@ var test_time = 0;
 		var len = 0,
 			i,
 			temp,
-			tempmin = [1,1,1],
-			tempmax = [1,1,1],
-			maxscale = 0;
+			tempmin    = [1,1,1],
+			tempmax    = [1,1,1],
+			scalesign  = [1,1,1],
+			maxscale   = 0;
 		
 		if (scale) {
-			for(i = 0 ; i < scale.length; i++) {
+			for (i = 0 ; i < scale.length; i++) {
 				temp = Math.abs(parseFloat(scale[i]));
-				if(maxscale < temp) {
+				if (maxscale < temp) {
 					maxscale = temp;
+				}
+				
+				//create sig
+				temp = parseFloat(scale[i]);
+				if (temp < 0) {
+					scalesign[i] = -1;
 				}
 			}
 		}
 		
-		if(maxscale === 0) {
+		if (maxscale === 0) {
 			maxscale = 1;
 		}
 
-		tempmin[0] = min[0] * maxscale * Math.sign(parseFloat(scale[0]));
-		tempmin[1] = min[1] * maxscale * Math.sign(parseFloat(scale[1]));
-		tempmin[2] = min[2] * maxscale * Math.sign(parseFloat(scale[2]));
-		tempmax[0] = max[0] * maxscale * Math.sign(parseFloat(scale[0]));
-		tempmax[1] = max[1] * maxscale * Math.sign(parseFloat(scale[1]));
-		tempmax[2] = max[2] * maxscale * Math.sign(parseFloat(scale[2]));
+		tempmin[0] = min[0] * maxscale * scalesign[0];
+		tempmin[1] = min[1] * maxscale * scalesign[1];
+		tempmin[2] = min[2] * maxscale * scalesign[2];
+		tempmax[0] = max[0] * maxscale * scalesign[0];
+		tempmax[1] = max[1] * maxscale * scalesign[1];
+		tempmax[2] = max[2] * maxscale * scalesign[2];
 
 		this.camWorldPosStart[0]   = this.camWorldPos[0];
 		this.camWorldPosStart[1]   = this.camWorldPos[1];
