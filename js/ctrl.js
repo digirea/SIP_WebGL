@@ -131,21 +131,17 @@
 
 			if (mouseState.Left) {
 				var rot = camera[i].addRotate(-movementX * multrotate, movementY * multrotate, 0);
-				//console.log( rot[1] / 3.141592 );
 			}
 
 			if (mouseState.Center) {
 				camera[i].addPos(0, 0, -movementY * multY );
-				if(camera[i].camPos[2] >= 0.0) {
+				if (camera[i].camPos[2] >= 0.0) {
 					camera[i].camPos[2] = -0.05;
 					return;
 				}
-				//camera[i].addAt(0,  0, -movementY * multY );
 			}
 
 			if (mouseState.Right) {
-				//camera[i].addPos(0, 0, -movementY * mult);
-				//camera[i].addAt(0, 0, -movementY * mult);
 				camera[i].addPos(movementX * multX, 0, 0);
 				camera[i].addPos(0, movementY * multY, 0);
 				camera[i].addAt(movementX * multX, 0, 0);
@@ -176,25 +172,15 @@
 			if (e.wheelDelta) {
 				delta = e.wheelDelta * rate * 1.0;
 			}
-			if( e.detail) {
+			if ( e.detail) {
 				delta = -e.detail    * rate * 40.0
 				
 			}
 			camera[i].addPos(0, 0, delta);
-			if(camera[i].camPos[2] >= 0.0) {
+			if (camera[i].camPos[2] >= 0.0) {
 				camera[i].camPos[2] = -0.05;
 				return;
 			}
-			
-			//update coef
-			/*
-			if(delta < 0) {
-				multWheelCoef *= (1.0 + 0.02);
-			}
-			if(delta > 0) {
-				multWheelCoef *= (1.0 - 0.02);
-			}
-			*/
 		}
 		e.preventDefault();
 		return false;
