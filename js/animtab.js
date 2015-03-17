@@ -9,11 +9,11 @@
 		isMoving = {};
 	
 	/**
-	 * Description
+	 * key, valueを与えると連想配列で返す
 	 * @method to_json
-	 * @param {} key
-	 * @param {} value
-	 * @return json
+	 * @param {Object} key キー
+	 * @param {Object} value 値
+	 * @return json 連祖配列
 	 */
 	function to_json(key, value) {
 		var json = {};
@@ -22,10 +22,10 @@
 	}
 	
 	/**
-	 * Description
+	 * "px"付きの文字列からpxを取り数値文字列として返す.
 	 * @method to_num
-	 * @param {} pixelStr
-	 * @return CallExpression
+	 * @param {String} pixelStr px付き文字列
+	 * @return CallExpression 数値文字列
 	 */
 	function to_num(pixelStr) {
 		return pixelStr.split('px').join('');
@@ -33,13 +33,13 @@
 	
 	/// initialize dialog and set separator 
 	/**
-	 * Description
+	 * ドラッグ可能なセパレータをセットアップ
 	 * @method setupSeparator
-	 * @param {} direction
-	 * @param {} separator
-	 * @param {} button
-	 * @param {} targets
-	 * @param {} whstr
+	 * @param {String} direction 方向文字列
+	 * @param {Element} separator セパレータエレメント
+	 * @param {Element} button ボタンエレメント
+	 * @param {Array} targets ターゲットリスト
+	 * @param {String} whstr 幅高さ文字列
 	 */
 	function setupSeparator(direction, separator, button, targets, whstr) {
 		var dragging = "no", // "no", "ready", "yes"
@@ -73,11 +73,6 @@
 			}
 		}
 		
-		/**
-		 * Description
-		 * @method onmousedown
-		 * @param {} e
-		 */
 		separator.onmousedown = function (e) {
 			var target,
 				id;
@@ -92,11 +87,7 @@
 				}
 			}
 		};
-		/**
-		 * Description
-		 * @method onmouseover
-		 * @param {} e
-		 */
+		
 		separator.onmouseover = function (e) {
 			//e.preventDefault();
 			
@@ -167,15 +158,15 @@
 	}
 	
 	/**
-	 * Description
+	 * タブの作成
 	 * @method create
-	 * @param {} direction
-	 * @param {} button
-	 * @param {} targets
-	 * @param {} textlabel
-	 * @param {} cbopen
-	 * @param {} cbclose
-	 * @return createAnimateButton
+	 * @param {String} direction 方向文字列
+	 * @param {Element} button ボタンエレメント
+	 * @param {Array} targets ターゲットリスト
+	 * @param {String} textlabel テキストラベル
+	 * @param {Function} cbopen オープンコールバック
+	 * @param {Function} cbclose クローズコールバック
+	 * @return createAnimateButton タブ開閉ファンクション
 	 */
 	function create(direction, button, targets, textlabel, cbopen, cbclose) {
 		var buttonElem = document.createElement("input"),
@@ -253,9 +244,9 @@
 		button[buttonID].max = buttonMax;
 		
 		/**
-		 * Description
+		 * アニメーション付きで開閉するタブボタンを作る
 		 * @method createAnimateButton
-		 * @param {} isOpen
+		 * @param {Boolean} isOpen trueの場合タブが開く.falseの場合タブが閉じる.
 		 */
 		function createAnimateButton(isOpen) {
 			var i = 0,
@@ -279,48 +270,25 @@
 				state = 0;
 			}
 			
-			/**
-			 * Description
-			 * @method beforeTarget
-			 */
 			function beforeTarget() {
 				state = 2;
 			}
 			
-			/**
-			 * Description
-			 * @method afterTarget
-			 */
 			function afterTarget() {
 				targetElem.style.overflow = initialOverflow[id];
 				state = 0;
 			}
 			
-			/**
-			 * Description
-			 * @method beforeButton
-			 */
 			function beforeButton() {
 				//buttonElem.value = afterLabel;
 			}
 			
-			/**
-			 * Description
-			 * @method afterButton
-			 */
 			function afterButton() {
 				//buttonElem.value = beforeLabel;
 			}
 			
-			/**
-			 * Description
-			 * @method beforeSep
-			 */
 			function beforeSep() {}
-			/**
-			 * Description
-			 * @method afterSep
-			 */
+
 			function afterSep() {}
 			
 			for (id in targets) {
@@ -354,10 +322,10 @@
 		setupSeparator(direction, separatorElem, button, targets, whstr);
 		
 		/**
-		 * Description
+		 * タブボタンの作成
 		 * @method createButton
-		 * @param {} direction
-		 * @param {} targets
+		 * @param {String} direction 方向文字列
+	 	 * @param {Array} targets ターゲットリスト
 		 */
 		function createButton(direction, targets) {
 			separatorElem.addEventListener('click', function () {
