@@ -8,11 +8,11 @@
 		changedValueFuncs = [];
 	
 	/**
-	 * Description
+	 * アイテムノードの作成
 	 * @method makeItemNode
-	 * @param {} name
-	 * @param {} text
-	 * @param {} top
+	 * @param {String} name アイテム名
+	 * @param {String} text テキスト
+	 * @param {Boolean} top trueの場合はトッププロパティを追加します
 	 * @return itemNode
 	 */
 	function makeItemNode(name, text, top) {
@@ -35,12 +35,12 @@
 	}
 	
 	/**
-	 * Description
+	 * テキストアイテムノードの作成
 	 * @method makeItemTextNode
-	 * @param {} name
-	 * @param {} text
-	 * @param {} node
-	 * @param {} type
+	 * @param {String} name アイテム名
+	 * @param {String} text テキスト
+	 * @param {node} node 入力ノード
+	 * @param {String} type テキストノードタイプ(空の場合は"text"になります)
 	 * @return itemNode
 	 */
 	function makeItemTextNode(name, text, node, type) {
@@ -61,10 +61,10 @@
 		itemNode.appendChild(textNode);
 		
 		/**
-		 * Description
+		 * テキスト値変更
 		 * @method valChange
-		 * @param {} data
-		 * @param {} txt
+		 * @param {Element} data 変更されたテキストノードエレメント
+		 * @param {String} txt 変更後のテキスト
 		 * @return FunctionExpression
 		 */
 		function valChange(data, txt) {
@@ -85,12 +85,12 @@
 	}
 	
 	/**
-	 * Description
+	 * 配列アイテムの数ノードの作成
 	 * @method makeItemArrayNumNode
-	 * @param {} name
-	 * @param {} text
-	 * @param {} node
-	 * @return itemNode
+	 * @param {String} name ノード名
+	 * @param {String} text テキスト
+	 * @param {node} node 入力ノード
+	 * @return itemNode 作成したノード
 	 */
 	function makeItemArrayNumNode(name, text, node) {
 		var itemNode = document.createElement('div'),
@@ -129,13 +129,13 @@
 	}
 	
 	/**
-	 * Description
+	 * ベクタアイテムノードの作成
 	 * @method makeItemVecNode
-	 * @param {} name
-	 * @param {} vals
-	 * @param {} node
-	 * @param {} n
-	 * @return itemNode
+	 * @param {String} name ノード名
+	 * @param {Array} vals 値リスト
+	 * @param {node} node 入力ノード
+	 * @param {Number} n ベクタの要素数
+	 * @return itemNode 作成したノード
 	 */
 	function makeItemVecNode(name, vals, node, n) {
 		var itemNode = document.createElement('div'),
@@ -149,11 +149,11 @@
 		itemNode.appendChild(nameNode);
 
 		/**
-		 * Description
+		 * ベクタアイテムノードの値変更
 		 * @method valChange
-		 * @param {} data
-		 * @param {} txt
-		 * @param {} i
+		 * @param {Element} data 変更されたノードエレメント
+		 * @param {String} txt 変更後のテキスト
+		 * @param {Number} i ベクタのインデックス
 		 * @return FunctionExpression
 		 */
 		function valChange(data, txt, i) {
@@ -181,10 +181,6 @@
 	}
 	
 	/**
-	 * Description
-	 * @method doApply
-	 * @param {} data
-	 */
 	function doApply(data) {
 		var i,
 			func;
@@ -198,23 +194,20 @@
 		}
 		changedValueFuncs = [];
 	}
+	 */
 	
 	
 	/**
-	 * Description
-	 * @method doDelete
-	 * @param {} data
-	 */
 	function doDelete(data) {
 		console.log(currentData)
 	}
+	 */
 	
 
-	// data - name, varname,
 	/**
-	 * Description
+	 * プロパティの表示.
 	 * @method showProperty
-	 * @param {} data
+	 * @param {Data} data 表示データ
 	 */
 	function showProperty(data) {
 		//console.log(data);
@@ -234,22 +227,6 @@
 			applyButton  = document.getElementById('ApplyProperty'),
 			deleteButton = document.getElementById('DeleteProperty');
 		
-		/*
-		if (data.name !== 'root') {
-			applyButton.style.display  = "block";
-			deleteButton.style.display = "block";
-			//alphavalue.style.display   = "block";
-			applyButton.onclick        = doApply;
-			deleteButton.onclick       = doDelete;
-		} else {
-			applyButton.style.display  = "none";
-			deleteButton.style.display = "none";
-			//alphavalue.style.display   = "none";
-			applyButton.onclick        = null;
-			deleteButton.onclick       = null;
-		}
-		*/
-		
 		currentData = data;
 		changedValueFuncs = []; // clear
 		to.innerHTML = ''; // clear
@@ -264,11 +241,11 @@
 		}
 		
 		/**
-		 * Description
+		 * 配列アイテムの追加
 		 * @method addArrayItem
-		 * @param {} inode
-		 * @param {} n
-		 * @return itemNode
+		 * @param {node} inode 入力ノード
+		 * @param {Number} n 入力数
+		 * @return itemNode 作成されたノード
 		 */
 		function addArrayItem(inode, n) {
 			var itemNode;
@@ -288,10 +265,10 @@
 			return itemNode;
 		}
 		/**
-		 * Description
+		 * アイテムの追加
 		 * @method addItems
-		 * @param {} inode
-		 * @return itemNode
+		 * @param {node} inode 入力ノード
+		 * @return itemNode 作成されたノード
 		 */
 		function addItems(inode) {
 			var itemNode;
@@ -328,7 +305,7 @@
 	}
 	
 	/**
-	 * Description
+	 * プロパティリストビューの初期化
 	 * @method init
 	 */
 	function init() {
