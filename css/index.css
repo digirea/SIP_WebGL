@@ -141,8 +141,9 @@ body {
 	z-index: 100;
 }
 
-#hstable { 
-	height          :400px;
+#hstable {
+	top :  35px;
+	height          :365px;
 	background-color:rgba(200, 200, 100, 1.0);
 }
 
@@ -235,11 +236,11 @@ DustBox{
 
 
 #AddLine {
-	/*position:absolute;
-	right:150px;
-	top:28px;*/
-	margin: 10px;
-	width: 150px;
+	position:absolute;
+	
+	left : 145px;
+	margin: 4px;
+	width: 130px;
 	height:25px;
 	background-color:#e50e78;
 	color:#FFF;
@@ -247,11 +248,11 @@ DustBox{
 
 
 #AddPoint {
-	/*position:absolute;
-	right:150px;
-	top:28px;*/
-	margin: 10px;
-	width: 150px;
+	position:absolute;
+	
+	left : 5px;
+	margin: 4px;
+	width: 130px;
 	height:25px;
 	background-color:#155e98;
 	color:#FFF;
