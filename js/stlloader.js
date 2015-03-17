@@ -1,4 +1,4 @@
-/*jslint devel:true*/
+﻿/*jslint devel:true*/
 /*global DataView, FileReader, Float32Array, ArrayBuffer */
 
 /* ported SimpleSTLB.h */
@@ -10,11 +10,11 @@
 			filename = '';
 
 	/**
-	 * Description
+	 * 法線の計算.
 	 * @method calcNormal
-	 * @param {} pos
-	 * @param {} i
-	 * @return normal
+	 * @param {Array} pos 頂点配列
+	 * @param {Number} i 頂点インデックス.
+	 * @return normal 法線.
 	 */
 	function calcNormal(pos, i) {
 		var normal = [0, 0, 0],
@@ -58,10 +58,10 @@
 
 
 	/**
-	 * Description
+	 * アスキーSTLの読み込み.
 	 * @method loadbinSTLA
-	 * @param {} dataview
-	 * @return ret
+	 * @param {DataView} dataview 読み込み先データビュー
+	 * @return data 読み込んだデータ
 	 */
 	function loadbinSTLA(dataview) {
 		var i              = 0,
@@ -147,10 +147,10 @@
 	///
 	///---------------------------------------------------------------------------
 	/**
-	 * Description
+	 * バイナリSTLの読み込み.
 	 * @method loadbinSTLB
-	 * @param {} dataview
-	 * @return ObjectExpression
+	 * @param {DataView} dataview 読み込み先データビュー
+	 * @return data 読み込んだデータ
 	 */
 	function loadbinSTLB(dataview) {
 		var i           = 0,
@@ -253,10 +253,10 @@
 	}
 	
 	/**
-	 * Description
+	 * STLデータの読み込み.
 	 * @method loadSTLInternal
-	 * @param {} dataview
-	 * @return CallExpression
+	 * @param {DataView} dataview 読み込み先データビュー
+	 * @return data 読み込んだデータ.
 	 */
 	function loadSTLInternal(dataview) {
 		var i           = 0,
@@ -286,10 +286,10 @@
 	}
 	
 	/**
-	 * Description
+	 * バイナリを開き,STLの読み込みを開始する.
 	 * @method openBinary
-	 * @param {} evt
-	 * @param {} callback
+	 * @param {Event} evt ファイル入力イベント
+	 * @param {Function} callback 読み込み後に呼ばれるコールバック.
 	 */
 	function openBinary(evt, callback) {
 		var files  = evt.target.files,
@@ -303,10 +303,9 @@
 		}
 
 		/**
-		 * Description
+		 * 読み込み終了コールバック
 		 * @method onloadend
-		 * @param {} e
-
+		 * @param {Event} e イベント
 		 */
 		fr.onloadend = function (e) {
 			var data    = e.target.result,
@@ -320,9 +319,9 @@
 		};
 
 		/**
-		 * Description
+		 * エラー時に呼ばれるコールバック
 		 * @method onerror
-		 * @param {} error
+		 * @param {Error} error エラー
 		 */
 		fr.onerror = function (error) {
 			alert('Brewsor not support FileReader.');
