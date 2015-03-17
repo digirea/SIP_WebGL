@@ -330,14 +330,14 @@ var test_time = 0;
 
 	/**
 	 * Description
-	 * @method getViewMatrix
+	 * @method getViewProjMatrix
 	 * @param {} fov
 	 * @param {} aspect
 	 * @param {} near
 	 * @param {} far
 	 * @return vpMatrix
 	 */
-	camera.prototype.getViewMatrix = function (fov, aspect, near, far) {
+	camera.prototype.getViewProjMatrix = function (fov, aspect, near, far) {
 		var mtx      = new MatIV(),
 			tMatrix  = mtx.identity(mtx.create()),
 			vpMatrix = mtx.identity(mtx.create()),
@@ -358,6 +358,25 @@ var test_time = 0;
 		mtx.multiply(vpMatrix, this.RotateMatrix, vpMatrix);
 		mtx.multiply(vpMatrix, tMatrix,           vpMatrix);
 		return vpMatrix;
+	};
+
+	/**
+	 * Description
+	 * @method getViewMatrix
+	 * @return vMatrix
+	 */
+	camera.prototype.getViewMatrix = function () {
+		var mtx      = new MatIV(),
+			vMatrix  = mtx.identity(mtx.create()),
+			tMatrix  = mtx.identity(mtx.create()),
+			vMatrix  = mtx.identity(mtx.create());
+
+		mtx.lookAt(this.camPos, this.camAt, [0, 1, 0], vMatrix);
+		
+		mtx.translate(tMatrix, this.camWorldPos,  tMatrix);
+		mtx.multiply(vMatrix, this.RotateMatrix, vMatrix);
+		mtx.multiply(vMatrix, tMatrix,           vMatrix);
+		return vMatrix;
 	};
 
 	/**

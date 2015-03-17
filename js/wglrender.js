@@ -15,6 +15,8 @@ var WGLRender;
 		this.canvas = null;
 		this.rAF    = null;
 		this.mtx    = new MatIV();
+		this.eyeDir = [0, 0, 0, 1];
+		this.vMat   = this.mtx.identity(this.mtx.create());
 		this.vpMat  = this.mtx.identity(this.mtx.create());
 	};
 
@@ -26,6 +28,16 @@ var WGLRender;
 	render.prototype.setViewProjection = function (m) {
 		this.vpMat = m;
 	};
+
+	/**
+	 * ビュー行列設定
+	 * @method setViewProjection
+	 * @param {} m
+	 */
+	render.prototype.setView = function (m) {
+		this.vMat = m;
+	};
+	
 
 	/**
 	 * 初期化
@@ -876,6 +888,9 @@ var WGLRender;
 		return lMatrix;
 	}
 	
+	render.prototype.setupEyeDir = function (pos, at) {
+		this.eyeDir = Normalize(Sub(pos, at));
+	}
 	
 	//---------------------------------------------------------------------
 	// DrawMesh
@@ -887,23 +902,29 @@ var WGLRender;
 	 */
 	render.prototype.drawMesh = function (mesh) {
 		var primnum     = 0,
-			lMatrix     = this.getLocalMatrixFromMesh(mesh),
+			wMatrix     = this.getLocalMatrixFromMesh(mesh),
+			lMatrix     = this.mtx.identity(this.mtx.create()),
 			program     = mesh.shader.program,
 			shader      = mesh.shader,
-			uniformname = ['mvpMatrix', 'uColor', 'Radius'],
+			uniformname = ['mvpMatrix', 'vMatrix', 'vpMatrix', 'wMatrix', 'eyeDir', 'uColor', 'Radius'],
 			attLocation = [],
+			ed          = [this.eyeDir[0], this.eyeDir[1], this.eyeDir[2], 0],
 			uniLocation = [];
 
 		//create trasnfrom matrix
-		this.mtx.multiply(this.vpMat, lMatrix, lMatrix);
+		this.mtx.multiply(this.vpMat, wMatrix, lMatrix);
 
 		//setup shader parameter
 		this.gl.useProgram(program);
 		uniLocation = this.getShaderUniformList(shader, uniformname);
 		attLocation = this.getAttribList(program, mesh.attrnames);
 		if (uniLocation[0] !== null) { this.setUniform('Matrix4fv', uniLocation[0], lMatrix); }
-		if (uniLocation[1] !== null) { this.setUniform('4fv',       uniLocation[1], mesh.diffColor); }
-		if (uniLocation[2] !== null) { this.setUniform('1f',        uniLocation[2], mesh.radius); }
+		if (uniLocation[1] !== null) { this.setUniform('Matrix4fv', uniLocation[1], this.vMat); }
+		if (uniLocation[2] !== null) { this.setUniform('Matrix4fv', uniLocation[2], this.vpMat); }
+		if (uniLocation[3] !== null) { this.setUniform('Matrix4fv', uniLocation[3], wMatrix); }
+		if (uniLocation[4] !== null) { this.setUniform('4fv',       uniLocation[4], ed); }
+		if (uniLocation[5] !== null) { this.setUniform('4fv',       uniLocation[5], mesh.diffColor); }
+		if (uniLocation[6] !== null) { this.setUniform('1f',        uniLocation[6], mesh.radius); }
 		this.setAttribute(mesh.vbo_list, attLocation, mesh.stride);
 		if (mesh.mode === 'Points') {
 			primnum = mesh.position.length / 3;

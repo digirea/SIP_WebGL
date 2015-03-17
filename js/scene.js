@@ -325,13 +325,30 @@ Normalize, Sub */
 			vpMatrix;
 		camZ = camera.getCamPosZ();
 		if (camZ === 0) {
-			vpMatrix = camera.getViewMatrix(60, canvas.width / canvas.height, 0.1, 2560);
+			vpMatrix = camera.getViewProjMatrix(60, canvas.width / canvas.height, 0.1, 2560);
 		} else {
-			vpMatrix = camera.getViewMatrix(60, canvas.width / canvas.height, camZ * 0.02, camZ * 50.0);
+			vpMatrix = camera.getViewProjMatrix(60, canvas.width / canvas.height, camZ * 0.02, camZ * 50.0);
 		}
 		return vpMatrix;
 	}
-	
+
+	/**
+	 * Description
+	 * @method getViewMatrix
+	 * @return vMatrix
+	 */
+	function getViewMatrix() {
+		var camZ     = 0,
+			vpMatrix;
+		camZ = camera.getCamPosZ();
+		if (camZ === 0) {
+			vpMatrix = camera.getViewMatrix();
+		} else {
+			vpMatrix = camera.getViewMatrix();
+		}
+		return vpMatrix;
+	}
+
 	/**
 	 * Description
 	 * @method IsHitMesh
@@ -731,7 +748,8 @@ Normalize, Sub */
 			uniLocation   = [],
 			gridcolor     = [0.1, 0.1, 0.1, 1.0],
 			result        = [],
-			vpMatrix;
+			vpMatrix,
+			vMatrix;
 		camera.setupScreen([cw, ch]);
 		camera.updateMatrix(wh);
 		//updatePopup()
@@ -741,7 +759,10 @@ Normalize, Sub */
 		render.Depth(true);
 		render.Blend(true);
 		vpMatrix = getViewProjMatrix();
+		vMatrix  = getViewMatrix();
 		render.setViewProjection(vpMatrix);
+		render.setView(vMatrix);
+		render.setupEyeDir(camera.camPos, camera.camAt);
 		render.drawMeshList(meshlist, result);
 		updateInfo(result[0].VertexNum, result[0].PolygonNum);
 		drawGizmo();
