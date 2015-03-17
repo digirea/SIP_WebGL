@@ -206,7 +206,7 @@ var test_time = 0;
 		var len = 0,
 			i,
 			temp,
-			maxscale = 1;
+			maxscale = 0;
 
 		this.camWorldPosStart   = this.camWorldPos;
 		this.camWorldPosEnd     = [(max[0] + min[0]) / 2, (max[1] + min[1]) / 2, (max[2] + min[2]) / 2];
@@ -220,7 +220,7 @@ var test_time = 0;
 		
 		if (scale) {
 			for(i = 0 ; i < scale.length; i++) {
-				temp = parseFloat(scale[i]);
+				temp = Math.abs(parseFloat(scale[i]));
 				if(maxscale < temp) {
 					maxscale = temp;
 				}
@@ -242,8 +242,11 @@ var test_time = 0;
 		this.camPosEnd[1]       = 0;
 		this.camPosEnd[2]       = 0;
 		
+		if(maxscale === 0) {
+			maxscale = 1;
+		}
 		this.camPosEnd[2]       = -Distance(max, min) * maxscale;
-		
+
 		this.lerpTime           = 0;
 		this.lerpTimeDelta      = 1.0 / 30.0;
 		this.lerpState          = true;
