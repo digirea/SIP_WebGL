@@ -106,7 +106,6 @@ a.active {
 	transform: rotate(-90deg);
 }
 
-
 body {
 	width:100%;
 	height:100%;
@@ -578,14 +577,6 @@ DustBox{
 	bottom:0px;
 }
 
-.consoleArea
-{
-	position: relative;
-	min-width:100%;
-	min-height:100%;
-	background:transparent;
-}
-
 .consoleOutput
 {
 	position: absolute;
@@ -594,12 +585,14 @@ DustBox{
 	background-color:rgba(100, 100, 100, 0.5);
 }
 
+.consoleTextBlockArea {
+	width : 100%;
+	height:370px;
+	overflow: auto;
+}
 
 .consoleTextBlock
 {
-	overflow: auto;
-	bottom:30px;
-	/*height:400px;*/
 	display: table-cell;
 	vertical-align: bottom;
 	background:transparent;

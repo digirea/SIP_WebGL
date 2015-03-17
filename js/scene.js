@@ -919,7 +919,8 @@ Normalize, Sub */
 		consoleTab = window.animtab.create('bottom', {
 			'bottomTab' : { min : '10px', max : '400' }
 		}, {
-			'consoleOutput' : { min : '0px', max : '400px' }
+			'consoleOutput' : { min : '0px', max : '400px' },
+			'consoleTextBlockArea' :  { min : '0px', max : '370px' }
 		}, 'DataView');
 		consoleTab(false);
 

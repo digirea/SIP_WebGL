@@ -46,10 +46,32 @@
 			buttonID = Object.keys(button)[0],
 			targetID = Object.keys(targets)[0],
 			buttonElem = document.getElementById(buttonID),
-			diffButtonTargetMax = 0;
+			diffButtonTargetMax = 0,
+			id,
+			maxValue = 0,
+			targetMaxOffset = {},
+			target;
 		
 		diffButtonTargetMax = to_num(button[buttonID].max) - to_num(targets[targetID].max);
 		//console.log("diffButtonTargetMax" + diffButtonTargetMax);
+		
+		// find max value
+		for (id in targets) {
+			if (targets.hasOwnProperty(id)) {
+				target = targets[id];
+				if (to_num(target.max) > maxValue) {
+					maxValue = to_num(target.max);
+				}
+			}
+		}
+		
+		// create targetMaxOffset dict
+		for (id in targets) {
+			if (targets.hasOwnProperty(id)) {
+				target = targets[id];
+				targetMaxOffset[id] = maxValue - to_num(target.max);
+			}
+		}
 		
 		/**
 		 * Description
@@ -130,8 +152,8 @@
 				for (id in targets) {
 					if (targets.hasOwnProperty(id)) {
 						target = document.getElementById(id);
-						target.style[whstr] = pos + 'px';
-						targets[id].max = pos + 'px';
+						target.style[whstr] = (pos - targetMaxOffset[id]) + 'px';
+						targets[id].max = (pos - targetMaxOffset[id]) + 'px';
 					}
 				}
 				separator.style[direction] = pos + 'px';
@@ -308,7 +330,7 @@
 					targetMin = targets[id].min;
 					targetMax = targets[id].max;
 					if (state === 0) {
-						if(cbopen) {
+						if (cbopen) {
 							cbopen();
 						}
 						state = 1;
@@ -317,7 +339,7 @@
 						$animate(separatorElem, to_json(direction, { from : buttonMax, to : buttonMin }), time, beforeSep);
 					} else if (state === 2) {
 						state = 3;
-						if(cbclose) {
+						if (cbclose) {
 							cbclose();
 						}
 						$animate(targetElem, to_json(whstr, { from: targetMin, to: targetMax }), time, afterTarget);
