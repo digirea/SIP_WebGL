@@ -274,6 +274,9 @@
 			focusProperty(child);
 		}
 		init();
+		if (document.getElementById('expand_all')) {
+			document.getElementById('expand_all').click();
+		}
 	}
 	
 	init();
