@@ -17,6 +17,8 @@ Normalize, Sub */
 		scene          = {},
 		model_id       = 0,
 		openstate      = 0,
+		openviewdirstate      = 0,
+		openviewtypestate     = 0,
 		consolestate   = 0;
 	
 	function resetShader() {
@@ -587,11 +589,31 @@ Normalize, Sub */
 			window.scene.groupTab(false);
 			openstate = 1;
 		} else {
-			window.scene.groupTab(true);
+			//window.scene.groupTab(true);
 			openstate = 0;
 		}
 	}
 	
+	function openViewDirection(e) {
+		var viewdir = document.getElementById('ViewDirection');
+		$toggle(viewdir, 100);
+		if (openviewdirstate === 0) {
+			openviewdirstate = 1;
+		} else {
+			openviewdirstate = 0;
+		}
+	}
+	
+	function openViewType(e) {
+		var viewtype = document.getElementById('ViewType');
+		$toggle(viewtype, 100);
+		if (openviewtypestate === 0) {
+			window.scene.groupTab(false);
+			openviewtypestate = 1;
+		} else {
+			openviewtypestate = 0;
+		}
+	}
 	
 	function consoleSwitch(e) {
 		var openwindow = document.getElementById('console');
@@ -619,6 +641,8 @@ Normalize, Sub */
 	function init() {
 		var i,
 			openswitch  = document.getElementById('OpenSwitch'),
+			viewdirection  = document.getElementById('ViewDirectionSwitch'),
+			viewtype     = document.getElementById('ViewTypeSwitch'),
 			openstl     = document.getElementById('OpenSTL'),
 			opencsv     = document.getElementById('OpenCSV'),
 			addline     = document.getElementById('AddLine'),
@@ -658,6 +682,8 @@ Normalize, Sub */
 		document.getElementById('OpenTextFile').addEventListener('change', loadTXT, false);
 		
 		openswitch.onclick = openSwitch;
+		viewdirection.onclick = openViewDirection;
+		viewtype.onclick = openViewType;
 		addline.onclick  = addLine;
 		addpoint.onclick = addPoint;
 
