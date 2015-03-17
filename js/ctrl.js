@@ -15,7 +15,7 @@
 		mouseState  = {"Left": false, "Center": false, "Right": false };
 	
 	/**
-	 * Description
+	 * マウスステートのリセット
 	 * @method resetMouseState
 	 */
 	function resetMouseState() {
@@ -23,12 +23,12 @@
 	}
 	
 	/**
-	 * Description
+	 * カメラ可動時に使用される積算値の設定
 	 * @method setMoveMult
-	 * @param {} x
-	 * @param {} y
-	 * @param {} r
-	 * @param {} w
+	 * @param {Number} x x積算値
+	 * @param {Number} y y積算値
+	 * @param {Number} r 回転積算値
+	 * @param {Number} w ホイール積算値
 	 */
 	function setMoveMult(x, y, r, w)
 	{
@@ -39,16 +39,16 @@
 	}
 
 	/**
-	 * Description
+	 * カメラの設定
 	 * @method setCamera
-	 * @param {} cam
+	 * @param {Camera} cam カメラ
 	 */
 	function setCamera(cam) {
 		camera.push(cam);
 	}
 
 	/**
-	 * Description
+	 * ビューのリセット
 	 * @method resetView
 	 */
 	function resetView() {
@@ -62,18 +62,18 @@
 	}
 
 	/**
-	 * Description
+	 * マウスアウトコールバック
 	 * @method mouseOut
-	 * @param {} e
+	 * @param {Event} e マウスイベント
 	 */
 	function mouseOut(e) {
 		resetMouseState();
 	}
 
 	/**
-	 * Description
+	 * マウスダウンコールバック
 	 * @method mouseDown
-	 * @param {} e
+	 * @param {Event} e マウスイベント
 	 */
 	function mouseDown(e) {
 		if (e.button === 0) {
@@ -89,9 +89,9 @@
 	}
 
 	/**
-	 * Description
+	 * マウスアップコールバック
 	 * @method mouseUp
-	 * @param {} e
+	 * @param {Event} e マウスイベント
 	 */
 	function mouseUp(e) {
 		if (e.button === 0) {
@@ -107,9 +107,9 @@
 	}
 
 	/**
-	 * Description
+	 * マウスムーブコールバック
 	 * @method mouseMove
-	 * @param {} e
+	 * @param {Event} e マウスイベント
 	 */
 	function mouseMove(e) {
 		var i,
@@ -153,10 +153,9 @@
 	}
 
 	/**
-	 * Description
+	 * マウスホイールコールバック
 	 * @method mouseWheel
-	 * @param {} e
-	 * @return Literal
+	 * @param {Event} e マウスイベント
 	 */
 	function mouseWheel(e) {
 		var i,
@@ -187,9 +186,9 @@
 	}
 
 	/**
-	 * Description
+	 * キーイベント
 	 * @method keyEvent
-	 * @param {} e
+	 * @param {Event} e キーイベント
 	 */
 	function keyEvent(e) {
 		//F5
@@ -201,18 +200,13 @@
 	}
 
 	/**
-	 * Description
+	 * 初期化
 	 * @method init
-	 * @param {} document
-	 * @param {} canvas
-	 * @param {} keycb
+	 * @param {Object} document ドキュメントオブジェクト
+	 * @param {Object} canvas キャンバスオブジェクト
+	 * @param {Function} keycb キーボードコールバック
 	 */
 	function init(document, canvas, keycb) {
-		/**
-		 * Description
-		 * @method mouseUpFunc
-		 * @param {} evt
-		 */
 		var mouseUpFunc = function (evt) {
 			resetMouseState();
 			window.removeEventListener('mousemove', mouseMove, false);
