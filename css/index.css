@@ -116,7 +116,7 @@ body {
 
 .menuButtonClass {
 	font-size:16px;
-	padding: 0px;
+	padding: 4px 0px 0px 0px;
 	text-align: center;
 	border-radius: 2px;
 	cursor: pointer;
@@ -243,8 +243,6 @@ DustBox{
 	position        : relative;
 	padding         : 0px;
 	margin          : 5px;
-	margin-top      : 0px;
-	margin-bottom   : 10px;
 	width           : 150px;
 	height          : 25px;
 	background-color:rgb(203,184,53);
@@ -475,7 +473,8 @@ DustBox{
 
 #pickup {
 	margin          :5px;
-	background-color:rgba(100, 77, 55, 1.0);
+	padding: 10px;
+	background-color:rgb(160, 111, 65);
 	color           :white;
 	display         :none;
 	z-index         :10;
