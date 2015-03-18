@@ -19,7 +19,7 @@ Normalize, Sub */
 		consolestate   = 0;
 	
 	/**
-	 * Description
+	 * シェーダのリセット
 	 * @method resetShader
 	 */
 	function resetShader() {
@@ -28,19 +28,19 @@ Normalize, Sub */
 	}
 
 	/**
-	 * Description
+	 * ビューがリセットされた場合に呼ばれるコールバック
 	 * @method callbackResetView
-	 * @param {} e
+	 * @param {Event} e イベント
 	 */
 	function callbackResetView(e) {
 		resetShader();
 	}
 
 	/**
-	 * Description
+	 * 頂点数ポリゴン数の更新
 	 * @method updateInfo
-	 * @param {} vnum
-	 * @param {} pnum
+	 * @param {Number} vnum 頂点数
+	 * @param {Number} pnum ポリゴン数
 	 */
 	function updateInfo(vnum, pnum) {
 		var vnumElem = document.getElementById('vertexNum'),
@@ -55,9 +55,9 @@ Normalize, Sub */
 	}
 
 	/**
-	 * Description
+	 * メッシュの削除
 	 * @method delMesh
-	 * @param {} name
+	 * @param {String} name メッシュ名
 	 */
 	function delMesh(name) {
 		var i,
@@ -77,7 +77,12 @@ Normalize, Sub */
 		meshlist = newlist;
 	}
 
-	
+	/**
+	 * メッシュデータプロパティの更新
+	 * @method updateDataTree
+	 * @param {Array} meshprop データプロパティ
+	 * @param {Number} value 更新する値
+	 */
 	function updateMeshDataProp(meshprop, value) {
 		var i;
 		for (i = 0; i < meshprop.length; i = i + 1) {
@@ -86,9 +91,9 @@ Normalize, Sub */
 	}
 	
 	/**
-	 * Description
+	 * データツリーの更新
 	 * @method updateDataTree
-	 * @param {} data
+	 * @param {Object} data データ
 	 */
 	function updateDataTree(data) {
 		console.log(meshlist);
@@ -128,9 +133,9 @@ Normalize, Sub */
 	/// updateMesh  call back function for loadSTL
 	/// @param data STL data, pos, normal...
 	/**
-	 * Description
+	 * メッシュの更新
 	 * @method updateMesh
-	 * @param {} data
+	 * @param {Object} data 更新データ
 	 */
 	function updateMesh(data) {
 		var point_p   = data.pos,
@@ -159,10 +164,10 @@ Normalize, Sub */
 	}
 
 	/**
-	 * Description
+	 * ツリーノードの選択
 	 * @method selectTreeNode
-	 * @param {} node
-	 * @param {} checkbox
+	 * @param {node} node ノード
+	 * @param {Element} checkbox チェックボックス
 	 */
 	function selectTreeNode(node, checkbox) {
 		if (checkbox) {
@@ -181,12 +186,12 @@ Normalize, Sub */
 	}
 
 	/**
-	 * Description
+	 * メッシュテキスト情報の更新
 	 * @method updateMeshText
-	 * @param {} name
-	 * @param {} pos
-	 * @param {} type
-	 * @param {} urllist
+	 * @param {String} name 名前
+	 * @param {Array} pos 位置
+	 * @param {String} type 種類
+	 * @param {Array} urllist URLリスト
 	 */
 	function updateMeshText(name, pos, type, urllist, colinfo) {
 		var mesh = {'position' : pos},
@@ -222,9 +227,9 @@ Normalize, Sub */
   
   
 	/**
-	 * Description
+	 * STLの読み込み
 	 * @method loadSTL
-	 * @param {} evt
+	 * @param {Event} evt ファイルイベント
 	 */
 	function loadSTL(evt) {
 		if (evt === '') {
@@ -238,7 +243,7 @@ Normalize, Sub */
 	}
 
 	/**
-	 * Description
+	 * リサイズ
 	 * @method onResize
 	 */
 	function onResize() {
@@ -251,7 +256,7 @@ Normalize, Sub */
 	}
 	
 	/**
-	 * Description
+	 * ツリーのリセット
 	 * @method resetTree
 	 */
 	function resetTree() {
@@ -280,7 +285,7 @@ Normalize, Sub */
 	
 	
 	/**
-	 * Description
+	 * 全てのビューをリセット
 	 * @method resetAll
 	 */
 	function resetAll() {
@@ -291,10 +296,10 @@ Normalize, Sub */
 	}
 	
 	/**
-	 * Description
+	 * サイドビュー変更関数を返す
 	 * @method sideViewChange
-	 * @param {} axis
-	 * @return FunctionExpression
+	 * @param {Array} axis 軸
+	 * @return Function サイドビュー変更関数
 	 */
 	function sideViewChange(axis) {
 		return function (e) {
@@ -304,10 +309,10 @@ Normalize, Sub */
 	}
 	
 	/**
-	 * Description
+	 * ビューモードの変更関数を返す
 	 * @method sideViewChange
-	 * @param {} mode
-	 * @return FunctionExpression
+	 * @param {String} mode モード
+	 * @return Function ビューモードの変更関数を返す
 	 */
 	function viewModeChange(mode) {
 		return function (e) {
@@ -316,9 +321,9 @@ Normalize, Sub */
 	}
 	
 	/**
-	 * Description
+	 * ビュープロジェクションマトリックスの取得
 	 * @method getViewProjMatrix
-	 * @return vpMatrix
+	 * @return vpMatrix ビュープロジェクションマトリックス
 	 */
 	function getViewProjMatrix() {
 		var camZ     = 0,
@@ -333,9 +338,9 @@ Normalize, Sub */
 	}
 
 	/**
-	 * Description
+	 * ビューマトリックスの取得
 	 * @method getViewMatrix
-	 * @return vMatrix
+	 * @return vMatrix ビューマトリックス
 	 */
 	function getViewMatrix() {
 		var camZ     = 0,
@@ -350,11 +355,11 @@ Normalize, Sub */
 	}
 
 	/**
-	 * Description
+	 * メッシュにヒットしたか
 	 * @method IsHitMesh
-	 * @param {} o
-	 * @param {} d
-	 * @param {} mesh
+	 * @param {Array} o レイ基点ベクトル
+	 * @param {Array} d レイ方向ベクトル
+	 * @param {mesh} mesh メッシュ
 	 * @return ObjectExpression
 	 */
 	function IsHitMesh(o, d, mesh) {
@@ -389,7 +394,7 @@ Normalize, Sub */
 	}
 	
 	/**
-	 * Description
+	 * ポップアップの更新
 	 * @method updatePopup
 	 */
 	function updatePopup() {
@@ -418,11 +423,11 @@ Normalize, Sub */
 	}
 	
 	/**
-	 * Description
+	 * ポップアップの作成
 	 * @method createPopup
-	 * @param {} win_x
-	 * @param {} win_y
-	 * @param {} data
+	 * @param {Number} win_x スクリーンx座標
+	 * @param {Number} win_y スクリーンy座標
+	 * @param {Object} data データ
 	*/
 	function createPopup(win_x, win_y, data) {
 		var popup = document.getElementById('pickup'),
@@ -445,7 +450,7 @@ Normalize, Sub */
 	}
 	
 	/**
-	 * Description
+	 * ポップアップを隠す
 	 * @method hidePopup
 	 */
 	function hidePopup() {
@@ -456,11 +461,11 @@ Normalize, Sub */
 	}
 	
 	/**
-	 * Description
+	 * レイをメッシュとして生成
 	 * @method createRayMesh
-	 * @param {} org
-	 * @param {} dir
-	 * @param {} t
+	 * @param {Array} org レイ基点ベクトル
+	 * @param {Array} dir レイ方向ベクトル
+	 * @param {Number} t org + t * dir のt
 	 */
 	function createRayMesh(org, dir, t) {
 		var mesh = render.createMeshObj(
@@ -482,10 +487,10 @@ Normalize, Sub */
 	}
 
 	/**
-	 * Description
+	 * ピック
 	 * @method Pick
-	 * @param {} win_x
-	 * @param {} win_y
+	 * @param {Number} win_x スクリーンx座標
+	 * @param {Number} win_y スクリーンy座標
 	 */
 	function Pick(win_x, win_y) {
 		var mtx      = new MatIV(),
@@ -562,9 +567,9 @@ Normalize, Sub */
 	
 	
 	/**
-	 * Description
+	 * マウスクリック
 	 * @method MouseClickFunc
-	 * @param {} evt
+	 * @param {Event} evt マウスイベント
 	 */
 	function MouseClickFunc(evt) {
 		//console.log(evt.clientX, evt.clientY);
@@ -574,26 +579,18 @@ Normalize, Sub */
 	}
 	
 
-	/**
-	 * Description
-	 * @method KickDogFrame
-	 */
 	function KickDogFrame() {
 		//document.getElementById('progress').innerHTML = "updata
 	}
 
-	/**
-	 * Description
-	 * @method KickDog
-	 */
 	function KickDog() {
 		render.swapBuffer()(KickDogFrame);
 	}
 
 	/**
-	 * Description
+	 * グループの追加
 	 * @method addGroup
-	 * @param {} type
+	 * @param {String} type グループタイプ
 	 */
 	function addGroup(type) {
 		var colinfo   = [],
@@ -696,25 +693,25 @@ Normalize, Sub */
 	
 	
 	/**
-	 * Description
+	 * ラインの追加
 	 * @method addLine
-	 * @param {} e
+	 * @param {Event} e マウスイベント
 	 */
 	function addLine(e) {
 		addGroup('Line');
 	}
 	
 	/**
-	 * Description
+	 * ポイントの追加
 	 * @method addPoint
-	 * @param {} e
+	 * @param {Event} e マウスイベント
 	 */
 	function addPoint(e) {
 		addGroup('Point');
 	}
 	
 	/**
-	 * Description
+	 * ギズモの描画
 	 * @method drawGizmo
 	 */
 	function drawGizmo() {
@@ -738,7 +735,7 @@ Normalize, Sub */
 	}
 
 	/**
-	 * Description
+	 * フレームの更新
 	 * @method updateFrame
 	 */
 	function updateFrame() {
@@ -770,7 +767,7 @@ Normalize, Sub */
 	}
 
 	/**
-	 * Description
+	 * OpenGLの開始
 	 * @method startGL
 	 */
 	function startGL() {
@@ -781,9 +778,9 @@ Normalize, Sub */
 	}
 
 	/**
-	 * Description
+	 * スイッチの開閉
 	 * @method openSwitch
-	 * @param {} e
+	 * @param {Event} e マウスイベント
 	 */
 	function openSwitch(e) {
 		var openwindow = document.getElementById('OpenWindow');
@@ -792,9 +789,9 @@ Normalize, Sub */
 	}
 	
 	/**
-	 * Description
+	 * ViewDirectionボタンの開閉
 	 * @method openViewDirection
-	 * @param {} e
+	 * @param {Event} e マウスイベント
 	 */
 	function openViewDirection(e) {
 		var viewdir = document.getElementById('ViewDirection');
@@ -803,9 +800,9 @@ Normalize, Sub */
 	}
 	
 	/**
-	 * Description
+	 * 表示タイプボタンの開閉
 	 * @method openViewType
-	 * @param {} e
+	 * @param {Event} e マウスイベント
 	 */
 	function openViewType(e) {
 		var viewtype = document.getElementById('ViewType');
@@ -814,9 +811,9 @@ Normalize, Sub */
 	}
 	
 	/**
-	 * Description
+	 * コンソールの開閉
 	 * @method consoleSwitch
-	 * @param {} e
+	 * @param {Event} e マウスイベント
 	 */
 	function consoleSwitch(e) {
 		var openwindow = document.getElementById('console');
@@ -826,9 +823,9 @@ Normalize, Sub */
 	
 	
 	/**
-	 * Description
+	 * テキストの読み込み
 	 * @method loadTXT
-	 * @param {} e
+	 * @param {Event} e ファイルイベント
 	 */
 	function loadTXT(e) {
 		window.hstable.openText(e);
@@ -843,16 +840,16 @@ Normalize, Sub */
 	
 	
 	/**
-	 * Description
+	 * コンソールの更新
 	 * @method updateconsole
-	 * @param {} change
+	 * @param {Object} change 更新メッセージ
 	 */
 	function updateconsole(change) {
 		console.log(change);
 	}
 	
 	/**
-	 * Description
+	 * 初期化
 	 * @method init
 	 */
 	function init() {
