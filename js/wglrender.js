@@ -1,4 +1,4 @@
-﻿/*jslint devel:true*/
+/*jslint devel:true*/
 /*global $, Float32Array, ArrayBuffer, Int16Array, QtnIV, MatIV, canvas, ShaderObj, MeshObj*/
 
 var WGLRender;
@@ -32,7 +32,7 @@ var WGLRender;
 	/**
 	 * ビュー行列設定
 	 * @method setViewProjection
-	 * @param {} m
+	 * @param {Matrix} m ビュー行列
 	 */
 	render.prototype.setView = function (m) {
 		this.vMat = m;
