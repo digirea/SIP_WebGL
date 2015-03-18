@@ -41,23 +41,23 @@
 
       void main(void)
       {
+        vec4 pos     = vec4(0, 0, 0, 0);
         mat4 wvM     = vMatrix * wMatrix;
         vec3 light   = normalize(vec3(0.5, 1.0, 1.0));
         vec3 N       = normalize((wvM * vec4(normalize(normal), 0.0)).xyz);
         float dt     = max(0.0, dot(N, light));
-        vColor       = vec4(dt, dt, dt, uColor.a);
-
-        vec4 pos     = vec4(0, 0, 0, 0);
-        vec3 Nv       = normalize(normal);
-        vec4 NT      = vec4(N, 1.0);
+        vec3 ncol    = vec3(dt, dt, dt);
         vec3 L       = normalize((wvM * eyeDir).xyz);
-        vec3 col     = uColor.xyz * max(0.0, dot(N, L));
+        vec3 col     = uColor.xyz * ncol;
+        vColor       = vec4(col, uColor.a);
         
-        vNormal.xyz  = N.xyz;
-        //vColor       = vec4(col, uColor.a);
+        vec3 Nv      = normalize(normal);
         vec3 p       = position + (Nv * (Radius - 1.0));
         pos          = mvpMatrix * vec4(p, 1.0);
+        
+        vNormal.xyz  = N.xyz;
         vNormal.w    = pos.z / pos.w;
+
         gl_Position  = pos;
       }
   </script>
