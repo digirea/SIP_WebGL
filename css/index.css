@@ -675,10 +675,10 @@ DustBox{
 	border: solid 1px;
 	border-radius:1px;
 	
-	-moz-transform-origin: 85% 50%;
-	-webkit-transform-origin: 85% 50%;
-	-o-transform-origin: 85% 50%;
-	-ms-transform-origin: 85% 50%;
+	-moz-transform-origin: 92% 50%;
+	-webkit-transform-origin: 92% 50%;
+	-o-transform-origin: 92% 50%;
+	-ms-transform-origin: 92% 50%;
 	transform-origin: 92% 50%;
 	-moz-transform: rotate(-90deg);
 	-webkit-transform: rotate(-90deg);
