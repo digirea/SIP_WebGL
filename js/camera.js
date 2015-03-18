@@ -329,13 +329,13 @@ var test_time = 0;
 	};
 
 	/**
-	 * ビューマトリックスの取得
+	 * ビュープロジェクションマトリックスの取得
 	 * @method getViewProjMatrix
 	 * @param {Number} fov 視野角
 	 * @param {Number} aspect アスペクト
 	 * @param {Number} near ニア
 	 * @param {Number} far ファー
-	 * @return vpMatrix ビューマトリックス
+	 * @return vpMatrix ビュープロジェクションマトリックス
 	 */
 	camera.prototype.getViewProjMatrix = function (fov, aspect, near, far) {
 		var mtx      = new MatIV(),
