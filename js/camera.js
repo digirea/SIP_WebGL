@@ -6,7 +6,7 @@ var test_time = 0;
 (function () {
 	"use strict";
 	/**
-	 * Description
+	 * コンストラクタ
 	 * @method camera
 	 */
 	var camera = function () {
@@ -36,16 +36,16 @@ var test_time = 0;
 	};
 
 	/**
-	 * Description
+	 * スクリーンのセットアップ
 	 * @method setupScreen
-	 * @param {} s
+	 * @param {Array} スクリーン
 	 */
 	camera.prototype.setupScreen = function (s) {
 		this.screen = s;
 	};
 
 	/**
-	 * Description
+	 * ビューのリセット
 	 * @method resetView
 	 */
 	camera.prototype.resetView = function () {
@@ -65,9 +65,9 @@ var test_time = 0;
 	};
 
 	/**
-	 * Description
+	 * ビュー方向の変更
 	 * @method ViewSide
-	 * @param {} type
+	 * @param {String} type ビュー方向
 	 */
 	camera.prototype.ViewSide = function (type) {
 		var z = 1000;//this.getCamPosZ();
@@ -113,9 +113,9 @@ var test_time = 0;
 	};
 
 	/**
-	 * Description
+	 * ビューモードの設定
 	 * @method ViewMode
-	 * @param {} type
+	 * @param {String} type ビューモード
 	 */
 	camera.prototype.ViewMode = function (mode) {
 		if (mode === 'pers') {
@@ -130,12 +130,12 @@ var test_time = 0;
 
 
 	/**
-	 * Description
+	 * 位置の設定
 	 * @method pos
-	 * @param {} x
-	 * @param {} y
-	 * @param {} z
-	 * @return MemberExpression
+	 * @param {Number} x x
+	 * @param {Number} y y
+	 * @param {Number} z z
+	 * @return Array 設定したベクトル
 	 */
 	camera.prototype.pos = function (x, y, z) {
 		this.camPos   = [x, y, z];
@@ -143,12 +143,12 @@ var test_time = 0;
 	};
 	
 	/**
-	 * Description
+	 * ターゲット位置の設定
 	 * @method at
-	 * @param {} x
-	 * @param {} y
-	 * @param {} z
-	 * @return MemberExpression
+	 * @param {Number} x x
+	 * @param {Number} y y
+	 * @param {Number} z z
+	 * @return Array 設定したベクトル
 	 */
 	camera.prototype.at = function (x, y, z) {
 		this.camAt   = [x, y, z];
@@ -156,12 +156,12 @@ var test_time = 0;
 	};
 	
 	/**
-	 * Description
+	 * アップベクトルの設定
 	 * @method up
-	 * @param {} x
-	 * @param {} y
-	 * @param {} z
-	 * @return MemberExpression
+	 * @param {Number} x x
+	 * @param {Number} y y
+	 * @param {Number} z z
+	 * @return Array 設定したベクトル
 	 */
 	camera.prototype.up = function (x, y, z) {
 		this.camUp   = [x, y, z];
@@ -169,12 +169,12 @@ var test_time = 0;
 	};
 
 	/**
-	 * Description
+	 * 位置の加算
 	 * @method addPos
-	 * @param {} x
-	 * @param {} y
-	 * @param {} z
-	 * @return MemberExpression
+	 * @param {Number} x x
+	 * @param {Number} y y
+	 * @param {Number} z z
+	 * @return Array 設定したベクトル
 	 */
 	camera.prototype.addPos = function (x, y, z) {
 		this.camPos[0] += x;
@@ -184,12 +184,12 @@ var test_time = 0;
 	};
 
 	/**
-	 * Description
+	 * ターゲット位置の加算
 	 * @method addAt
-	 * @param {} x
-	 * @param {} y
-	 * @param {} z
-	 * @return MemberExpression
+	 * @param {Number} x x
+	 * @param {Number} y y
+	 * @param {Number} z z
+	 * @return Array 設定したベクトル
 	 */
 	camera.prototype.addAt = function (x, y, z) {
 		this.camAt[0] += x;
@@ -199,12 +199,12 @@ var test_time = 0;
 	};
 
 	/**
-	 * Description
+	 * 回転値の加算
 	 * @method addRotate
-	 * @param {} x
-	 * @param {} y
-	 * @param {} z
-	 * @return MemberExpression
+	 * @param {Number} x x
+	 * @param {Number} y y
+	 * @param {Number} z z
+	 * @return Array 設定したベクトル
 	 */
 	camera.prototype.addRotate = function (x, y, z) {
 		this.camRot[0] += x;
@@ -214,12 +214,12 @@ var test_time = 0;
 	};
 
 	/**
-	 * Description
+	 * 補間値のセットアップ
 	 * @method setupLerp
-	 * @param {} min
-	 * @param {} max
-	 * @param {} trans
-	 * @param {} scale
+	 * @param {Number} min 最小値
+	 * @param {Number} max 最大値
+	 * @param {Array} trans 移動量
+	 * @param {Number} scale 拡縮量
 	 */
 	camera.prototype.setupLerp = function (min, max, trans, scale, rotate) {
 		var len = 0,
@@ -320,22 +320,22 @@ var test_time = 0;
 	};
 
 	/**
-	 * Description
+	 * カメラz位置の取得
 	 * @method getCamPosZ
-	 * @return CallExpression
+	 * @return number カメラz絶対座標
 	 */
 	camera.prototype.getCamPosZ = function () {
 		return Math.abs(this.camPos[2]);
 	};
 
 	/**
-	 * Description
+	 * ビューマトリックスの取得
 	 * @method getViewProjMatrix
-	 * @param {} fov
-	 * @param {} aspect
-	 * @param {} near
-	 * @param {} far
-	 * @return vpMatrix
+	 * @param {Number} fov 視野角
+	 * @param {Number} aspect アスペクト
+	 * @param {Number} near ニア
+	 * @param {Number} far ファー
+	 * @return vpMatrix ビューマトリックス
 	 */
 	camera.prototype.getViewProjMatrix = function (fov, aspect, near, far) {
 		var mtx      = new MatIV(),
@@ -361,9 +361,9 @@ var test_time = 0;
 	};
 
 	/**
-	 * Description
+	 * ビューマトリックスの取得
 	 * @method getViewMatrix
-	 * @return vMatrix
+	 * @return vMatrix ビューマトリックス
 	 */
 	camera.prototype.getViewMatrix = function () {
 		var mtx      = new MatIV(),
@@ -378,18 +378,18 @@ var test_time = 0;
 		mtx.multiply(vMatrix, tMatrix,           vMatrix);
 		return vMatrix;
 	};
-
+	
 	/**
-	 * Description
+	 * カメラ位置からターゲットまでの距離返す
 	 * @method getAtDistance
-	 * @return CallExpression
+	 * @return number 距離
 	 */
 	camera.prototype.getAtDistance = function () {
 		return Distance(Sub(this.camAtStart, this.camPosStart));
 	};
 	
 	/**
-	 * Description
+	 * カメラの補間
 	 * @method LeapCamera
 	 */
 	camera.prototype.LeapCamera = function () {
@@ -413,9 +413,9 @@ var test_time = 0;
 	};
 
 	/**
-	 * Description
+	 * 視線ベクトルの取得
 	 * @method getEyeDirection
-	 * @return CallExpression
+	 * @return Array 正規化された視線ベクトル
 	 */
 	camera.prototype.getEyeDirection = function () {
 		return Normalize(Sub(this.camPos, this.camAt));
@@ -423,11 +423,11 @@ var test_time = 0;
 	}
 
 	/**
-	 * Description
+	 * 回転行列の更新
 	 * @method updateRotateMatrix
-	 * @param {} r
-	 * @param {} y
-	 * @param {} x
+	 * @param {Number} r 回転値
+	 * @param {Number} y y移動量
+	 * @param {Number} x x移動量
 	 */
 	camera.prototype.updateRotateMatrix = function (r, y, x) {
 		var qt = this.qtn.identity(this.qtn.create()),
@@ -443,7 +443,7 @@ var test_time = 0;
 	/**
 	 * Description
 	 * @method updateMatrix
-	 * @param {} wh
+	 * @param {Array} wh 幅高さ
 	 */
 	camera.prototype.updateMatrix = function (wh) {
 		if (this.lerpState === false) {

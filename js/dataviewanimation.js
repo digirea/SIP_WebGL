@@ -96,7 +96,7 @@ $ready(function () {
 (function () {
 	"use strict";
 	/**
-	 * Description
+	 * リサイズ
 	 * @method resize
 	 */
 	function resize() {
@@ -122,17 +122,12 @@ $ready(function () {
 	}
 
 	/**
-	 * Description
+	 * 初期化
 	 * @method init
 	 */
 	function init() {
 		resize();
 		
-		/**
-		 * Description
-		 * @method onmousedrag
-		 * @param {} e
-		 */
 		$('DataViewButton').onmousedrag = function (e) {
 			console.log('aA');
 		};
