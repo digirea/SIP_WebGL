@@ -115,7 +115,16 @@ body {
 }
 
 .menuButtonClass {
-	font-size:20px;
+	font-size:18px;
+	padding: 2px;
+	text-align: center;
+	border-radius: 2px;
+	cursor: pointer;
+}
+
+.menuTextClass {
+	color: #EEE;
+	font-size:15px;
 	padding: 2px;
 	text-align: center;
 	border-radius: 2px;
