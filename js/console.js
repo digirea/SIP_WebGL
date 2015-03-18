@@ -6,10 +6,10 @@
 
 	//http://www.hp-stylelink.com/news/2014/08/20140826.php
 	/**
-	 * Description
+	 * csv文字列をArrayにして返す
 	 * @method csv2Array
-	 * @param {} csvData
-	 * @return csvArray
+	 * @param {String} csvData csv
+	 * @return csvArray Array
 	 */
 	function csv2Array(csvData) {
 			var tempArray = csvData.split("\n");
@@ -21,9 +21,9 @@
 	}
 	
 	/**
-	 * Description
+	 * 列数を返す
 	 * @method countCols
-	 * @return Literal
+	 * @return Number 列数
 	 */
 	function countCols() {
 		if(grid) {
@@ -33,10 +33,10 @@
 	}
 	
 	/**
-	 * Description
+	 * 指定したインデックスの列を取得
 	 * @method getCol
-	 * @param {} index
-	 * @return Literal
+	 * @param {Array} index インデックス
+	 * @return Array 列データ
 	 */
 	function getCol(index) {
 		if(grid) {
@@ -46,7 +46,7 @@
 	}
 	
 	/**
-	 * Description
+	 * 表のリセット
 	 * @method resetData
 	 */
 	function resetData() {
@@ -60,9 +60,9 @@
 	}
 	
 	/**
-	 * Description
+	 * データの読み込み
 	 * @method loadData
-	 * @param {} data
+	 * @param {Object} data データ
 	 */
 	function loadData(data) {
 		var header     = [];
@@ -74,12 +74,7 @@
 				rowHeaders   : true,
 				colHeaders   : true,
 				fillHandle   : false,
-				/**
-				 * Description
-				 * @method onChange
-				 * @param {} change
-				 * @param {} source
-				 */
+				
 				onChange: function(change, source) {
 					console.log('チェンジされました', change, source);
 					if(grid) {
@@ -118,9 +113,9 @@
 	}
 
 	/**
-	 * Description
+	 * データの更新
 	 * @method updateGridData
-	 * @param {} data
+	 * @param {Object} data データ
 	 */
 	function updateGridData(data) {
 		var rootnode   = {};
@@ -130,9 +125,9 @@
 	}
 
 	/**
-	 * Description
+	 * テキストを開く
 	 * @method openText
-	 * @param {} evt
+	 * @param {Event} evt ファイルイベント
 	 */
 	function openText(evt) {
 		var files = evt.target.files;
@@ -140,11 +135,7 @@
 		if (evt === '') {
 			return;
 		}
-		/**
-		 * Description
-		 * @method onloadend
-		 * @param {} e
-		 */
+		
 		reader.onloadend = (function(e) {
 			var csvArray = csv2Array(e.target.result);
 			var i;
@@ -159,7 +150,7 @@
 	}
 
 	/**
-	 * Description
+	 * 初期化
 	 * @method init
 	 */
 	function init() {
