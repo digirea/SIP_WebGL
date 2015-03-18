@@ -48,14 +48,14 @@
         vColor       = vec4(dt, dt, dt, uColor.a);
 
         vec4 pos     = vec4(0, 0, 0, 0);
-        //vec3 N       = normalize(normal);
+        vec3 Nv       = normalize(normal);
         vec4 NT      = vec4(N, 1.0);
         vec3 L       = normalize((wvM * eyeDir).xyz);
         vec3 col     = uColor.xyz * max(0.0, dot(N, L));
         
         vNormal.xyz  = N.xyz;
         //vColor       = vec4(col, uColor.a);
-        vec3 p       = position + (N * (Radius - 1.0));
+        vec3 p       = position + (Nv * (Radius - 1.0));
         pos          = mvpMatrix * vec4(p, 1.0);
         vNormal.w    = pos.z / pos.w;
         gl_Position  = pos;
