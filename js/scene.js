@@ -172,13 +172,14 @@ Normalize, Sub */
 	function selectTreeNode(node, checkbox) {
 		if (checkbox) {
 			node.data.show = checkbox.checked;
-		} else {
-			console.log(node);
+		}
+
+		//update handsontable
+		if (node.type === 'mesh') {
 			if (node.data.boundmin) {
 				camera.setupLerp(node.data.boundmin, node.data.boundmax, node.data.trans, node.data.scale, node.data.rotate);
 			}
 		}
-		
 		//update handsontable
 		if (node.type === 'text') {
 			window.hstable.loadData(node.data);

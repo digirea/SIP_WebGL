@@ -2,6 +2,7 @@
 	var grid = null,
 			tbl,
 			filename = '',
+			selectdata = null,
 			hstable = {};
 
 	//http://www.hp-stylelink.com/news/2014/08/20140826.php
@@ -58,7 +59,16 @@
 			tbl.innerHTML = '';
 		}
 	}
-	
+
+	/**
+	 * 選択されているtableのデータ参照を返却する
+	 * @method getSelectData
+	 * @return Array データ。無ければnullを返却する
+	 */
+	function getSelectData() {
+		return selectdata;
+	}
+
 	/**
 	 * データの読み込み
 	 * @method loadData
@@ -85,6 +95,8 @@
 				}
 			});
 		}
+		
+		selectdata = data;
 
 		if(grid) {
 			grid.loadData(data);
