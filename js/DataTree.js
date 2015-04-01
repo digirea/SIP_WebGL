@@ -100,6 +100,18 @@
 	}
 
 	/**
+	 * 指定されたノードのメッシュをすべて削除
+	 * @method delDataNodeMesh
+	 * @param {node} node 削除対象のノード
+	 */
+	function delDataNodeMesh(node) {
+		var i;
+		for (i = 0; i < node.length; i = i + 1) {
+			window.scene.delMesh(node[i].name);
+		}
+	}
+	
+	/**
 	 * データの削除.
 	 * @method delData
 	 * @param {String} name 削除するデータのノード名.
@@ -116,6 +128,8 @@
 			delDataChild(name, root[i]);
 			if (root[i].name !== name) {
 				newroot.push(root[i]);
+			} else if(root[i].type === 'text') {
+				delDataNodeMesh(root[i].child);
 			}
 		}
 		root = newroot;
