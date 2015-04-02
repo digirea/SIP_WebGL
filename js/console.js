@@ -96,7 +96,6 @@
 			for(i = 0 ; i < colinfo.length; i = i + 1) {
 				if(colinfo[i].index === index) {
 					selectOptionSelected(options, colinfo[i].attr);
-					innode[colinfo[i].index].value = colinfo[i].name;
 				}
 			}
 		}
