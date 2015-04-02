@@ -179,7 +179,12 @@ Normalize, Sub */
 			if (node.data.boundmin) {
 				camera.setupLerp(node.data.boundmin, node.data.boundmax, node.data.trans, node.data.scale, node.data.rotate);
 			}
+			//update handsontable
+			if(node.data.parentdata) {
+				window.hstable.loadData(node.data.parentdata, node.data.colinfo);
+			}
 		}
+		
 		//update handsontable
 		if (node.type === 'text') {
 			window.hstable.loadData(node.data);
@@ -214,6 +219,9 @@ Normalize, Sub */
 		}
 		retmesh.urllist = urllist;
 		retmesh.colinfo = colinfo;
+		
+		//get hstable
+		retmesh.parentdata = window.hstable.getSelectData();
 
 		child = datatree.createChild('mesh', retmesh.name, retmesh);
 		datatree.addChild(selectnode.name, child);
@@ -602,6 +610,7 @@ Normalize, Sub */
 			urllist   = [],
 			vtemp     = [],
 			name      = '',
+			groupname,
 			colnum,
 			col,
 			coltemp,
@@ -628,21 +637,23 @@ Normalize, Sub */
 		
 		
 		//Create Select Info
-		for (i = 0; i < selectnames.length; i = i + 1) {
-			
+		for (i = 0; i < selectnames.length; i = i + 1)
+		{
 			console.log(selectnames[i].value);
+			groupname = headernames[i].value;
 			if (selectnames[i].value === 'X') {
-				colinfo.push({'index' : i, 'attr' : 0});
+				colinfo.push({'name':groupname, 'index' : i, 'attr' : 0});
 			}
 			if (selectnames[i].value === 'Y') {
-				colinfo.push({'index' : i, 'attr' : 1});
+				colinfo.push({'name':groupname, 'index' : i, 'attr' : 1});
 			}
 			if (selectnames[i].value === 'Z') {
-				colinfo.push({'index' : i, 'attr' : 2});
+				colinfo.push({'name':groupname, 'index' : i, 'attr' : 2});
 			}
 			
 			if(colURL < 0) {
 				if (selectnames[i].value === 'URL') {
+					colinfo.push({'name':groupname, 'index' : i, 'attr' : 3});
 					colURL = i;
 				}
 			}

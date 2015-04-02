@@ -68,16 +68,54 @@
 	function getSelectData() {
 		return selectdata;
 	}
+	
+	
+	function selectOptionSelected(options, select) {
+		var oindex;
+		for(oindex = 0; oindex < options.length; oindex = oindex + 1) {
+			options[oindex].removeAttribute('selected');
+		}
+		options[select].setAttribute('selected', 'true');
+		
+	}
+	
+	function updateSelectHeader(index, html, colinfo) {
+		var div    = document.createElement('div'),
+			innode = null,
+			node   = null,
+			i,
+			options,
+			oindex;
+		div.innerHTML = html;
+		if(colinfo)
+		{
+			node   = div.getElementsByClassName('colselectbox');
+			innode = div.getElementsByClassName('colnames');
+			options = node[0].options;
+			selectOptionSelected(options, options.length - 1);
+			for(i = 0 ; i < colinfo.length; i = i + 1) {
+				if(colinfo[i].index === index) {
+					selectOptionSelected(options, colinfo[i].attr);
+					innode[colinfo[i].index].value = colinfo[i].name;
+				}
+			}
+		}
+		return div.innerHTML;
+	}
 
 	/**
 	 * データの読み込み
 	 * @method loadData
 	 * @param {Object} data データ
 	 */
-	function loadData(data) {
-		var header     = [];
-		var headerhtml = '';
-		var style = tbl.style;
+	function loadData(data, colinfo) {
+		var header     = [],
+			headerhtml = '',
+			div        = null,
+			select     = null,
+			child      = null,
+			i          = 0,
+			style = tbl.style;
 		resetData();
 		if(grid == null) {
 			grid = new Handsontable(tbl, {
@@ -100,26 +138,29 @@
 
 		if(grid) {
 			grid.loadData(data);
-
+			
 			for(i = 0; i < grid.countCols(); i++) {
-				
-				//todo createElement
 				headerhtml = '';
-				headerhtml += '<INPUT type="text" value="G' + i + '"class="colnames">';
-				headerhtml += '<SELECT name="ATTR" class="colselectbox">';
-				headerhtml += '<OPTION value="NONE">NONE</OPTION>';
-				headerhtml += '<OPTION value="X">X</OPTION>';
-				headerhtml += '<OPTION value="Y">Y</OPTION>';
-				headerhtml += '<OPTION value="Z">Z</OPTION>';
-				headerhtml += '<OPTION value="URL">URL</OPTION>';
+				headerhtml += '<INPUT  type="text" value="G' + i + '"class="colnames">\n';
+				headerhtml += '<SELECT name="ATTR" class="colselectbox">\n';
+				headerhtml += '<OPTION value="X">X</OPTION>\n';
+				headerhtml += '<OPTION value="Y">Y</OPTION>\n';
+				headerhtml += '<OPTION value="Z">Z</OPTION>\n';
+				headerhtml += '<OPTION value="URL">URL</OPTION>\n';
+				headerhtml += '<OPTION value="NONE" selected=true >NONE</OPTION>\n';
 				headerhtml += '</SELECT>';
-				header.push(headerhtml);
+				if(colinfo) {
+					header.push(updateSelectHeader(i, headerhtml, colinfo));
+				} else {
+					header.push(headerhtml);
+				}
 			}
 
 			grid.updateSettings({
 				colHeaders: header
 			});
-			tbl.style = style;
+			
+			tbl.style          = style;
 			tbl.style.overflow = scroll;
 		}
 	}
@@ -176,6 +217,8 @@
 	window.hstable.loadData  = loadData;
 	window.hstable.resetData = resetData;
 	window.hstable.getCol    = getCol;
+	window.hstable.getSelectData    = getSelectData;
+	
 	
 })(window.scene);
 
