@@ -16,6 +16,7 @@ Normalize, Sub */
 		mesh_shader    = null,
 		scene          = {},
 		model_id       = 0,
+		scene_fov      = 45.0,
 		consolestate   = 0;
 	
 	/**
@@ -192,6 +193,50 @@ Normalize, Sub */
 	}
 
 	/**
+	 * 座標を球面座標に変換
+	 * @method transformSphereCoord
+	 * @param {Array} pos 座標配列
+	 */
+	function transformSphereCoord(pos) {
+		var i = 0,
+			r = 0,
+			th = 0,
+			phi = 0,
+			x = 0,
+			y = 0,
+			z = 0,
+			apos = [];
+
+		for (i = 0; i < pos.length; i = i + 3) {
+			x = pos[i + 0];
+			y = pos[i + 1];
+			z = pos[i + 2];
+
+			r   = 1000.0;//Math.sqrt(x * x + y * y + z * z); //暫定
+			th  = (2 * Math.PI * y) / 180.0;//Math.acos( z / r );
+			
+			/*
+			if(z < 0) {
+				z = 360.0 - (Math.abs(z));
+			}
+			*/
+			phi = -(2 * Math.PI * z) / 180.0;//Math.atan2(y, x);
+			/*
+			apos.push(r * (Math.sin(th) * Math.cos(phi)));
+			apos.push(r * (Math.sin(th) * Math.sin(phi)));
+			apos.push(r * (Math.cos(th))              );
+			*/
+			pos[i + 0] = (r * (Math.sin(th) * Math.cos(phi)));
+			pos[i + 1] = (r * (Math.sin(th) * Math.sin(phi)));
+			pos[i + 2] = (r * (Math.cos(th))                );
+
+				
+		}
+		return apos;
+	}
+	
+	
+	/**
 	 * メッシュテキスト情報の更新
 	 * @method updateMeshText
 	 * @param {String} name 名前
@@ -213,10 +258,28 @@ Normalize, Sub */
 		}
 
 		if (type === 'Point') {
+			retmesh = render.createPointMesh(mesh, 1.0, 3, 2);
+			retmesh.name = name + 'Point';
+			retmesh.setShader(mesh_shader);
+		}
+		
+
+		if (type === 'LineSphere') {
+			//mesh.position = transformSphereCoord(mesh.position);
+			transformSphereCoord(mesh.position);
+			retmesh  = render.createLineMesh(mesh, 8, 1.0);
+			retmesh.name = name + 'Line';
+			retmesh.setShader(mesh_shader);
+		}
+
+		if (type === 'PointSphere') {
+			//mesh.position = transformSphereCoord(mesh.position);
+			transformSphereCoord(mesh.position);
 			retmesh = render.createPointMesh(mesh, 1.0, 8, 4);
 			retmesh.name = name + 'Point';
 			retmesh.setShader(mesh_shader);
 		}
+
 		retmesh.urllist = urllist;
 		retmesh.colinfo = colinfo;
 		
@@ -339,9 +402,9 @@ Normalize, Sub */
 			vpMatrix;
 		camZ = camera.getCamPosZ();
 		if (camZ === 0) {
-			vpMatrix = camera.getViewProjMatrix(60, canvas.width / canvas.height, 0.1, 2560);
+			vpMatrix = camera.getViewProjMatrix(scene_fov, canvas.width / canvas.height, 0.1, 2560);
 		} else {
-			vpMatrix = camera.getViewProjMatrix(60, canvas.width / canvas.height, camZ * 0.02, camZ * 50.0);
+			vpMatrix = camera.getViewProjMatrix(scene_fov, canvas.width / canvas.height, camZ * 0.02, camZ * 50.0);
 		}
 		return vpMatrix;
 	}
@@ -623,7 +686,7 @@ Normalize, Sub */
 			selectnames,
 			headernames;
 		
-		
+		console.log('Create add group ', type);
 		hstable = document.getElementById('hstable');
 		clonetable = hstable.getElementsByClassName('ht_clone_top');
 		if (clonetable.length <= 0) {
@@ -722,6 +785,23 @@ Normalize, Sub */
 		addGroup('Point');
 	}
 	
+	/**
+	 * 球面ラインの追加
+	 * @method addLine
+	 * @param {Event} e マウスイベント
+	 */
+	function addLineSphere(e) {
+		addGroup('LineSphere');
+	}
+	
+	/**
+	 * 球面ポイントの追加
+	 * @method addPoint
+	 * @param {Event} e マウスイベント
+	 */
+	function addPointSphere(e) {
+		addGroup('PointSphere');
+	}
 	/**
 	 * ギズモの描画
 	 * @method drawGizmo
@@ -875,6 +955,8 @@ Normalize, Sub */
 			opencsv        = document.getElementById('OpenCSV'),
 			addline        = document.getElementById('AddLine'),
 			addpoint       = document.getElementById('AddPoint'),
+			addpointsphere = document.getElementById('AddPointSphere'),
+			addlinesphere  = document.getElementById('AddLineSphere'),
 			pickup         = document.getElementById('pickup'),
 			sideviewx      = document.getElementById('viewLeft'),
 			sideviewy      = document.getElementById('viewTop'),
@@ -915,7 +997,8 @@ Normalize, Sub */
 		viewtype.onclick = openViewType;
 		addline.onclick  = addLine;
 		addpoint.onclick = addPoint;
-
+		addpointsphere.onclick = addPointSphere;
+        addlinesphere.onclick  = addLineSphere;
 		sideviewx.onclick = (sideViewChange)("x");
 		sideviewy.onclick = (sideViewChange)("y");
 		sideviewz.onclick = (sideViewChange)("z");
