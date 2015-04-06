@@ -16,7 +16,8 @@ Normalize, Sub */
 		mesh_shader    = null,
 		scene          = {},
 		model_id       = 0,
-		scene_fov      = 45.0,
+		//scene_fov      = 45.0,
+		scene_fov      = 90.0,
 		consolestate   = 0;
 	
 	/**
@@ -211,26 +212,12 @@ Normalize, Sub */
 			x = pos[i + 0];
 			y = pos[i + 1];
 			z = pos[i + 2];
-
-			r   = 1000.0;//Math.sqrt(x * x + y * y + z * z); //暫定
-			th  = (2 * Math.PI * y) / 180.0;//Math.acos( z / r );
-			
-			/*
-			if(z < 0) {
-				z = 360.0 - (Math.abs(z));
-			}
-			*/
-			phi = -(2 * Math.PI * z) / 180.0;//Math.atan2(y, x);
-			/*
-			apos.push(r * (Math.sin(th) * Math.cos(phi)));
-			apos.push(r * (Math.sin(th) * Math.sin(phi)));
-			apos.push(r * (Math.cos(th))              );
-			*/
-			pos[i + 0] = (r * (Math.sin(th) * Math.cos(phi)));
-			pos[i + 1] = (r * (Math.sin(th) * Math.sin(phi)));
-			pos[i + 2] = (r * (Math.cos(th))                );
-
-				
+			r     = 1000.0;
+			th    =  (2 * Math.PI * y) / 360.0;
+			phi   = -(2 * Math.PI * z) / 360.0;
+			pos[i + 0] = (r * (Math.cos(th)  * Math.cos(phi)));
+			pos[i + 2] = (r * (Math.sin(phi) * Math.cos(th)));
+			pos[i + 1] = (r * (Math.sin(th)));
 		}
 		return apos;
 	}
@@ -258,7 +245,7 @@ Normalize, Sub */
 		}
 
 		if (type === 'Point') {
-			retmesh = render.createPointMesh(mesh, 1.0, 3, 2);
+			retmesh = render.createPointMesh(mesh, 1.0, 8, 2);
 			retmesh.name = name + 'Point';
 			retmesh.setShader(mesh_shader);
 		}
