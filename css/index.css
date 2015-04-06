@@ -473,7 +473,7 @@ DustBox{
 #pickup {
 	margin          :5px;
 	padding: 10px;
-	background-color:rgb(160, 111, 65);
+	background-color:rgb(60, 111, 165);
 	color           :white;
 	display         :none;
 	z-index         :10;
