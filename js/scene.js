@@ -16,8 +16,7 @@ Normalize, Sub */
 		mesh_shader    = null,
 		scene          = {},
 		model_id       = 0,
-		//scene_fov      = 45.0,
-		scene_fov      = 90.0,
+		scene_fov      = 45.0,
 		consolestate   = 0;
 	
 	/**
@@ -252,7 +251,6 @@ Normalize, Sub */
 		
 
 		if (type === 'LineSphere') {
-			//mesh.position = transformSphereCoord(mesh.position);
 			transformSphereCoord(mesh.position);
 			retmesh  = render.createLineMesh(mesh, 8, 1.0);
 			retmesh.name = name + 'Line';
@@ -260,7 +258,6 @@ Normalize, Sub */
 		}
 
 		if (type === 'PointSphere') {
-			//mesh.position = transformSphereCoord(mesh.position);
 			transformSphereCoord(mesh.position);
 			retmesh = render.createPointMesh(mesh, 1.0, 8, 4);
 			retmesh.name = name + 'Point';
