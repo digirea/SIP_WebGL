@@ -15,8 +15,16 @@
 	function csv2Array(csvData) {
 			var tempArray = csvData.split("\n");
 			var csvArray = new Array();
+			var ii;
 			for(var i = 0; i<tempArray.length;i++){
 				csvArray[i] = tempArray[i].split(",");
+				
+				//check double double 
+				for(ii = 0; ii < csvArray[i].length; ii = ii + 1) {
+					if( csvArray[i][ii][0] === '"') {
+						csvArray[i][ii] = csvArray[i][ii].slice(1, -1);
+					}
+				}
 			}
 			return csvArray;
 	}
