@@ -236,6 +236,22 @@ DustBox{
 	color           : #FFF;
 }
 
+
+#SaveButton {
+	display         : inline-block;
+	overflow        : hidden;
+	position        : relative;
+	padding         : 0px;
+	margin          : 5px;
+	/*margin-top      : 10px;*/
+	margin-bottom   : 0px;
+	width           : 150px;
+	height          : 25px;
+	background-color: rgb(255,127,8);
+	color           : #FFF;
+}
+
+
 #OpenCSV {
 	display         : inline-block;
 	overflow        : hidden;

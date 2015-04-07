@@ -17,7 +17,12 @@ Normalize, Sub */
 		scene          = {},
 		model_id       = 0,
 		scene_fov      = 45.0,
-		consolestate   = 0;
+		consolestate   = 0,
+		nameLineGroup  = 'LineGroup',
+		namePointGroup = 'PointGroup',
+		nameLineSphereGroup  = 'LineSphereGroup',
+		namePointSphereGroup  = 'PointSphereGroup',
+		nameSTLData    = 'STLDATA';
 	
 	/**
 	 * シェーダのリセット
@@ -155,6 +160,7 @@ Normalize, Sub */
 		
 		//type is stl
 		stlmesh.type = 'stl';
+		stlmesh.grouptype = nameSTLData;
 		
 		//add root
 		node = datatree.createRoot('mesh', data.name, stlmesh);
@@ -237,30 +243,30 @@ Normalize, Sub */
 			child,
 			retmesh;
 
-		if (type === 'LineGroup') {
+		if (type === nameLineGroup) {
 			retmesh  = render.createLineMesh(mesh, 8, 1.0);
 			retmesh.name = name + 'Line';
 			retmesh.setShader(mesh_shader);
 		}
 
-		if (type === 'PointGroup') {
+		if (type === namePointGroup) {
 			retmesh = render.createPointMesh(mesh, 1.0, 8, 4);
 			retmesh.name = name + 'Point';
 			retmesh.setShader(mesh_shader);
 		}
 		
 
-		if (type === 'LineSphereGroup') {
+		if (type === nameLineSphereGroup) {
 			transformSphereCoord(mesh.position);
 			retmesh  = render.createLineMesh(mesh, 8, 1.0);
-			retmesh.name = name + 'Line';
+			retmesh.name = name + 'SphereLine';
 			retmesh.setShader(mesh_shader);
 		}
 
-		if (type === 'PointSphereGroup') {
+		if (type === namePointSphereGroup) {
 			transformSphereCoord(mesh.position);
 			retmesh = render.createPointMesh(mesh, 1.0, 8, 4);
-			retmesh.name = name + 'Point';
+			retmesh.name = name + 'SpherePoint';
 			retmesh.setShader(mesh_shader);
 		}
 
@@ -314,6 +320,7 @@ Normalize, Sub */
 		
 		gridmesh.setMode('Lines');
 		gridmesh.type = 'stl';
+		gridmesh.grouptype = nameLineGroup;
 		gridmesh.setShader(line_shader);
 		gridmesh.boundmin = Mul(gridmesh.boundmin, [0.25, 0.25, 0.25]);
 		gridmesh.boundmax = Mul(gridmesh.boundmax, [0.25, 0.25, 0.25]);
@@ -644,7 +651,7 @@ Normalize, Sub */
 			urllist   = [],
 			vtemp     = [],
 			name      = '',
-			groupname,
+			grouptype,
 			colnum,
 			col,
 			coltemp,
@@ -674,20 +681,20 @@ Normalize, Sub */
 		for (i = 0; i < selectnames.length; i = i + 1)
 		{
 			console.log(selectnames[i].value);
-			groupname = headernames[i].value;
+			grouptype = headernames[i].value;
 			if (selectnames[i].value === 'X') {
-				colinfo.push({'name':groupname, 'index' : i, 'attr' : 0});
+				colinfo.push({'name':grouptype, 'index' : i, 'attr' : 0});
 			}
 			if (selectnames[i].value === 'Y') {
-				colinfo.push({'name':groupname, 'index' : i, 'attr' : 1});
+				colinfo.push({'name':grouptype, 'index' : i, 'attr' : 1});
 			}
 			if (selectnames[i].value === 'Z') {
-				colinfo.push({'name':groupname, 'index' : i, 'attr' : 2});
+				colinfo.push({'name':grouptype, 'index' : i, 'attr' : 2});
 			}
 			
 			if(colURL < 0) {
 				if (selectnames[i].value === 'URL') {
-					colinfo.push({'name':groupname, 'index' : i, 'attr' : 3});
+					colinfo.push({'name':grouptype, 'index' : i, 'attr' : 3});
 					colURL = i;
 				}
 			}
@@ -758,7 +765,7 @@ Normalize, Sub */
 	 */
 	function addLine(e) {
 		var mesh = null;
-		mesh = addGroup('LineGroup');
+		mesh = addGroup(nameLineGroup);
 		addMeshToGroupTree(mesh);
 	}
 	
@@ -769,7 +776,7 @@ Normalize, Sub */
 	 */
 	function addPoint(e) {
 		var mesh = null;
-		mesh = addGroup('PointGroup');
+		mesh = addGroup(namePointGroup);
 		addMeshToGroupTree(mesh);
 	}
 	
@@ -780,7 +787,7 @@ Normalize, Sub */
 	 */
 	function addLineSphere(e) {
 		var mesh = null;
-		mesh = addGroup('LineSphereGroup');
+		mesh = addGroup(nameLineSphereGroup);
 		addMeshToGroupTree(mesh);
 	}
 	
@@ -791,7 +798,7 @@ Normalize, Sub */
 	 */
 	function addPointSphere(e) {
 		var mesh = null;
-		mesh = addGroup('PointSphereGroup');
+		mesh = addGroup(namePointSphereGroup);
 		addMeshToGroupTree(mesh);
 	}
 
@@ -849,6 +856,98 @@ Normalize, Sub */
 		updateInfo(result[0].VertexNum, result[0].PolygonNum);
 		drawGizmo();
 		render.swapBuffer()(updateFrame);
+	}
+	
+	
+	function saveScene(e) {
+		var cw            = canvas.width,
+			ch            = canvas.height,
+			filename      = new Date(), //2015/4/7 17:04:08 : toLocaleString()
+			text          = '',
+			ref           = null,
+			tablename     = '',
+			pgenname      = '',
+			modelname     = '',
+			index,
+			i;
+		
+		//setup filename
+		filename = filename.toLocaleString();
+		filename = filename.replace(/:/g, "");
+		filename = filename.replace(/\//g, "");
+		filename = filename.replace(/\s/g, "");
+		filename += '.png';
+
+		//setup scene table
+		text += 'local scene = {}\n';
+
+		//setup camera
+		text += 'local cam = Camera()\n';
+		text += 'cam:SetScreenSize(' + cw + ',' + ch + ')\n';
+		text += 'cam:SetFilename("' + filename + '")\n';
+		text += 'cam:LookAt(';
+		text +=  camera.camPos[0] + ',';
+		text +=  camera.camPos[1] + ',';
+		text +=  camera.camPos[2] + ',';
+		text +=  '    ';
+		text +=  camera.camAt[0] + ',';
+		text +=  camera.camAt[1] + ',';
+		text +=  camera.camAt[2] + ',';
+		text +=  '    ';
+		text +=  camera.camUp[0] + ',';
+		text +=  camera.camUp[1] + ',';
+		text +=  camera.camUp[2] + ',';
+		text +=  '    ';
+		text +=  scene_fov + ')\n';
+		text += 'table.insert(scene, cam)\n';
+
+		//setup 
+		for(index = 0; index < meshlist.length; index = index + 1) {
+			ref = meshlist[index];
+			if(ref.show !== true) {
+				continue;
+			}
+			
+			console.log(ref.grouptype);
+			if(ref.grouptype === namePointGroup || ref.grouptype === namePointSphereGroup) {
+				console.log('ぽいんとじゃろう');
+				tablename = 'table_' + ref.name;
+				modelname = 'model_' + ref.name;
+				pgenname  = 'pgen_'  + ref.name;
+				text += 'local ' + tablename + ' = {\n';
+				
+				//Create PointList Table
+				for(i = 0 ; i < ref.pointposition.length; i = i + 3) {
+					if ( ( i % 9 ) === 0) text += '\n';
+					text += ref.pointposition[i + 0] + ',';
+					text += ref.pointposition[i + 1] + ',';
+					text += ref.pointposition[i + 2] + ',';
+					/*
+					text += 'table.insert(' + tablename + ', ' + ref.pointposition[i + 0] + '); \n'
+					text += 'table.insert(' + tablename + ', ' + ref.pointposition[i + 1] + '); \n'
+					text += 'table.insert(' + tablename + ', ' + ref.pointposition[i + 2] + '); \n'
+					*/
+				}
+				text += '\n}\n\n';
+				
+				text += 'local ' + modelname + ' = PointModel()\n';
+				text += 'local ' + pgenname + ' = PrimitiveGenerator()\n'
+				text += modelname + ':Create(' +  pgenname + ':PointList(' + tablename + ', #' + tablename + ', ' + '1.0)\n'
+				text += modelname + ":SetShader('normal.frag')\n";
+				text += 'table.insert(scene, ' + modelname + ')\n';
+				
+				//CreatePointList Primitive
+				continue;
+			}
+
+			if(ref.grouptype === nameLineGroup || ref.grouptype === nameLineSphereGroup) {
+				text += 'local ' + ref.name + ' = {}\n';
+				console.log('らいんじゃろう');
+				continue;
+			}
+		}
+
+		console.log(text);
 	}
 
 	/**
@@ -994,6 +1093,8 @@ Normalize, Sub */
 			sideviewz_     = document.getElementById('viewBack'),
 			
 			deletegroup    = document.getElementById('DeleteGroup'),
+			savebutton     = document.getElementById('SaveButton'),
+		
 			propertyTab,
 			groupTab,
 			consoleTab;
@@ -1036,7 +1137,8 @@ Normalize, Sub */
 		
 		viewortho.onclick = (viewModeChange)("ortho");
 		viewpers.onclick  = (viewModeChange)("pers");
-		
+		savebutton.onclick = saveScene;
+
 		// Create Tab
 		propertyTab = window.animtab.create('right', {
 			'rightTab' : { min : '0px', max : 'auto' }
