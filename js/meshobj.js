@@ -43,6 +43,47 @@ var MeshObj;
 	};
 
 	/**
+	 * メンバのクリア
+	 * @method setTrans
+	 * @param {Number} x x
+	 * @param {Number} y y 
+	 * @param {Number} z z
+	 */
+	mesh.prototype.clear = function () {
+		this.name          = 'undef';
+		this.type          = 'data';
+		this.position      = [];
+		this.normal        = [];
+		this.color         = [];
+		this.index         = [];
+		this.attrnames     = [];
+		this.mode          = 'Triangles';
+		this.vbo_position  = null;
+		this.vbo_normal    = null;
+		this.vbo_color     = null;
+		this.vbo_list      = [];
+		this.stride        = [];
+		this.shader        = null;
+		this.radius        = 1;
+		this.show          = true;
+		this.boundmin      = [0,0,0];
+		this.boundmax      = [0,0,0];
+		this.trans         = [0,0,0];
+		this.scale         = [1,1,1];
+		this.rotate        = [0,0,0];
+		this.diffColor     = [1,1,1,1];
+		
+		
+		//for raytrace
+		this.pointposition = [];
+		
+		//for info
+		this.urllist       = [];
+		this.colinfo       = [];
+		this.primtype      = 'mesh';
+	}
+
+	/**
 	 * 移動量の設定
 	 * @method setTrans
 	 * @param {Number} x x

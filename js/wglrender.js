@@ -559,6 +559,8 @@ var WGLRender;
 		for (i = 0 ; i < mesh.vbo_list.length; i = i + 1) {
 			this.gl.deleteBuffer(mesh.vbo_list[i]);
 		}
+		console.log('Delete Mesh : ', mesh);
+		mesh.clear();
 		mesh        = new MeshObj();
 		return mesh;
 	};
