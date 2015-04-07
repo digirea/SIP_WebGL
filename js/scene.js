@@ -194,7 +194,7 @@ Normalize, Sub */
 	}
 
 	/**
-	 * 座標を球面座標に変換
+	 * 球面座標に変換
 	 * @method transformSphereCoord
 	 * @param {Array} pos 座標配列
 	 */
@@ -212,7 +212,7 @@ Normalize, Sub */
 			x = pos[i + 0];
 			y = pos[i + 1];
 			z = pos[i + 2];
-			r     = 1000.0;
+			r     = 350.0;
 			th    =  (2 * Math.PI * y) / 360.0;
 			phi   = -(2 * Math.PI * z) / 360.0;
 			pos[i + 0] = (r * (Math.cos(th)  * Math.cos(phi)));
@@ -235,8 +235,7 @@ Normalize, Sub */
 		var mesh = {'position' : pos},
 			bb,
 			child,
-			retmesh,
-			selectnode = window.grouptreeview.getSelectNode();
+			retmesh;
 
 		if (type === 'LineGroup') {
 			retmesh  = render.createLineMesh(mesh, 8, 1.0);
@@ -245,7 +244,7 @@ Normalize, Sub */
 		}
 
 		if (type === 'PointGroup') {
-			retmesh = render.createPointMesh(mesh, 1.0, 8, 2);
+			retmesh = render.createPointMesh(mesh, 1.0, 8, 4);
 			retmesh.name = name + 'Point';
 			retmesh.setShader(mesh_shader);
 		}
@@ -265,23 +264,13 @@ Normalize, Sub */
 			retmesh.setShader(mesh_shader);
 		}
 
-
-
 		//ref hstable
 		retmesh.parentdata = window.hstable.getSelectData();
-		retmesh.urllist = urllist;
-		retmesh.colinfo = colinfo;
-		retmesh.grouptype = type;
+		retmesh.urllist    = urllist;
+		retmesh.colinfo    = colinfo;
+		retmesh.grouptype  = type;
 
-		child = datatree.createChild('mesh', retmesh.name, retmesh);
-		datatree.addChild(selectnode.name, child);
-
-		window.grouptreeview.update(datatree.getRoot(), child);
-		window.scene.propertyTab(true);
-		meshlist.push(child.data);
-
-		//datatree.addData(retmesh.name, retmesh);
-		//camera.setupLerp(retmesh.boundmin, retmesh.boundmax);
+		return retmesh;
 	}
   
   
@@ -333,11 +322,6 @@ Normalize, Sub */
 		//update tree
 		rootnode = datatree.createRoot('mesh', 'grid', gridmesh);
 		window.grouptreeview.update(datatree.getRoot(), rootnode);
-		/*
-		gridmesh= render.createGizmoMesh(1000);
-		gridmesh.setShader(line_shader);
-		meshlist.push(gridmesh);
-		*/
 		gizmomesh = render.createGizmoMesh(0.15);
 		gizmomesh.setShader(line_shader);
 	}
@@ -750,17 +734,32 @@ Normalize, Sub */
 		}
 
 		//Create Name
-		updateMeshText(name, pos, type, urllist, colinfo);
+		return updateMeshText(name, pos, type, urllist, colinfo);
 	}
 	
-	
+	/**
+	 * GroupTreeViewにmeshを追加
+	 * @method addMeshToGroupTree
+	 * @param {Mesh} mesh 追加するmesh
+	 */
+	function addMeshToGroupTree(mesh) {
+		var child = datatree.createChild('mesh', mesh.name, mesh),
+			selectnode = window.grouptreeview.getSelectNode();
+		meshlist.push(mesh);
+		datatree.addChild(selectnode.name, child);
+		window.grouptreeview.update(datatree.getRoot(), child);
+		window.scene.propertyTab(true);
+	}
+
 	/**
 	 * ラインの追加
 	 * @method addLine
 	 * @param {Event} e マウスイベント
 	 */
 	function addLine(e) {
-		addGroup('LineGroup');
+		var mesh = null;
+		mesh = addGroup('LineGroup');
+		addMeshToGroupTree(mesh);
 	}
 	
 	/**
@@ -769,7 +768,9 @@ Normalize, Sub */
 	 * @param {Event} e マウスイベント
 	 */
 	function addPoint(e) {
-		addGroup('PointGroup');
+		var mesh = null;
+		mesh = addGroup('PointGroup');
+		addMeshToGroupTree(mesh);
 	}
 	
 	/**
@@ -778,7 +779,9 @@ Normalize, Sub */
 	 * @param {Event} e マウスイベント
 	 */
 	function addLineSphere(e) {
-		addGroup('LineSphereGroup');
+		var mesh = null;
+		mesh = addGroup('LineSphereGroup');
+		addMeshToGroupTree(mesh);
 	}
 	
 	/**
@@ -787,8 +790,11 @@ Normalize, Sub */
 	 * @param {Event} e マウスイベント
 	 */
 	function addPointSphere(e) {
-		addGroup('PointSphereGroup');
+		var mesh = null;
+		mesh = addGroup('PointSphereGroup');
+		addMeshToGroupTree(mesh);
 	}
+
 	/**
 	 * ギズモの描画
 	 * @method drawGizmo
@@ -856,6 +862,7 @@ Normalize, Sub */
 		updateFrame();
 	}
 
+
 	/**
 	 * スイッチの開閉
 	 * @method openSwitch
@@ -919,15 +926,45 @@ Normalize, Sub */
 	
 	
 	/**
-	 * コンソールの更新
+	 * コンソールの更新発生したら
 	 * @method updateconsole
 	 * @param {Object} change 更新メッセージ
 	 */
 	function updateconsole(table) {
-		var i;
+		var i,
+			node = null,
+			oldmesh = null,
+			mesh = null;
+
 		for(i = 0 ; i < meshlist.length; i++) {
 			if(meshlist[i].parentdata === table) {
+				//replace datatree data
+				node = datatree.findNodeData(meshlist[i]);
+				if(node === null) {
+					//console.log('ERROR 何も見つかりませんでした');
+					continue;
+				}
+
+				oldmesh = meshlist[i];
+
+				//reconstruct mesh data.
+				window.hstable.loadData(node.data.parentdata, node.data.colinfo);
+				mesh = addGroup(oldmesh.grouptype);
+				oldmesh.duplicateInfo(mesh);
+				meshlist[i] = mesh;
+				window.hstable.loadData(node.data.parentdata);
+				
+				//replace node data
+				node.data = meshlist[i];
+				
+				//delete old VBO etc.
+				render.deleteMeshObj(oldmesh);
 			}
+		}
+		
+		
+		if(mesh !== null) {
+			camera.setupLerp(mesh.boundmin, mesh.boundmax, mesh.trans, mesh.scale, mesh.rotate);
 		}
 	}
 	

@@ -430,7 +430,7 @@ var WGLRender;
 	render.prototype.getMeshBoundingBox = function (mesh, bmin, bmax) {
 		var i,
 			isnan = false,
-			dummy_const = 100;
+			dummy_const = 1000;
 
 		for (i = 0; i < mesh.position.length; i = i + 3) {
 			if (mesh.position[i + 0] !== mesh.position[i + 0]) {
@@ -579,8 +579,8 @@ var WGLRender;
 	render.prototype.createLineMesh = function (base, divide, radius) {
 		var qtn = new QtnIV(),
 			qt  = qtn.identity(qtn.create()),
-			i,
-			deg,
+			i   = 0,
+			deg = 0,
 			x0  = 0,
 			x1  = 0,
 			x2  = 0,
@@ -593,15 +593,15 @@ var WGLRender;
 			cx  = 0,
 			cy  = 0,
 			cz  = 0,
-			dx,
-			dy,
-			dz,
-			invlen,
+			pointmax = 0,
+			dx  = 0,
+			dy  = 0,
+			dz  = 0,
+			len = 0,
+			invlen = 0,
 			vertical,
 			degdelta,
 			temp,
-			len,
-			linenum        = 0,
 			restrip        = 0,
 			restrip_offset = 0,
 			buf            = [],
@@ -631,7 +631,9 @@ var WGLRender;
 		//---------------------------------------------------------------------
 		//create vertex
 		//---------------------------------------------------------------------
-		for (i = 0; i < base.position.length; i = i + 6) {
+		pointmax = base.position.length;
+		pointmax = pointmax - (pointmax % 6)
+		for (i = 0; i < pointmax; i = i + 6) {
 			//get vertex per line.
 			x0 = base.position[i];
 			y0 = base.position[i + 1];
@@ -659,7 +661,8 @@ var WGLRender;
 			tangent = Normalize(tangent);
 
 			//create triangle vertex
-			for (deg = 0; deg <= 360; deg += degdelta) {
+			var c_count = 0;
+			for (deg = 0; deg <= (360 + degdelta); deg += degdelta) {
 				temp = [];
 				//degrees * Math.PI / 180;
 				qtn.rotate(deg * Math.PI / 180.0, [dx, dy, dz], qt);
@@ -685,8 +688,8 @@ var WGLRender;
 
 				//normal1
 				normal.push(temp[0], temp[1], temp[2]);
+				c_count++;
 			}
-			linenum = linenum + 1;
 		}
 
 		//---------------------------------------------------------------------

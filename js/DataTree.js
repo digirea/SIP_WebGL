@@ -200,6 +200,79 @@
 		}
 		return null;
 	}
+	
+	
+	/**
+	 * 指定した名前のノードを検索する[サブ]
+	 * @method findNode
+	 * @param {String} name 検索するノード名
+	 * @param {Node}   node 検索対象ノード
+	 * @return Literal nullまたは取得したノード.
+	 */
+	function findNodeNameSub(name, node) {
+		var i = 0,
+			temp = null;
+		if(node === null || node === undefined) {
+			return null;
+		}
+		for (i = 0; i < node.length; i = i + 1) {
+			if(node[i].name === name) {
+				return node;
+			}
+			if(node[i].child && node[i].child.length > 0) {
+				temp = findNodeNameSub(name, node[i].child);
+				if(temp !== null) return temp;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 指定した名前のノードを検索して返却する
+	 * @method findNode
+	 * @param {String} name 検索するノード名
+	 * @return Literal nullまたは取得したノード.
+	 */
+	function findNodeName(name) {
+		return findNodeNameSub(name, root);
+	}
+	
+	/**
+	 * 指定した名前のノードを検索する[サブ]
+	 * @method findNode
+	 * @param {Object} data 検索するノードデータ
+	 * @param {Node}   node 検索対象ノード
+	 * @return Literal nullまたは取得したノード.
+	 */
+	function findNodeDataSub(data, node) {
+		var i = 0,
+			temp = null;
+		if(node === null || node === undefined) {
+			return null;
+		}
+		for (i = 0; i < node.length; i = i + 1) {
+			if(node[i].data === data) {
+				return node[i];
+			}
+			if(node[i].child && node[i].child.length > 0) {
+				temp = findNodeDataSub(data, node[i].child);
+				if(temp !== null) return temp;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 指定した名前のノードを検索して返却する
+	 * @method findNode
+	 * @param {Object} data 検索するノードデータ
+	 * @return Literal nullまたは取得したノード.
+	 */
+	function findNodeData(data) {
+		return findNodeDataSub(data, root);
+	}
+	
+	
 
 	window.datatree             = datatree;
 	window.datatree.createRoot  = createRoot;
@@ -209,6 +282,8 @@
 	window.datatree.getRoot     = getRoot;
 	window.datatree.getData     = getData;
 	window.datatree.delData     = delData;
+	window.datatree.findNodeData    = findNodeData;
+	window.datatree.findNodeName    = findNodeName;
 }());
 
 

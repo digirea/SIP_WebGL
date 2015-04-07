@@ -52,9 +52,54 @@ var MeshObj;
 		this.colinfo       = [];
 		this.primtype      = 'mesh';
 		this.grouptype     = 'meshgroup';
-		console.log('Call clear mesh:', this);
 	}
 
+
+	
+	/**
+	 * メンバのクリア
+	 * @method setTrans
+	 * @param {Number} x x
+	 * @param {Number} y y 
+	 * @param {Number} z z
+	 */
+	mesh.prototype.duplicateInfo = function (dest) {
+		dest.name             = this.name            ;
+		dest.type             = this.type            ;
+		//dest.position         = this.position        ;
+		dest.normal           = this.normal          ;
+		dest.color            = this.color           ;
+		dest.index            = this.index           ;
+		dest.attrnames        = this.attrnames       ;
+		dest.mode             = this.mode            ;
+		//dest.vbo_position   = this.vbo_position    ;
+		//dest.vbo_normal     = this.vbo_normal      ;
+		//dest.vbo_color      = this.vbo_color       ;
+		//dest.vbo_list       = this.vbo_list        ;
+		dest.stride           = this.stride          ;
+		dest.shader           = this.shader          ;
+		dest.radius           = this.radius          ;
+		dest.show             = this.show            ;
+		//dest.boundmin         = this.boundmin        ;
+		//dest.boundmax         = this.boundmax        ;
+		dest.trans            = this.trans           ;
+		dest.scale            = this.scale           ;
+		dest.rotate           = this.rotate          ;
+		dest.diffColor        = this.diffColor       ;
+		//dest.pointposition    = this.pointposition   ;
+		//dest.urllist          = this.urllist         ;
+		//dest.colinfo          = this.colinfo         ;
+		dest.primtype         = this.primtype        ;
+		dest.grouptype        = this.grouptype       ;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * 移動量の設定
 	 * @method setTrans
