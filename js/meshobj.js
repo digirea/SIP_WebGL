@@ -9,37 +9,7 @@ var MeshObj;
 	 * @method mesh
 	 */
 	var mesh = function () {
-		this.name          = 'undef';
-		this.type          = 'data';
-		this.position      = [];
-		this.normal        = [];
-		this.color         = [];
-		this.index         = [];
-		this.attrnames     = [];
-		this.mode          = 'Triangles';
-		this.vbo_position  = null;
-		this.vbo_normal    = null;
-		this.vbo_color     = null;
-		this.vbo_list      = [];
-		this.stride        = [];
-		this.shader        = null;
-		this.radius        = 1;
-		this.show          = true;
-		this.boundmin      = [0,0,0];
-		this.boundmax      = [0,0,0];
-		this.trans         = [0,0,0];
-		this.scale         = [1,1,1];
-		this.rotate        = [0,0,0];
-		this.diffColor     = [1,1,1,1];
-		
-		
-		//for raytrace
-		this.pointposition = [];
-		
-		//for info
-		this.urllist       = [];
-		this.colinfo       = [];
-		this.primtype      = 'mesh';
+		this.clear();
 	};
 
 	/**
@@ -81,6 +51,8 @@ var MeshObj;
 		this.urllist       = [];
 		this.colinfo       = [];
 		this.primtype      = 'mesh';
+		this.grouptype     = 'meshgroup';
+		console.log('Call clear mesh:', this);
 	}
 
 	/**

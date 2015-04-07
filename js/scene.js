@@ -238,38 +238,40 @@ Normalize, Sub */
 			retmesh,
 			selectnode = window.grouptreeview.getSelectNode();
 
-		if (type === 'Line') {
+		if (type === 'LineGroup') {
 			retmesh  = render.createLineMesh(mesh, 8, 1.0);
 			retmesh.name = name + 'Line';
 			retmesh.setShader(mesh_shader);
 		}
 
-		if (type === 'Point') {
+		if (type === 'PointGroup') {
 			retmesh = render.createPointMesh(mesh, 1.0, 8, 2);
 			retmesh.name = name + 'Point';
 			retmesh.setShader(mesh_shader);
 		}
 		
 
-		if (type === 'LineSphere') {
+		if (type === 'LineSphereGroup') {
 			transformSphereCoord(mesh.position);
 			retmesh  = render.createLineMesh(mesh, 8, 1.0);
 			retmesh.name = name + 'Line';
 			retmesh.setShader(mesh_shader);
 		}
 
-		if (type === 'PointSphere') {
+		if (type === 'PointSphereGroup') {
 			transformSphereCoord(mesh.position);
 			retmesh = render.createPointMesh(mesh, 1.0, 8, 4);
 			retmesh.name = name + 'Point';
 			retmesh.setShader(mesh_shader);
 		}
 
+
+
+		//ref hstable
+		retmesh.parentdata = window.hstable.getSelectData();
 		retmesh.urllist = urllist;
 		retmesh.colinfo = colinfo;
-		
-		//get hstable
-		retmesh.parentdata = window.hstable.getSelectData();
+		retmesh.grouptype = type;
 
 		child = datatree.createChild('mesh', retmesh.name, retmesh);
 		datatree.addChild(selectnode.name, child);
@@ -758,7 +760,7 @@ Normalize, Sub */
 	 * @param {Event} e マウスイベント
 	 */
 	function addLine(e) {
-		addGroup('Line');
+		addGroup('LineGroup');
 	}
 	
 	/**
@@ -767,7 +769,7 @@ Normalize, Sub */
 	 * @param {Event} e マウスイベント
 	 */
 	function addPoint(e) {
-		addGroup('Point');
+		addGroup('PointGroup');
 	}
 	
 	/**
@@ -776,7 +778,7 @@ Normalize, Sub */
 	 * @param {Event} e マウスイベント
 	 */
 	function addLineSphere(e) {
-		addGroup('LineSphere');
+		addGroup('LineSphereGroup');
 	}
 	
 	/**
@@ -785,7 +787,7 @@ Normalize, Sub */
 	 * @param {Event} e マウスイベント
 	 */
 	function addPointSphere(e) {
-		addGroup('PointSphere');
+		addGroup('PointSphereGroup');
 	}
 	/**
 	 * ギズモの描画
