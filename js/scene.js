@@ -72,6 +72,7 @@ Normalize, Sub */
 				newlist.push(meshlist[i]);
 			} else {
 				console.log('DELETE MESH : ', meshlist[i].name);
+				render.deleteMeshObj(meshlist[i]);
 			}
 		}
 		console.log(newlist);
@@ -920,8 +921,12 @@ Normalize, Sub */
 	 * @method updateconsole
 	 * @param {Object} change 更新メッセージ
 	 */
-	function updateconsole(change) {
-		console.log(change);
+	function updateconsole(table) {
+		var i;
+		for(i = 0 ; i < meshlist.length; i++) {
+			if(meshlist[i].parentdata === table) {
+			}
+		}
 	}
 	
 	/**

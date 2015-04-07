@@ -136,7 +136,7 @@
 						grid.render();
 					}
 					if(source === 'loadData') return;
-					window.scene.updateconsole(change);
+					window.scene.updateconsole(selectdata);
 				}
 			});
 		}

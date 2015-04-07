@@ -428,20 +428,39 @@ var WGLRender;
 	 * @return ObjectExpression
 	 */
 	render.prototype.getMeshBoundingBox = function (mesh, bmin, bmax) {
-		var i;
+		var i,
+			isnan = false,
+			dummy_const = 100;
+
 		for (i = 0; i < mesh.position.length; i = i + 3) {
 			if (mesh.position[i + 0] !== mesh.position[i + 0]) {
 				console.log("NAN:", i);
+				isnan = true;
 			}
 			if (mesh.position[i + 1] !== mesh.position[i + 1]) {
 				console.log("NAN:", i);
+				isnan = true;
 			}
 			if (mesh.position[i + 2] !== mesh.position[i + 2]) {
 				console.log("NAN:", i);
+				isnan = true;
+			}
+			if (isnan === true) {
+				break;
 			}
 			
 			GetMinMax(bmin, bmax, [mesh.position[i + 0], mesh.position[i + 1], mesh.position[i + 2]]);
 		}
+
+		if (isnan === true) {
+			bmin[0] = -dummy_const;
+			bmin[1] = -dummy_const;
+			bmin[2] = -dummy_const;
+			bmax[0] = dummy_const;
+			bmax[1] = dummy_const;
+			bmax[2] = dummy_const;
+		}
+
 		console.log('BB:', bmin, bmax);
 		return {'min' : bmin, 'max' : bmax};
 	};
@@ -528,7 +547,22 @@ var WGLRender;
 		
 		return mesh;
 	};
-	
+
+	/**
+	 * メッシュオブジェクトの削除
+	 * @method createMeshObj
+	 * @param {Object} data メッシュデータ
+	 * @return mesh 空のメッシュオブジェクト
+	 */
+	render.prototype.deleteMeshObj = function (mesh) {
+		var i;
+		for (i = 0 ; i < mesh.vbo_list.length; i = i + 1) {
+			this.gl.deleteBuffer(mesh.vbo_list[i]);
+		}
+		mesh        = new MeshObj();
+		return mesh;
+	};
+
 	//------------------------------------------------------------------------------
 	// createLineMesh (Cylinder)
 	//------------------------------------------------------------------------------

@@ -56,7 +56,7 @@
         pos          = mvpMatrix * vec4(p, 1.0);
         
         vNormal.xyz  = N.xyz;
-        vNormal.w    = pos.z / pos.w;
+        //vNormal.w    = pos.z / pos.w;
 
         gl_Position  = pos;
       }
