@@ -580,6 +580,7 @@ var WGLRender;
 		var qtn = new QtnIV(),
 			qt  = qtn.identity(qtn.create()),
 			i   = 0,
+			di  = 0,
 			deg = 0,
 			x0  = 0,
 			x1  = 0,
@@ -660,9 +661,8 @@ var WGLRender;
 			tangent = Cross([dx, dy, dz], vertical);
 			tangent = Normalize(tangent);
 
-			//create triangle vertex
-			var c_count = 0;
-			for (deg = 0; deg <= (360 + degdelta); deg += degdelta) {
+			deg = 0;
+			for (di = 0; di <= divide ; di = di + 1) {
 				temp = [];
 				//degrees * Math.PI / 180;
 				qtn.rotate(deg * Math.PI / 180.0, [dx, dy, dz], qt);
@@ -688,7 +688,7 @@ var WGLRender;
 
 				//normal1
 				normal.push(temp[0], temp[1], temp[2]);
-				c_count++;
+				deg += degdelta;
 			}
 		}
 
