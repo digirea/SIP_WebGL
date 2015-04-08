@@ -899,6 +899,13 @@ Normalize, Sub */
 		text +=  camera.camUp[2] + ',';
 		text +=  '    ';
 		text +=  scene_fov + ')\n';
+
+		//rotate?
+		////rotate
+		//text += modelname + ':SetRotate(\n';
+		//text += ref.rotate[0] + ', ' + ref.rotate[1] + ', ' + ref.rotate[2] + '\n';
+		//text += ')\n\n'
+
 		text += 'table.insert(scene, cam)\n';
 
 		//setup 
@@ -908,12 +915,16 @@ Normalize, Sub */
 				continue;
 			}
 			
-			console.log(ref.grouptype);
+			//Create Script table name 
+			tablename = 'table_' + ref.name;
+			modelname = 'model_' + ref.name;
+			pgenname  = 'pgen_'  + ref.name;
+
 			if(ref.grouptype === namePointGroup || ref.grouptype === namePointSphereGroup) {
-				console.log('ぽいんとじゃろう');
-				tablename = 'table_' + ref.name;
-				modelname = 'model_' + ref.name;
-				pgenname  = 'pgen_'  + ref.name;
+				text += '------------------------------------------------------\n';
+				text += '--PointList Primitive\n';
+				text += '------------------------------------------------------\n';
+
 				text += 'local ' + tablename + ' = {\n';
 				
 				//Create PointList Table
@@ -922,30 +933,64 @@ Normalize, Sub */
 					text += ref.pointposition[i + 0] + ',';
 					text += ref.pointposition[i + 1] + ',';
 					text += ref.pointposition[i + 2] + ',';
-					/*
-					text += 'table.insert(' + tablename + ', ' + ref.pointposition[i + 0] + '); \n'
-					text += 'table.insert(' + tablename + ', ' + ref.pointposition[i + 1] + '); \n'
-					text += 'table.insert(' + tablename + ', ' + ref.pointposition[i + 2] + '); \n'
-					*/
 				}
 				text += '\n}\n\n';
 				
 				text += 'local ' + modelname + ' = PointModel()\n';
 				text += 'local ' + pgenname + ' = PrimitiveGenerator()\n'
-				text += modelname + ':Create(' +  pgenname + ':PointList(' + tablename + ', #' + tablename + ', ' + '1.0)\n'
-				text += modelname + ":SetShader('normal.frag')\n";
-				text += 'table.insert(scene, ' + modelname + ')\n';
-				
-				//CreatePointList Primitive
-				continue;
+				text += modelname + ':Create(' +  pgenname + ':PointList(' + tablename + ', #' + tablename + ', ' +  ref.radius + ')\n'
 			}
 
+
 			if(ref.grouptype === nameLineGroup || ref.grouptype === nameLineSphereGroup) {
-				text += 'local ' + ref.name + ' = {}\n';
-				console.log('らいんじゃろう');
-				continue;
+				text += '------------------------------------------------------\n';
+				text += '--LineList Primitive\n';
+				text += '------------------------------------------------------\n';
+				text += 'local ' + tablename + ' = {\n';
+				
+				//Create LineList Table
+				for(i = 0 ; i < ref.pointposition.length; i = i + 3) {
+					if ( ( i % 9 ) === 0) text += '\n';
+					text += ref.pointposition[i + 0] + ',';
+					text += ref.pointposition[i + 1] + ',';
+					text += ref.pointposition[i + 2] + ',';
+				}
+				text += '\n}\n\n';
+				
+				text += 'local ' + modelname + ' = LineModel()\n';
+				text += 'local ' + pgenname + ' = PrimitiveGenerator()\n'
+				text += modelname + ':Create(' +  pgenname + ':LineList(' + tablename + ', #' + tablename + ', ' +  ref.radius + ')\n'
+			}
+
+			//transform and push scene
+			if(
+				ref.grouptype === nameLineGroup ||
+				ref.grouptype === nameLineSphereGroup ||
+				ref.grouptype === namePointGroup ||
+				ref.grouptype === namePointSphereGroup)
+			{
+				//scale
+				text += modelname + ':SetScale(\n';
+				text += ref.scale[0] + ', ' + ref.scale[1] + ', ' + ref.scale[2] + '\n';
+				text += ')\n\n'
+
+				//rotate
+				text += modelname + ':SetRotate(\n';
+				text += ref.rotate[0] + ', ' + ref.rotate[1] + ', ' + ref.rotate[2] + '\n';
+				text += ')\n\n'
+
+				//trans
+				text += modelname + ':SetTranslate(\n';
+				text += ref.trans[0] + ', ' + ref.trans[1] + ', ' + ref.trans[2] + '\n';
+				text += ')\n\n'
+
+				text += modelname + ":SetShader('polygon.frag')\n";
+				text += 'table.insert(scene, ' + modelname + ')\n';
 			}
 		}
+
+		//RENDER
+		text += 'render(scene)\n'
 
 		console.log(text);
 	}

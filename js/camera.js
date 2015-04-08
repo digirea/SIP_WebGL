@@ -291,7 +291,7 @@ var test_time = 0;
 		this.camWorldPosEnd[1]     = (tempmax[1] + tempmin[1]) / 2;
 		this.camWorldPosEnd[2]     = (tempmax[2] + tempmin[2]) / 2;
 
-		console.log('setupLerp : ', min, max, trans, scale);
+		console.log('setupLerp : cwp->', this.camWorldPos, this.camRot, min, max, trans, scale);
 		if (trans) {
 			this.camWorldPosEnd[0] += parseFloat(trans[0]);
 			this.camWorldPosEnd[1] += parseFloat(trans[1]);

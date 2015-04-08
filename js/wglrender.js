@@ -611,7 +611,8 @@ var WGLRender;
 			inum           = 0,
 			tangent        = [],
 			normal         = [],
-			reconstnoremal = [];
+			reconstnoremal = [],
+			mesh;
 
 		if (divide <= 0 || radius <= 0) {
 			console.log('Error divide or radius is less then 0\n');
@@ -717,8 +718,9 @@ var WGLRender;
 			pos.push(buf[inum * 3], buf[inum * 3 + 1], buf[inum * 3 + 2]);
 			reconstnoremal.push(normal[inum * 3],  normal[inum * 3 + 1], normal[inum * 3 + 2]);
 		}
-
-		return this.createMeshObj({'pos' : pos, 'normal' : reconstnoremal});
+		mesh = this.createMeshObj({'pos' : pos, 'normal' : reconstnoremal});
+		mesh.pointposition = base.position;
+		return mesh;
 	};
 	
 	
@@ -736,7 +738,8 @@ var WGLRender;
 	render.prototype.createGridMesh = function (gridsize, gridshift, gridcol) {
 		var i,
 			position     = [],
-			color        = [];
+			color        = [],
+			mesh;
 
 		for (i = -gridsize; i <= gridsize; i += gridshift) {
 			position.push(gridsize, 0, i);
@@ -748,7 +751,9 @@ var WGLRender;
 			color.push(gridcol, gridcol, gridcol, 1.0);
 			color.push(gridcol, gridcol, gridcol, 1.0);
 		}
-		return this.createMeshObj({'pos' : position, 'color' : color});
+		mesh = this.createMeshObj({'pos' : position, 'color' : color});
+		mesh.pointposition = position;
+		return mesh;
 	};
 	
 	
