@@ -957,12 +957,59 @@ Normalize, Sub */
 			if(ref.show !== true) {
 				continue;
 			}
+			console.log("GROUP_TYPE === ", ref.grouptype);
 			
 			//Create Script table name 
 			tablename = 'table_' + ref.name;
 			modelname = 'model_' + ref.name;
 			pgenname  = 'pgen_'  + ref.name;
 
+			tablename = tablename.replace(/\./g, "");
+			modelname = modelname.replace(/\./g, "");
+			pgenname  = pgenname.replace(/\./g, "");
+
+			//------------------------------------------------------------------------------
+			//
+			// STLDATA
+			//
+			//------------------------------------------------------------------------------
+			if(ref.grouptype === nameSTLData) {
+				text += '------------------------------------------------------\n';
+				text += '-- STL \n';
+				text += '------------------------------------------------------\n';
+				text += 'local ' + tablename + ' = {\n';
+				
+				for(i = 0 ; i < ref.position.length; i = i + 3) {
+					if ( ( i % 9 ) === 0) text += '\n';
+					text += ref.position[i + 0] + ',';
+					text += ref.position[i + 1] + ',';
+					text += ref.position[i + 2] + ',';
+				}
+				//
+				for(i = 0 ; i < ref.normal.length; i = i + 3) {
+					if ( ( i % 9 ) === 0) text += '\n';
+					text += ref.normal[i + 0] + ',';
+					text += ref.normal[i + 1] + ',';
+					text += ref.normal[i + 2] + ',';
+				}
+
+				text += '\n}\n\n';
+				
+				text += 'local ' + modelname + ' = PolygonModel()\n';
+				text += 'local ' + pgenname + ' = PrimitiveGenerator()\n'
+
+				//Create start
+				text += modelname + ':Create(';
+				text += pgenname + ':TriangleList(' + tablename + ', (#' + tablename + ') / 3)';
+				text += ')\n';
+				//Create End
+			}
+
+			//------------------------------------------------------------------------------
+			//
+			// POINT
+			//
+			//------------------------------------------------------------------------------
 			if(ref.grouptype === namePointGroup || ref.grouptype === namePointSphereGroup) {
 				text += '------------------------------------------------------\n';
 				text += '-- PointList Primitive\n';
@@ -990,6 +1037,11 @@ Normalize, Sub */
 			}
 
 
+			//------------------------------------------------------------------------------
+			//
+			// LINE
+			//
+			//------------------------------------------------------------------------------
 			if(ref.grouptype === nameLineGroup || ref.grouptype === nameLineSphereGroup) {
 				text += '------------------------------------------------------\n';
 				text += '-- LineList Primitive\n';
@@ -1017,6 +1069,7 @@ Normalize, Sub */
 
 			//transform and push scene
 			if(
+				ref.grouptype === nameSTLData ||
 				ref.grouptype === nameLineGroup ||
 				ref.grouptype === nameLineSphereGroup ||
 				ref.grouptype === namePointGroup ||

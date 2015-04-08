@@ -238,9 +238,9 @@
 			index += 50;
 		}
 
-		console.log('POS' + m_pos);
-		console.log('NORMAL' + m_normal);
-		console.log('[DEBUG] STLB Done.');
+		//console.log('POS' + m_pos);
+		//console.log('NORMAL' + m_normal);
+		//console.log('[DEBUG] STLB Done.');
 
 		//todo Mesh Data
 		return {
