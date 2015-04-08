@@ -1090,7 +1090,8 @@ Normalize, Sub */
 				text += ref.trans[0] + ', ' + ref.trans[1] + ', ' + ref.trans[2] + '\n';
 				text += ')\n\n'
 
-				text += modelname + ":SetShader('normal.frag')\n";
+				text += modelname + ":SetShader('pathtrace.frag')\n";
+				text += modelname + ":SetVec4('color', 0.97, 0.97, 0.97, 1.0)\n";
 				text += 'table.insert(scene, ' + modelname + ')\n';
 			}
 		}
