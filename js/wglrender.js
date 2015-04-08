@@ -612,6 +612,8 @@ var WGLRender;
 			tangent        = [],
 			normal         = [],
 			reconstnoremal = [],
+			primvertex     = divide * 2,
+			number,
 			mesh;
 
 		if (divide <= 0 || radius <= 0) {
@@ -620,6 +622,7 @@ var WGLRender;
 			return null;
 		}
 
+		number = base.position.length / 6;
 
 		//Create degreee delta
 		degdelta = 360.0 / divide;
@@ -663,7 +666,7 @@ var WGLRender;
 			tangent = Normalize(tangent);
 
 			deg = 0;
-			for (di = 0; di <= divide ; di = di + 1) {
+			for (di = 0; di < divide ; di = di + 1) {
 				temp = [];
 				//degrees * Math.PI / 180;
 				qtn.rotate(deg * Math.PI / 180.0, [dx, dy, dz], qt);
@@ -696,19 +699,20 @@ var WGLRender;
 		//---------------------------------------------------------------------
 		//create triangle index buffer per vertex
 		//---------------------------------------------------------------------
-		for (i = 0; i < buf.length / 4; i = i + 2) { //2triangle push 
-			index.push(
-				restrip_offset + i,
-				restrip_offset + i + 1,
-				restrip_offset + i + 2,
-				restrip_offset + i + 1,
-				restrip_offset + i + 3,
-				restrip_offset + i + 2);
-
-			restrip += 2;
-			if (restrip >= (divide * 2)) {
-				restrip_offset = restrip_offset + 2;
-				restrip = 0;
+		for (i = 0; i < number ; i = i + 1) {
+			restrip_offset = i * primvertex;
+			for (di = 0; di < primvertex; di = di + 1) {
+				if( (di & 1) === 0) {
+					index.push(
+						restrip_offset + ((di + 0) % primvertex),
+						restrip_offset + ((di + 1) % primvertex),
+						restrip_offset + ((di + 2) % primvertex));
+				} else {
+					index.push(
+						restrip_offset + ((di + 0) % primvertex),
+						restrip_offset + ((di + 2) % primvertex),
+						restrip_offset + ((di + 1) % primvertex));
+				}
 			}
 		}
 		
@@ -716,7 +720,7 @@ var WGLRender;
 		for (i = 0; i < index.length; i = i + 1) {
 			inum = index[i];
 			pos.push(buf[inum * 3], buf[inum * 3 + 1], buf[inum * 3 + 2]);
-			reconstnoremal.push(normal[inum * 3],  normal[inum * 3 + 1], normal[inum * 3 + 2]);
+			reconstnoremal.push(normal[inum * 3],  normal[inum * 3 + 2], normal[inum * 3 + 1]);
 		}
 		mesh = this.createMeshObj({'pos' : pos, 'normal' : reconstnoremal});
 		mesh.pointposition = base.position;
