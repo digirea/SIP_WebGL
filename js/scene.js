@@ -1,5 +1,5 @@
 /*jslint devel:true*/
-/*global Float32Array, ArrayBuffer, Int16Array, QtnIV, MatIV,
+/*global Blob saveAs Float32Array, ArrayBuffer, Int16Array, QtnIV, MatIV,
 WGLRender, Camera, ReqFile, datatree, Mul, IntersectSphere, UnProject, UnProjectWithLocal
 Normalize, Sub */
 
@@ -865,6 +865,7 @@ Normalize, Sub */
 			ch            = canvas.height,
 			filename      = new Date(), //2015/4/7 17:04:08 : toLocaleString()
 			text          = '',
+			blob,
 			ref           = null,
 			tablename     = '',
 			pgenname      = '',
@@ -872,7 +873,12 @@ Normalize, Sub */
 			mtx           = new MatIV(),
 			vpMatrix      = getViewProjMatrix(),
 			vpMatrixI     = mtx.identity(mtx.create()),
+			RotateMatrixI = mtx.identity(mtx.create()),
 			camposview    = [],
+			camatview     = [],
+			camupview     = [],
+			camrotate     = [],
+			l_PI          = 3.14159265358979,
 			index,
 			i;
 
@@ -881,14 +887,33 @@ Normalize, Sub */
 		camposview[1] = camera.camPos[1];
 		camposview[2] = camera.camPos[2];
 		camposview[3] = 1.0;
+
+		camatview[0] = camera.camAt[0];
+		camatview[1] = camera.camAt[1];
+		camatview[2] = camera.camAt[2];
+		camatview[3] = 1.0;
 		
+		camupview[0] = camera.camUp[0];
+		camupview[1] = camera.camUp[1];
+		camupview[2] = camera.camUp[2];
+		camupview[3] = 1.0;
+
 		mtx.inverse(vpMatrix, vpMatrixI);
 		camposview = MultMatrixVec4(vpMatrixI, camposview);
 		camposview[0] /= camposview[3];
 		camposview[1] /= camposview[3];
 		camposview[2] /= camposview[3];
 
-	
+		mtx.inverse(camera.RotateMatrix, RotateMatrixI);
+		camupview = MultMatrixVec4(RotateMatrixI, camupview);
+		camupview[0] /= camupview[3];
+		camupview[1] /= camupview[3];
+		camupview[2] /= camupview[3];
+
+		//camposview[0] += camera.camWorldPos[0];
+		//camposview[1] += camera.camWorldPos[1];
+		//camposview[2] += camera.camWorldPos[2];
+
 		//setup filename
 		filename = filename.toLocaleString();
 		filename = filename.replace(/:/g, "");
@@ -904,32 +929,23 @@ Normalize, Sub */
 		text += 'cam:SetScreenSize(' + cw + ',' + ch + ')\n';
 		text += 'cam:SetFilename("' + filename + '")\n';
 		text += 'cam:LookAt(';
-		//text +=  camera.camPos[0] + ',';
-		//text +=  camera.camPos[1] + ',';
-		//text +=  camera.camPos[2] + ',';
 		text +=  camposview[0] + ',';
 		text +=  camposview[1] + ',';
 		text +=  camposview[2] + ',';
 		text +=  '    ';
-		text +=  camera.camAt[0] + ',';
-		text +=  camera.camAt[1] + ',';
-		text +=  camera.camAt[2] + ',';
+		text +=  camatview[0] + ',';
+		text +=  camatview[1] + ',';
+		text +=  camatview[2] + ',';
 		text +=  '    ';
-		text +=  camera.camUp[0] + ',';
-		text +=  camera.camUp[1] + ',';
-		text +=  camera.camUp[2] + ',';
+		text +=  camupview[0] + ',';
+		text +=  camupview[1] + ',';
+		text +=  camupview[2] + ',';
 		text +=  '    ';
 		text +=  scene_fov + ')\n';
 
-		//rotate?
-		////rotate
-		//text += modelname + ':SetRotate(\n';
-		//text += ref.rotate[0] + ', ' + ref.rotate[1] + ', ' + ref.rotate[2] + '\n';
-		//text += ')\n\n'
-
 		text += 'table.insert(scene, cam)\n';
 
-		//setup 
+		//setup mesh
 		for(index = 0; index < meshlist.length; index = index + 1) {
 			ref = meshlist[index];
 			if(ref.show !== true) {
@@ -943,7 +959,7 @@ Normalize, Sub */
 
 			if(ref.grouptype === namePointGroup || ref.grouptype === namePointSphereGroup) {
 				text += '------------------------------------------------------\n';
-				text += '--PointList Primitive\n';
+				text += '-- PointList Primitive\n';
 				text += '------------------------------------------------------\n';
 
 				text += 'local ' + tablename + ' = {\n';
@@ -970,7 +986,7 @@ Normalize, Sub */
 
 			if(ref.grouptype === nameLineGroup || ref.grouptype === nameLineSphereGroup) {
 				text += '------------------------------------------------------\n';
-				text += '--LineList Primitive\n';
+				text += '-- LineList Primitive\n';
 				text += '------------------------------------------------------\n';
 				text += 'local ' + tablename + ' = {\n';
 				
@@ -1015,7 +1031,7 @@ Normalize, Sub */
 				text += ref.trans[0] + ', ' + ref.trans[1] + ', ' + ref.trans[2] + '\n';
 				text += ')\n\n'
 
-				text += modelname + ":SetShader('polygon.frag')\n";
+				text += modelname + ":SetShader('normal.frag')\n";
 				text += 'table.insert(scene, ' + modelname + ')\n';
 			}
 		}
@@ -1024,6 +1040,8 @@ Normalize, Sub */
 		text += 'render(scene)\n'
 
 		console.log(text);
+		blob = new Blob([text], {type: "text/plain;charset=utf-8"});
+		saveAs(blob, "scene.scn");
 	}
 
 	/**
