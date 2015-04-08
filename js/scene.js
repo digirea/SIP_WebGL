@@ -324,6 +324,7 @@ Normalize, Sub */
 		gridmesh.setShader(line_shader);
 		gridmesh.boundmin = Mul(gridmesh.boundmin, [0.25, 0.25, 0.25]);
 		gridmesh.boundmax = Mul(gridmesh.boundmax, [0.25, 0.25, 0.25]);
+		gridmesh.radius = 0.01;
 		meshlist.push(gridmesh);
 		
 		//update tree
