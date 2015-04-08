@@ -869,9 +869,26 @@ Normalize, Sub */
 			tablename     = '',
 			pgenname      = '',
 			modelname     = '',
+			mtx           = new MatIV(),
+			vpMatrix      = getViewProjMatrix(),
+			vpMatrixI     = mtx.identity(mtx.create()),
+			camposview    = [],
 			index,
 			i;
+
+		//precalc view projection matrix
+		camposview[0] = camera.camPos[0];
+		camposview[1] = camera.camPos[1];
+		camposview[2] = camera.camPos[2];
+		camposview[3] = 1.0;
 		
+		mtx.inverse(vpMatrix, vpMatrixI);
+		camposview = MultMatrixVec4(vpMatrixI, camposview);
+		camposview[0] /= camposview[3];
+		camposview[1] /= camposview[3];
+		camposview[2] /= camposview[3];
+
+	
 		//setup filename
 		filename = filename.toLocaleString();
 		filename = filename.replace(/:/g, "");
@@ -887,9 +904,12 @@ Normalize, Sub */
 		text += 'cam:SetScreenSize(' + cw + ',' + ch + ')\n';
 		text += 'cam:SetFilename("' + filename + '")\n';
 		text += 'cam:LookAt(';
-		text +=  camera.camPos[0] + ',';
-		text +=  camera.camPos[1] + ',';
-		text +=  camera.camPos[2] + ',';
+		//text +=  camera.camPos[0] + ',';
+		//text +=  camera.camPos[1] + ',';
+		//text +=  camera.camPos[2] + ',';
+		text +=  camposview[0] + ',';
+		text +=  camposview[1] + ',';
+		text +=  camposview[2] + ',';
 		text +=  '    ';
 		text +=  camera.camAt[0] + ',';
 		text +=  camera.camAt[1] + ',';
