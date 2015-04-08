@@ -324,7 +324,7 @@ Normalize, Sub */
 		gridmesh.setShader(line_shader);
 		gridmesh.boundmin = Mul(gridmesh.boundmin, [0.25, 0.25, 0.25]);
 		gridmesh.boundmax = Mul(gridmesh.boundmax, [0.25, 0.25, 0.25]);
-		gridmesh.radius = 0.01;
+		gridmesh.radius = 1.5;
 		meshlist.push(gridmesh);
 		
 		//update tree
@@ -892,27 +892,33 @@ Normalize, Sub */
 		camatview[1] = camera.camAt[1];
 		camatview[2] = camera.camAt[2];
 		camatview[3] = 1.0;
-		
+
 		camupview[0] = camera.camUp[0];
 		camupview[1] = camera.camUp[1];
 		camupview[2] = camera.camUp[2];
 		camupview[3] = 1.0;
 
+		//Position
 		mtx.inverse(vpMatrix, vpMatrixI);
 		camposview = MultMatrixVec4(vpMatrixI, camposview);
 		camposview[0] /= camposview[3];
 		camposview[1] /= camposview[3];
 		camposview[2] /= camposview[3];
 
+		/*
+		//AT
+		camatview = MultMatrixVec4(vpMatrix, camatview);
+		camatview[0] /= camatview[3];
+		camatview[1] /= camatview[3];
+		camatview[2] /= camatview[3];
+		*/
+
+		//UP
 		mtx.inverse(camera.RotateMatrix, RotateMatrixI);
 		camupview = MultMatrixVec4(RotateMatrixI, camupview);
 		camupview[0] /= camupview[3];
 		camupview[1] /= camupview[3];
 		camupview[2] /= camupview[3];
-
-		//camposview[0] += camera.camWorldPos[0];
-		//camposview[1] += camera.camWorldPos[1];
-		//camposview[2] += camera.camWorldPos[2];
 
 		//setup filename
 		filename = filename.toLocaleString();
@@ -929,18 +935,18 @@ Normalize, Sub */
 		text += 'cam:SetScreenSize(' + cw + ',' + ch + ')\n';
 		text += 'cam:SetFilename("' + filename + '")\n';
 		text += 'cam:LookAt(';
-		text +=  camposview[0] + ',';
-		text +=  camposview[1] + ',';
-		text +=  camposview[2] + ',';
-		text +=  '    ';
-		text +=  camatview[0] + ',';
-		text +=  camatview[1] + ',';
-		text +=  camatview[2] + ',';
-		text +=  '    ';
-		text +=  camupview[0] + ',';
-		text +=  camupview[1] + ',';
-		text +=  camupview[2] + ',';
-		text +=  '    ';
+		text +=  camposview[0] + ', ';
+		text +=  camposview[1] + ', ';
+		text +=  camposview[2] + ', ';
+		text +=  '\n';
+		text +=  camatview[0] + ', ';
+		text +=  camatview[1] + ', ';
+		text +=  camatview[2] + ', ';
+		text +=  '\n';
+		text +=  camupview[0] + ', ';
+		text +=  camupview[1] + ', ';
+		text +=  camupview[2] + ', ';
+		text +=  '\n';
 		text +=  scene_fov + ')\n';
 
 		text += 'table.insert(scene, cam)\n';
