@@ -938,7 +938,12 @@ Normalize, Sub */
 				
 				text += 'local ' + modelname + ' = PointModel()\n';
 				text += 'local ' + pgenname + ' = PrimitiveGenerator()\n'
-				text += modelname + ':Create(' +  pgenname + ':PointList(' + tablename + ', #' + tablename + ', ' +  ref.radius + ')\n'
+
+				//Create start
+				text += modelname + ':Create(';
+				text += pgenname + ':PointList(' + tablename + ', (#' + tablename + ') / 3, ' +  ref.radius + ') '
+				text += ')\n';
+				//Create End
 			}
 
 
@@ -959,7 +964,12 @@ Normalize, Sub */
 				
 				text += 'local ' + modelname + ' = LineModel()\n';
 				text += 'local ' + pgenname + ' = PrimitiveGenerator()\n'
-				text += modelname + ':Create(' +  pgenname + ':LineList(' + tablename + ', #' + tablename + ', ' +  ref.radius + ')\n'
+
+				//Create start
+				text += modelname + ':Create(';
+				text += pgenname + ':LineList(' + tablename + ', (#' + tablename + ') / 3, ' +  ref.radius + ') '
+				text += ')\n';
+				//Create End
 			}
 
 			//transform and push scene
