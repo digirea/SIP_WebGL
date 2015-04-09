@@ -445,6 +445,7 @@ var WGLRender;
 				console.log("NAN:", i);
 				isnan = true;
 			}
+
 			if (isnan === true) {
 				break;
 			}
@@ -622,7 +623,7 @@ var WGLRender;
 			return null;
 		}
 
-		number = base.position.length / 6;
+		number = Math.floor(base.position.length / 6);
 
 		//Create degreee delta
 		degdelta = 360.0 / divide;
@@ -720,7 +721,7 @@ var WGLRender;
 		for (i = 0; i < index.length; i = i + 1) {
 			inum = index[i];
 			pos.push(buf[inum * 3], buf[inum * 3 + 1], buf[inum * 3 + 2]);
-			reconstnoremal.push(normal[inum * 3],  normal[inum * 3 + 2], normal[inum * 3 + 1]);
+			reconstnoremal.push(normal[inum * 3],  normal[inum * 3 + 1], normal[inum * 3 + 2]);
 		}
 		mesh = this.createMeshObj({'pos' : pos, 'normal' : reconstnoremal});
 		mesh.pointposition = base.position;
