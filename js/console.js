@@ -211,8 +211,12 @@
 			filename = '';
 			document.getElementById('OpenTextFile').value = ''; // clear filename
 		});
-		filename = files[0].name;
-		reader.readAsText(files[0], "UTF-8");
+		if (files[0]) {
+			if (files[0].hasOwnProperty("name")) {
+				filename = files[0].name;
+			}
+			reader.readAsText(files[0], "UTF-8");
+		}
 	}
 
 	/**
