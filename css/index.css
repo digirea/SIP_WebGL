@@ -215,7 +215,7 @@ DustBox{
 	position        :absolute;
 	margin          :5px;
 	width           :160px;
-	height          :70px;
+	height          :115px;
 	left            :35px;
 	top             :35px;
 	background-color:rgba(55, 55, 55, 0.7);
@@ -259,6 +259,19 @@ DustBox{
 	background-color:rgb(203,184,53);
 	color           :#FFF;
 }
+
+#OpenURL {
+	overflow        : hidden;
+	position        : relative;
+	padding         : 0px;
+	margin          : 5px;
+	width           : 150px;
+	height          : 25px;
+	background-color:rgb(203,184,53);
+	color           :#FFF;
+}
+
+
 
 .file input[type="file"] {
 	opacity: 0;
@@ -491,6 +504,18 @@ DustBox{
 	z-index         :10;
 	//background      :transparent;
 }
+
+
+#urlinput {
+	margin          :5px;
+	padding: 10px;
+	background-color:rgb(60, 111, 165);
+	color           :white;
+	display         :none;
+	z-index         :15;
+	//background      :transparent;
+}
+
 
 
 

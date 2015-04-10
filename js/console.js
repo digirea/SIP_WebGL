@@ -189,6 +189,17 @@
 		rootnode = datatree.createRoot('text', filename, data);
 		window.grouptreeview.update(datatree.getRoot(), rootnode);
 	}
+	
+	
+	/**
+	 * CSV形式のファイルをhstableに導入する
+	 * @method addGridData
+	 * @param {csvtext} csvtext CSVTEXT
+	 */
+	function addGridData(csvtext) {
+		var csvArray = csv2Array(csvtext);
+		updateGridData(csvArray);
+	}
 
 	/**
 	 * テキストを開く
@@ -203,11 +214,7 @@
 		}
 		
 		reader.onloadend = (function(e) {
-			var csvArray = csv2Array(e.target.result);
-			var i;
-			var headerhtml = '';
-			var header = [];
-			updateGridData(csvArray);
+			addGridData(e.target.result);
 			filename = '';
 			document.getElementById('OpenTextFile').value = ''; // clear filename
 		});
@@ -231,6 +238,7 @@
 	window.hstable           = hstable;
 	window.hstable.countCols = countCols;
 	window.hstable.openText  = openText;
+	window.hstable.addGridData  = addGridData;
 	window.hstable.loadData  = loadData;
 	window.hstable.resetData = resetData;
 	window.hstable.getCol    = getCol;

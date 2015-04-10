@@ -352,7 +352,7 @@ Normalize, Sub */
 		var pickmeshdata = {'position' : [pos[0], pos[1], pos[2]]};
 
 		pickmesh = render.createPointMesh(pickmeshdata, 1.0, 8, 4);
-		if(pickmesh) {
+		if (pickmesh) {
 			pickmesh.setShader(pick_shader);
 			pickmesh.type = 'stl';
 			pickmesh.grouptype = nameSTLData;
@@ -381,7 +381,7 @@ Normalize, Sub */
 	 * @method hidePickMesh
 	 */
 	function hidePickMesh() {
-		if(pickmesh) {
+		if (pickmesh) {
 			pickmesh.show = false;
 			render.deleteMeshObj(pickmesh);
 			pickmesh = null;
@@ -394,8 +394,8 @@ Normalize, Sub */
 	 */
 	function updatePickMesh()  {
 		var rate = 2.0;
-		if(pickmesh === null)       return;
-		if(pickmesh.show === false) return;
+		if (pickmesh === null)       return;
+		if (pickmesh.show === false) return;
 		pickmesh.diffColor[0] = 1.0;//Math.abs(Math.sin(frameTime * rate));
 		pickmesh.diffColor[1] = Math.abs(Math.sin(frameTime * rate));
 		pickmesh.diffColor[2] = Math.abs(Math.sin(frameTime * rate));
@@ -410,8 +410,8 @@ Normalize, Sub */
 		updatePickMesh();
 		
 		//draw pick mesh
-		if(pickmesh === null) return;
-		if(pickmesh.show === true) {
+		if (pickmesh === null) return;
+		if (pickmesh.show === true) {
 			render.drawMesh(pickmesh);
 		}
 	}
@@ -583,7 +583,7 @@ Normalize, Sub */
 	}
 	
 	/**
-	 * ポップアップを隠す
+	 * ポップアップを隠し、Pickupされたメッシュも隠す
 	 * @method hidePopup
 	 */
 	function hidePopup() {
@@ -592,8 +592,58 @@ Normalize, Sub */
 			popup.style.display = "none";
 		}
 		hidePickMesh();
+
+		hideUrlPopup();
 	}
 	
+	/**
+	 * ポップアップの作成
+	 * @method createPopup
+	 * @param {Number} win_x スクリーンx座標
+	 * @param {Number} win_y スクリーンy座標
+	 * @param {Object} data データ
+	*/
+	function createUrlPopup(win_x, win_y, data) {
+		var popup = document.getElementById('urlinput'),
+			ele0,
+			ele1;
+		popup.style.position = 'absolute';
+		popup.style.left     = win_x + 'px';
+		popup.style.top      = win_y + 'px';
+		popup.style.display  = 'block';
+		popup.innerHTML      = '';
+
+		ele0 = document.createElement('input');
+		ele0.type = "text";
+		ele0.id   = "inputurl";
+		popup.appendChild(ele0);
+		ele1 = document.createElement('input');
+		ele1.type  = "submit";
+		ele1.value = "URLOpen";
+		ele1.onclick = function (event) {
+			hideUrlPopup();
+			var textbox = document.getElementById('inputurl');
+			var req = new XMLHttpRequest();
+			//req.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+			req.open('GET', textbox.value, true);
+			req.onreadystatechange = function(event) {
+				if (req.readyState === 4) {
+					window.hstable.addGridData(event.target.responseText);
+				}
+			};
+			req.send(null);
+			textbox.value = '';
+		};
+		popup.appendChild(ele1);
+	}
+
+	function hideUrlPopup() {
+		var popup = document.getElementById('urlinput');
+		if (popup) {
+			popup.style.display = "none";
+		}
+	}
+
 	/**
 	 * レイをメッシュとして生成
 	 * @method createRayMesh
@@ -1285,6 +1335,24 @@ Normalize, Sub */
 		}
 	}
 	
+	/**
+	 * URLからの読み込み
+	 * @method loadURL
+	 * @param {Event} e ファイルイベント
+	 */
+	function loadURL(e) {
+		var left = window.innerWidth / 2,
+			top  = window.innerHeight / 2;
+		
+		openSwitch();
+		createUrlPopup(left, top);
+		if (consolestate === 0) {
+			consolestate = 1;
+			window.scene.consoleTab(true);
+		}
+	}
+	
+	
 	
 	/**
 	 * コンソールの更新発生したら
@@ -1342,6 +1410,7 @@ Normalize, Sub */
 			viewpers       = document.getElementById('viewPers'),
 			openstl        = document.getElementById('OpenSTL'),
 			opencsv        = document.getElementById('OpenCSV'),
+			openurl        = document.getElementById('OpenURL'),
 			addline        = document.getElementById('AddLine'),
 			addpoint       = document.getElementById('AddPoint'),
 			addpointsphere = document.getElementById('AddPointSphere'),
@@ -1382,6 +1451,8 @@ Normalize, Sub */
 		
 		document.getElementById('OpenSTLFile').addEventListener('change',  loadSTL, false);
 		document.getElementById('OpenTextFile').addEventListener('change', loadTXT, false);
+		document.getElementById('OpenURL').addEventListener('change', loadURL, false);
+		openurl.onclick = loadURL;
 		
 		openswitch.onclick = openSwitch;
 		viewdirection.onclick = openViewDirection;
