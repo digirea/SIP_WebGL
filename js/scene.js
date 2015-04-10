@@ -12,12 +12,15 @@ Normalize, Sub */
 		meshlist       = [],
 		camera         = null,
 		gizmomesh      = null,
+		pickmesh       = null,
 		line_shader    = null,
 		mesh_shader    = null,
+		pick_shader    = null,
 		scene          = {},
 		model_id       = 0,
 		scene_fov      = 45.0,
 		consolestate   = 0,
+		frameTime      = 0,
 		nameLineGroup  = 'LineGroup',
 		namePointGroup = 'PointGroup',
 		nameLineSphereGroup  = 'LineSphereGroup',
@@ -31,6 +34,7 @@ Normalize, Sub */
 	function resetShader() {
 		mesh_shader        = render.createShaderObj('vs_mesh', 'fs_mesh');
 		line_shader        = render.createShaderObj('vs_line', 'fs_line');
+		pick_shader        = render.createShaderObj('vs_mesh', 'fs_pick');
 	}
 
 	/**
@@ -97,6 +101,7 @@ Normalize, Sub */
 		}
 	}
 	
+	
 	/**
 	 * データツリーの更新
 	 * @method updateDataTree
@@ -135,6 +140,9 @@ Normalize, Sub */
 				camera.setupLerp(meshlist[i].boundmin, meshlist[i].boundmax, meshlist[i].trans, meshlist[i].scale, meshlist[i].rotate);
 			}
 		}
+		
+		//ポップアップは消しておく
+		hidePopup();
 	}
 
 	/// updateMesh  call back function for loadSTL
@@ -188,7 +196,7 @@ Normalize, Sub */
 				camera.setupLerp(node.data.boundmin, node.data.boundmax, node.data.trans, node.data.scale, node.data.rotate);
 			}
 			//update handsontable
-			if(node.data.parentdata) {
+			if (node.data.parentdata) {
 				window.hstable.loadData(node.data.parentdata, node.data.colinfo);
 			}
 		}
@@ -316,6 +324,8 @@ Normalize, Sub */
 	function resetTree() {
 		var gridmesh     = null,
 			rootnode     = {};
+		
+		//Create grid
 		gridmesh = render.createGridMesh(1000, 100, 0.5);
 		
 		gridmesh.setMode('Lines');
@@ -334,6 +344,79 @@ Normalize, Sub */
 		gizmomesh.setShader(line_shader);
 	}
 	
+	/**
+	 * ピックメッシュ表示
+	 * @method showPickMesh
+	 */
+	function showPickMesh(pos, mesh) {
+		var pickmeshdata = {'position' : [pos[0], pos[1], pos[2]]};
+
+		pickmesh = render.createPointMesh(pickmeshdata, 1.0, 8, 4);
+		if(pickmesh) {
+			pickmesh.setShader(pick_shader);
+			pickmesh.type = 'stl';
+			pickmesh.grouptype = nameSTLData;
+			pickmesh.name = "PICK";
+			pickmesh.trans[0]      = mesh.trans[0];
+			pickmesh.trans[1]      = mesh.trans[1];
+			pickmesh.trans[2]      = mesh.trans[2];
+			pickmesh.scale[0]      = mesh.scale[0];
+			pickmesh.scale[1]      = mesh.scale[1];
+			pickmesh.scale[2]      = mesh.scale[2];
+			pickmesh.rotate[0]     = mesh.rotate[0];
+			pickmesh.rotate[1]     = mesh.rotate[1];
+			pickmesh.rotate[2]     = mesh.rotate[2];
+			pickmesh.radius        = mesh.radius * 1.01;
+			pickmesh.diffColor[0]  = 1.0; 
+			pickmesh.diffColor[1]  = 1.0; 
+			pickmesh.diffColor[2]  = 1.0; 
+			pickmesh.diffColor[3]  = 1.0; 
+			pickmesh.show = true;
+		}
+		console.log(pickmesh);
+	}
+
+	/**
+	 * ピックメッシュ非表示
+	 * @method hidePickMesh
+	 */
+	function hidePickMesh() {
+		if(pickmesh) {
+			pickmesh.show = false;
+			render.deleteMeshObj(pickmesh);
+			pickmesh = null;
+		}
+	}
+	
+	/**
+	 * フレームの更新
+	 * @method updateFrame
+	 */
+	function updatePickMesh()  {
+		var rate = 2.0;
+		if(pickmesh === null)       return;
+		if(pickmesh.show === false) return;
+		pickmesh.diffColor[0] = 1.0;//Math.abs(Math.sin(frameTime * rate));
+		pickmesh.diffColor[1] = Math.abs(Math.sin(frameTime * rate));
+		pickmesh.diffColor[2] = Math.abs(Math.sin(frameTime * rate));
+		pickmesh.diffColor[3] = Math.abs(Math.sin(frameTime * rate));
+	}
+
+	/**
+	 * pickmeshの描画
+	 * @method updateFrame
+	 */
+	function drawPickMesh()  {
+		updatePickMesh();
+		
+		//draw pick mesh
+		if(pickmesh === null) return;
+		if(pickmesh.show === true) {
+			render.drawMesh(pickmesh);
+		}
+	}
+
+
 	
 	/**
 	 * 全てのビューをリセット
@@ -469,7 +552,6 @@ Normalize, Sub */
 			console.log(ppos);
 			popup.style.left = ppos[0] + 'px';
 			popup.style.top  = ppos[1] + 'px';
-			
 		}
 	}
 	
@@ -509,6 +591,7 @@ Normalize, Sub */
 		if (popup) {
 			popup.style.display = "none";
 		}
+		hidePickMesh();
 	}
 	
 	/**
@@ -605,15 +688,15 @@ Normalize, Sub */
 			mesh.pointposition[info.index + 2]
 		);
 		info.index /= 3;
-		console.log(resultpos, info);
+		//console.log(resultpos, info);
 		
 		if (mesh.urllist.length > 0) {
 			info.URL = {};
-			info.URL.title = mesh.urllist[info.index];
-			info.URL.href  = mesh.urllist[info.index];
+			info.URL.title = mesh.urllist[info.index / 3];
+			info.URL.href  = mesh.urllist[info.index / 3];
 		}
-
 		createPopup(win_x, win_y, info);
+		showPickMesh(info.position, mesh);
 	}
 	
 	
@@ -693,7 +776,7 @@ Normalize, Sub */
 				colinfo.push({'name':grouptype, 'index' : i, 'attr' : 2});
 			}
 			
-			if(colURL < 0) {
+			if (colURL < 0) {
 				if (selectnames[i].value === 'URL') {
 					colinfo.push({'name':grouptype, 'index' : i, 'attr' : 3});
 					colURL = i;
@@ -722,7 +805,7 @@ Normalize, Sub */
 			}
 		}
 
-		if(colURL >= 0) {
+		if (colURL >= 0) {
 			col = window.hstable.getCol(colURL);
 			for (j = 0; j < col.length - 1; j = j + 1) {
 				urllist.push(col[j]);
@@ -826,6 +909,7 @@ Normalize, Sub */
 		render.setViewProjection(vpM);
 		render.drawMesh(gizmomesh);
 	}
+	
 
 	/**
 	 * フレームの更新
@@ -840,6 +924,7 @@ Normalize, Sub */
 			result        = [],
 			vpMatrix,
 			vMatrix;
+		frameTime += 1.0 / 60.0;
 		camera.setupScreen([cw, ch]);
 		camera.updateMatrix(wh);
 		//updatePopup()
@@ -854,13 +939,19 @@ Normalize, Sub */
 		render.setView(vMatrix);
 		render.setupEyeDir(camera.camPos, camera.camAt);
 		render.drawMeshList(meshlist, result);
+		
+		drawPickMesh();
 		updateInfo(result[0].VertexNum, result[0].PolygonNum);
 		drawGizmo();
 		render.swapBuffer()(updateFrame);
 	}
 	
-	
-	function saveScene(e) {
+	/**
+	 * フレームの更新
+	 * @method exportScene
+	 * @param {Event} e イベント
+	 */
+	function exportScene(e) {
 		var cw            = canvas.width,
 			ch            = canvas.height,
 			filename      = new Date(), //2015/4/7 17:04:08 : toLocaleString()
@@ -925,6 +1016,15 @@ Normalize, Sub */
 		filename = filename.replace(/:/g, "");
 		filename = filename.replace(/\//g, "");
 		filename = filename.replace(/\s/g, "");
+		
+		//Write Script Header
+		text += '------------------------------------------------------\n\n';
+		text += '-- ' + filename + ' WebGL scene export \n\n';
+		text += '------------------------------------------------------\n';
+
+		//------------------------------------
+		//add file type
+		//------------------------------------
 		filename += '.png';
 
 		//setup scene table
@@ -952,9 +1052,9 @@ Normalize, Sub */
 		text += 'table.insert(scene, cam)\n';
 
 		//setup mesh
-		for(index = 0; index < meshlist.length; index = index + 1) {
+		for (index = 0; index < meshlist.length; index = index + 1) {
 			ref = meshlist[index];
-			if(ref.show !== true) {
+			if (ref.show !== true) {
 				continue;
 			}
 			console.log("GROUP_TYPE === ", ref.grouptype);
@@ -973,20 +1073,20 @@ Normalize, Sub */
 			// STLDATA
 			//
 			//------------------------------------------------------------------------------
-			if(ref.grouptype === nameSTLData) {
+			if (ref.grouptype === nameSTLData) {
 				text += '------------------------------------------------------\n';
 				text += '-- STL \n';
 				text += '------------------------------------------------------\n';
 				text += 'local ' + tablename + ' = {\n';
 				
-				for(i = 0 ; i < ref.position.length; i = i + 3) {
+				for (i = 0 ; i < ref.position.length; i = i + 3) {
 					if ( ( i % 9 ) === 0) text += '\n';
 					text += ref.position[i + 0] + ',';
 					text += ref.position[i + 1] + ',';
 					text += ref.position[i + 2] + ',';
 				}
 				//
-				for(i = 0 ; i < ref.normal.length; i = i + 3) {
+				for (i = 0 ; i < ref.normal.length; i = i + 3) {
 					if ( ( i % 9 ) === 0) text += '\n';
 					text += ref.normal[i + 0] + ',';
 					text += ref.normal[i + 1] + ',';
@@ -1010,7 +1110,7 @@ Normalize, Sub */
 			// POINT
 			//
 			//------------------------------------------------------------------------------
-			if(ref.grouptype === namePointGroup || ref.grouptype === namePointSphereGroup) {
+			if (ref.grouptype === namePointGroup || ref.grouptype === namePointSphereGroup) {
 				text += '------------------------------------------------------\n';
 				text += '-- PointList Primitive\n';
 				text += '------------------------------------------------------\n';
@@ -1018,7 +1118,7 @@ Normalize, Sub */
 				text += 'local ' + tablename + ' = {\n';
 				
 				//Create PointList Table
-				for(i = 0 ; i < ref.pointposition.length; i = i + 3) {
+				for (i = 0 ; i < ref.pointposition.length; i = i + 3) {
 					if ( ( i % 9 ) === 0) text += '\n';
 					text += ref.pointposition[i + 0] + ',';
 					text += ref.pointposition[i + 1] + ',';
@@ -1042,14 +1142,14 @@ Normalize, Sub */
 			// LINE
 			//
 			//------------------------------------------------------------------------------
-			if(ref.grouptype === nameLineGroup || ref.grouptype === nameLineSphereGroup) {
+			if (ref.grouptype === nameLineGroup || ref.grouptype === nameLineSphereGroup) {
 				text += '------------------------------------------------------\n';
 				text += '-- LineList Primitive\n';
 				text += '------------------------------------------------------\n';
 				text += 'local ' + tablename + ' = {\n';
 				
 				//Create LineList Table
-				for(i = 0 ; i < ref.pointposition.length; i = i + 3) {
+				for (i = 0 ; i < ref.pointposition.length; i = i + 3) {
 					if ( ( i % 9 ) === 0) text += '\n';
 					text += ref.pointposition[i + 0] + ',';
 					text += ref.pointposition[i + 1] + ',';
@@ -1068,7 +1168,7 @@ Normalize, Sub */
 			}
 
 			//transform and push scene
-			if(
+			if (
 				ref.grouptype === nameSTLData ||
 				ref.grouptype === nameLineGroup ||
 				ref.grouptype === nameLineSphereGroup ||
@@ -1189,11 +1289,11 @@ Normalize, Sub */
 			oldmesh = null,
 			mesh = null;
 
-		for(i = 0 ; i < meshlist.length; i++) {
-			if(meshlist[i].parentdata === table) {
+		for (i = 0 ; i < meshlist.length; i++) {
+			if (meshlist[i].parentdata === table) {
 				//replace datatree data
 				node = datatree.findNodeData(meshlist[i]);
-				if(node === null) {
+				if (node === null) {
 					//console.log('ERROR 何も見つかりませんでした');
 					continue;
 				}
@@ -1216,7 +1316,7 @@ Normalize, Sub */
 		}
 		
 		
-		if(mesh !== null) {
+		if (mesh !== null) {
 			camera.setupLerp(mesh.boundmin, mesh.boundmax, mesh.trans, mesh.scale, mesh.rotate);
 		}
 	}
@@ -1291,7 +1391,7 @@ Normalize, Sub */
 		
 		viewortho.onclick = (viewModeChange)("ortho");
 		viewpers.onclick  = (viewModeChange)("pers");
-		savebutton.onclick = saveScene;
+		savebutton.onclick = exportScene;
 
 		// Create Tab
 		propertyTab = window.animtab.create('right', {
