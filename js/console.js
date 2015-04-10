@@ -77,37 +77,17 @@
 		return selectdata;
 	}
 	
-	
-	function selectOptionSelected(options, select) {
-		var oindex;
-		for(oindex = 0; oindex < options.length; oindex = oindex + 1) {
-			options[oindex].removeAttribute('selected');
-		}
-		options[select].setAttribute('selected', 'true');
-		
-	}
-	
-	function updateSelectHeader(index, html, colinfo) {
-		var div    = document.createElement('div'),
-			innode = null,
-			node   = null,
-			i,
-			options,
-			oindex;
-		div.innerHTML = html;
-		if(colinfo)
-		{
-			node   = div.getElementsByClassName('colselectbox');
-			innode = div.getElementsByClassName('colnames');
-			options = node[0].options;
-			selectOptionSelected(options, options.length - 1);
+	function updateSelectHeader(index, select, colinfo) {
+		var i,
+			options;
+		if (select && colinfo) {
+			options = select.options;
 			for(i = 0 ; i < colinfo.length; i = i + 1) {
 				if(colinfo[i].index === index) {
-					selectOptionSelected(options, colinfo[i].attr);
+					options[colinfo[i].attr].selected = true;
 				}
 			}
 		}
-		return div.innerHTML;
 	}
 
 	/**
@@ -117,11 +97,16 @@
 	 */
 	function loadData(data, colinfo) {
 		var header     = [],
-			headerhtml = '',
+			headerinput,
+			headerselect,
+			optionStrs = ["X", "Y", "Z", "URL", "NONE"],
+			optionStr = "",
+			headeroption,
 			div        = null,
 			select     = null,
 			child      = null,
 			i          = 0,
+			k          = 0,
 			style = tbl.style;
 		resetData();
 		if(grid == null) {
@@ -146,25 +131,46 @@
 		if(grid) {
 			grid.loadData(data);
 			
-			for(i = 0; i < grid.countCols(); i++) {
-				headerhtml = '';
-				headerhtml += '<INPUT  type="text" value="G' + i + '"class="colnames">\n';
-				headerhtml += '<SELECT name="ATTR" class="colselectbox">\n';
-				headerhtml += '<OPTION value="X">X</OPTION>\n';
-				headerhtml += '<OPTION value="Y">Y</OPTION>\n';
-				headerhtml += '<OPTION value="Z">Z</OPTION>\n';
-				headerhtml += '<OPTION value="URL">URL</OPTION>\n';
-				headerhtml += '<OPTION value="NONE" selected=true >NONE</OPTION>\n';
-				headerhtml += '</SELECT>';
-				if(colinfo) {
-					header.push(updateSelectHeader(i, headerhtml, colinfo));
-				} else {
-					header.push(headerhtml);
-				}
-			}
-
 			grid.updateSettings({
-				colHeaders: header
+				colHeaders: true,
+				
+  				afterGetColHeader: function (col, TH) {
+					if (col < 0) { return; }
+					headerinput = document.createElement("input");
+					headerinput.type = 'text';
+					headerinput.value = "G" + col
+					headerinput.className = "colnames";
+					headerinput.id = "colname_" + col;
+
+					headerselect = document.createElement("select");
+					headerselect.name = "ATTR";
+					headerselect.className = "colselectbox colselectbox_" + col;
+
+					for (i = 0; i < optionStrs.length; i = i + 1) {
+						optionStr = optionStrs[i];
+						headeroption = document.createElement("option");
+						headeroption.value = optionStr;
+						headeroption.innerHTML = optionStr;
+						if (optionStr === "NONE") {
+							headeroption.selected = true;
+						}
+						headeroption.onmousedown = function (event) {
+							for (i = 0; i < optionStrs.length; i = i + 1) {
+								headerselect.options[i].selected = false;
+							}
+							headeroption.selected = true;
+							event.preventDefault();
+							event.stopImmediatePropagation();
+						};
+						headerselect.appendChild(headeroption);
+					}
+					TH.firstChild.firstChild.innerHTML = "";
+					TH.firstChild.firstChild.appendChild(headerinput);
+					TH.firstChild.firstChild.appendChild(headerselect);
+					if (colinfo) {
+						updateSelectHeader(col, headerselect, colinfo);
+					}
+				}
 			});
 			
 			tbl.style          = style;
