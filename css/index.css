@@ -215,7 +215,7 @@ DustBox{
 	position        :absolute;
 	margin          :5px;
 	width           :160px;
-	height          :115px;
+	height          :160px;
 	left            :35px;
 	top             :35px;
 	background-color:rgba(55, 55, 55, 0.7);
@@ -241,8 +241,6 @@ DustBox{
 	margin          :5px;
 	width           :150px;
 	height          :25px;
-	left            :520px;
-	top             :0px;
 	background-color:rgb(0,128, 255);
 	color           :#FFF;
 	z-index: 100;
@@ -253,7 +251,8 @@ DustBox{
 	overflow        : hidden;
 	position        : relative;
 	padding         : 0px;
-	margin          : 5px;
+ 	margin          : 5px;
+ 	margin-bottom   : 0px;
 	width           : 150px;
 	height          : 25px;
 	background-color:rgb(203,184,53);
@@ -507,10 +506,10 @@ DustBox{
 
 
 #urlinput {
-	margin          :5px;
+	margin          :2px;
 	padding: 10px;
-	background-color:rgb(60, 111, 165);
-	color           :white;
+	background-color:rgba(55, 55, 55, 0.7);
+	color           :#FFF;
 	display         :none;
 	z-index         :15;
 	//background      :transparent;

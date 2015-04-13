@@ -21,6 +21,9 @@ Normalize, Sub */
 		scene_fov      = 45.0,
 		consolestate   = 0,
 		frameTime      = 0,
+		menuOpenState  = 0,
+		menuViewModeState  = 0,
+		menuViewDirState  = 0,
 		nameLineGroup  = 'LineGroup',
 		namePointGroup = 'PointGroup',
 		nameLineSphereGroup  = 'LineSphereGroup',
@@ -297,6 +300,8 @@ Normalize, Sub */
 		if (evt === '') {
 			return;
 		}
+		hidePopup();
+		
 		loadSTLB.openBinary(evt, function (data) {
 			updateMesh(data);
 			document.getElementById('OpenSTLFile').value = '';
@@ -451,6 +456,7 @@ Normalize, Sub */
 	function viewModeChange(mode) {
 		return function (e) {
 			camera.ViewMode(mode);
+			hidePopup();
 		};
 	}
 	
@@ -594,6 +600,21 @@ Normalize, Sub */
 		hidePickMesh();
 
 		hideUrlPopup();
+		
+		if (menuOpenState === 1) {
+			openSwitch(null);
+			menuOpenState = 0;
+		}
+
+		if (menuOpenState === 3) {
+			openViewType(null);
+			menuOpenState = 0;
+		}
+
+		if (menuOpenState === 2) {
+			openViewDirection(null);
+			menuOpenState = 0;
+		}
 	}
 	
 	/**
@@ -614,21 +635,24 @@ Normalize, Sub */
 		popup.innerHTML      = '';
 
 		ele0 = document.createElement('input');
-		ele0.type = "text";
-		ele0.id   = "inputurl";
+		ele0.type  = "text";
+		ele0.id    = "inputurl";
+		ele0.size  = "50";
 		popup.appendChild(ele0);
 		ele1 = document.createElement('input');
 		ele1.type  = "submit";
-		ele1.value = "URLOpen";
+		ele1.value = "Open";
 		ele1.onclick = function (event) {
 			hideUrlPopup();
+			openSwitch(null);
 			var textbox = document.getElementById('inputurl');
 			var req = new XMLHttpRequest();
 			//req.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
 			req.open('GET', textbox.value, true);
 			req.onreadystatechange = function(event) {
 				if (req.readyState === 4) {
-					window.hstable.addGridData(event.target.responseText);
+					window.hstable.addGridData(event.currentTarget.responseURL, event.target.responseText);
+					window.scene.consoleTab(true);
 				}
 			};
 			req.send(null);
@@ -1023,6 +1047,8 @@ Normalize, Sub */
 			index,
 			i;
 
+		hidePopup();
+
 		//precalc view projection matrix
 		camposview[0] = camera.camPos[0];
 		camposview[1] = camera.camPos[1];
@@ -1281,6 +1307,8 @@ Normalize, Sub */
 	 */
 	function openSwitch(e) {
 		var openwindow = document.getElementById('OpenWindow');
+		hideUrlPopup();
+		menuOpenState = 1;
 		$toggle(openwindow, 100);
 		window.scene.groupTab(false);
 	}
@@ -1292,6 +1320,8 @@ Normalize, Sub */
 	 */
 	function openViewDirection(e) {
 		var viewdir = document.getElementById('ViewDirection');
+		hideUrlPopup();
+		menuOpenState = 2;
 		$toggle(viewdir, 100);
 		window.scene.groupTab(false);
 	}
@@ -1303,6 +1333,8 @@ Normalize, Sub */
 	 */
 	function openViewType(e) {
 		var viewtype = document.getElementById('ViewType');
+		hideUrlPopup();
+		menuOpenState = 3;
 		$toggle(viewtype, 100);
 		window.scene.groupTab(false);
 	}
@@ -1325,8 +1357,9 @@ Normalize, Sub */
 	 * @param {Event} e ファイルイベント
 	 */
 	function loadTXT(e) {
+		hidePopup();
 		window.hstable.openText(e);
-		openSwitch();
+		
 		document.getElementById('OpenTextFile').innerHTML = '';
 		
 		if (consolestate === 0) {
@@ -1342,14 +1375,17 @@ Normalize, Sub */
 	 */
 	function loadURL(e) {
 		var left = window.innerWidth / 2,
-			top  = window.innerHeight / 2;
-		
-		openSwitch();
-		createUrlPopup(left, top);
-		if (consolestate === 0) {
-			consolestate = 1;
-			window.scene.consoleTab(true);
-		}
+			top  = window.innerHeight / 2,
+			urlbutton;
+
+		urlbutton = document.getElementById('OpenURL');
+
+		var rect = e.target.getBoundingClientRect()
+		console.log(rect);
+		createUrlPopup(
+			rect.right,
+			rect.bottom - rect.height * 1.5
+		);
 	}
 	
 	

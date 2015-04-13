@@ -183,10 +183,10 @@
 	 * @method updateGridData
 	 * @param {Object} data データ
 	 */
-	function updateGridData(data) {
+	function updateGridData(name, data) {
 		var rootnode   = {};
 		loadData(data);
-		rootnode = datatree.createRoot('text', filename, data);
+		rootnode = datatree.createRoot('text', name, data);
 		window.grouptreeview.update(datatree.getRoot(), rootnode);
 	}
 	
@@ -196,9 +196,10 @@
 	 * @method addGridData
 	 * @param {csvtext} csvtext CSVTEXT
 	 */
-	function addGridData(csvtext) {
+	function addGridData(name, csvtext) {
 		var csvArray = csv2Array(csvtext);
-		updateGridData(csvArray);
+		console.log(name);
+		updateGridData(name, csvArray);
 	}
 
 	/**
@@ -214,7 +215,7 @@
 		}
 		
 		reader.onloadend = (function(e) {
-			addGridData(e.target.result);
+			addGridData(filename, e.target.result);
 			filename = '';
 			document.getElementById('OpenTextFile').value = ''; // clear filename
 		});
