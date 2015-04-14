@@ -17144,7 +17144,9 @@ function WalkontableEvent(instance) {
     }
     else if (cell.TD) {
       if (that.instance.hasSetting('onCellMouseDown')) {
-        that.instance.getSetting('onCellMouseDown', event, cell.coords, cell.TD, that.instance);
+		  if (event.target.tagName !== "SELECT" && event.target.tagName !== "select") {
+        	that.instance.getSetting('onCellMouseDown', event, cell.coords, cell.TD, that.instance);
+		  }
       }
     }
 
