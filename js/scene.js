@@ -606,13 +606,18 @@ Normalize, Sub */
 			menuOpenState = 0;
 		}
 
+		if (menuOpenState === 2) {
+			openViewDirection(null);
+			menuOpenState = 0;
+		}
+		
 		if (menuOpenState === 3) {
 			openViewType(null);
 			menuOpenState = 0;
 		}
-
-		if (menuOpenState === 2) {
-			openViewDirection(null);
+		
+		if (menuOpenState === 4) {
+			openExport(null);
 			menuOpenState = 0;
 		}
 	}
@@ -1034,7 +1039,7 @@ Normalize, Sub */
 	}
 	
 	/**
-	 * フレームの更新
+	 * シーンファイルに保存
 	 * @method exportScene
 	 * @param {Event} e イベント
 	 */
@@ -1351,6 +1356,19 @@ Normalize, Sub */
 		$toggle(viewtype, 100);
 		window.scene.groupTab(false);
 	}
+
+	/**
+	 * Exportボタンの開閉
+	 * @method openExport
+	 * @param {Event} e マウスイベント
+	 */
+	function openExport(e) {
+		var view = document.getElementById('ExportWindow');
+		hideUrlPopup();
+		menuOpenState = 4;
+		$toggle(view, 100);
+		window.scene.groupTab(false);
+	}
 	
 	/**
 	 * コンソールの開閉
@@ -1455,6 +1473,8 @@ Normalize, Sub */
 			openswitch     = document.getElementById('OpenSwitch'),
 			viewdirection  = document.getElementById('ViewDirectionSwitch'),
 			viewtype       = document.getElementById('ViewTypeSwitch'),
+			exportswitch   = document.getElementById('ExportSwitch'),
+			exportbutton   = document.getElementById('ExportButton'),
 			viewortho      = document.getElementById('viewOrtho'),
 			viewpers       = document.getElementById('viewPers'),
 			openstl        = document.getElementById('OpenSTL'),
@@ -1506,6 +1526,8 @@ Normalize, Sub */
 		openswitch.onclick = openSwitch;
 		viewdirection.onclick = openViewDirection;
 		viewtype.onclick = openViewType;
+		exportswitch.onclick = openExport;
+		exportbutton.onclick = exportScene;
 		addline.onclick  = addLine;
 		addpoint.onclick = addPoint;
 		addpointsphere.onclick = addPointSphere;
@@ -1519,7 +1541,6 @@ Normalize, Sub */
 		
 		viewortho.onclick = (viewModeChange)("ortho");
 		viewpers.onclick  = (viewModeChange)("pers");
-		savebutton.onclick = exportScene;
 
 		// Create Tab
 		propertyTab = window.animtab.create('right', {
@@ -1551,10 +1572,12 @@ Normalize, Sub */
 		function hideMenu(visible) {
 			var openwindow = document.getElementById('OpenWindow'),
 				viewdir = document.getElementById('ViewDirection'),
-				viewtype = document.getElementById('ViewType');
+				viewtype = document.getElementById('ViewType'),
+				exportwindow = document.getElementById('ExportWindow');
 			$hide(openwindow);
 			$hide(viewdir);
 			$hide(viewtype);
+			$hide(exportwindow);
 		}
 		document.getElementById('leftTab').addEventListener('click', function(ev) {
 			hideMenu(false);

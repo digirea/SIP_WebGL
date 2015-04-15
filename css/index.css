@@ -215,7 +215,7 @@ DustBox{
 	position        :absolute;
 	margin          :5px;
 	width           :160px;
-	height          :115px;
+	height          :108px;
 	left            :35px;
 	top             :35px;
 	background-color:rgba(55, 55, 55, 0.7);
@@ -236,17 +236,7 @@ DustBox{
 	color           : #FFF;
 }
 
-#SaveButton {
-	position        :absolute;
-	margin          :5px;
-	width           :150px;
-	height          :25px;
-	left            :520px;
-	top             :0px;
-	background-color:rgb(0,128, 255);
-	color           :#FFF;
-	z-index: 100;
-}
+
 
 #OpenCSV {
 	display         : inline-block;
@@ -271,6 +261,44 @@ DustBox{
 	background-color:rgb(203,184,53);
 	color           :#FFF;
 }
+
+
+
+#ExportSwitch{
+	position        :absolute;
+	margin          :5px;
+	width           :150px;
+	height          :25px;
+	left            :520px;
+	top             :0px;
+	background-color:rgb(0,128, 255);
+	color           :#FFF;
+	z-index: 100;
+}
+
+
+#ExportWindow {
+	position        :absolute;
+	margin          :5px;
+	width           :160px;
+	height          :35px;
+	left            :515px;
+	top             :35px;
+	background-color:rgba(55, 55, 55, 0.7);
+	color           :#FFF;
+}
+
+#ExportButton{
+	overflow        : hidden;
+	position        : relative;
+	padding         : 0px;
+	margin          : 5px;
+	width           : 150px;
+	height          : 25px;
+	background-color:rgb(203,184,53);
+	color           :#FFF;
+}
+
 
 
 
