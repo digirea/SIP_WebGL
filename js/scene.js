@@ -627,7 +627,8 @@ Normalize, Sub */
 	function createUrlPopup(win_x, win_y, data) {
 		var popup = document.getElementById('urlinput'),
 			ele0,
-			ele1;
+			ele1,
+			ele2;
 		popup.style.position = 'absolute';
 		popup.style.left     = win_x + 'px';
 		popup.style.top      = win_y + 'px';
@@ -639,15 +640,27 @@ Normalize, Sub */
 		ele0.id    = "inputurl";
 		ele0.size  = "50";
 		popup.appendChild(ele0);
-		ele1 = document.createElement('input');
-		ele1.type  = "submit";
-		ele1.value = "Open";
+		
+		
+		ele1 = document.createElement('span');
+		ele1.id                     = "SendUrl";
+		ele1.class                  = "menuButtonClass noneselect";
+		ele1.innerHTML              = "Open";
+		ele1.style.margin           = "5px";
+		ele1.style.backgroundColor  = '#5F8FFF';
+		ele1.style.color            = '#FFF';
+		ele1.style.zIndex           = 15;
+		ele1.style.cursor           = 'pointer';
+		ele1.style.borderRadius     = '2px';
+		ele1.style.fontSize         = '16px';
+		ele1.style.textAlign        = 'center';
+		ele1.style.padding          = '0px 4px 0px 4px';
+		
 		ele1.onclick = function (event) {
 			hideUrlPopup();
 			openSwitch(null);
 			var textbox = document.getElementById('inputurl');
 			var req = new XMLHttpRequest();
-			//req.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
 			req.open('GET', textbox.value, true);
 			req.onreadystatechange = function(event) {
 				if (req.readyState === 4) {
