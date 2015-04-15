@@ -1,0 +1,529 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<style>
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote {
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", Arial, sans-serif;
+    font-size: 13px;
+    line-height: 18px;
+    color: #737373;
+    background-color: white;
+    margin: 10px 13px 10px 13px;
+}
+table {
+	margin: 10px 0 15px 0;
+	border-collapse: collapse;
+}
+td,th {	
+	border: 1px solid #ddd;
+	padding: 3px 10px;
+}
+th {
+	padding: 5px 10px;	
+}
+
+a {
+    color: #0069d6;
+}
+a:hover {
+    color: #0050a3;
+    text-decoration: none;
+}
+a img {
+    border: none;
+}
+p {
+    margin-bottom: 9px;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #404040;
+    line-height: 36px;
+}
+h1 {
+    margin-bottom: 18px;
+    font-size: 30px;
+}
+h2 {
+    font-size: 24px;
+}
+h3 {
+    font-size: 18px;
+}
+h4 {
+    font-size: 16px;
+}
+h5 {
+    font-size: 14px;
+}
+h6 {
+    font-size: 13px;
+}
+hr {
+    margin: 0 0 19px;
+    border: 0;
+    border-bottom: 1px solid #ccc;
+}
+blockquote {
+    padding: 13px 13px 21px 15px;
+    margin-bottom: 18px;
+    font-family:georgia,serif;
+    font-style: italic;
+}
+blockquote:before {
+    content:"\201C";
+    font-size:40px;
+    margin-left:-10px;
+    font-family:georgia,serif;
+    color:#eee;
+}
+blockquote p {
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 18px;
+    margin-bottom: 0;
+    font-style: italic;
+}
+code, pre {
+    font-family: Monaco, Andale Mono, Courier New, monospace;
+}
+code {
+    background-color: #fee9cc;
+    color: rgba(0, 0, 0, 0.75);
+    padding: 1px 3px;
+    font-size: 12px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+pre {
+    display: block;
+    padding: 14px;
+    margin: 0 0 18px;
+    line-height: 16px;
+    font-size: 11px;
+    border: 1px solid #d9d9d9;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+pre code {
+    background-color: #fff;
+    color:#737373;
+    font-size: 11px;
+    padding: 0;
+}
+sup {
+    font-size: 0.83em;
+    vertical-align: super;
+    line-height: 0;
+}
+* {
+	-webkit-print-color-adjust: exact;
+}
+@media screen and (min-width: 914px) {
+    body {
+        width: 854px;
+        margin:10px auto;
+    }
+}
+@media print {
+	body,code,pre code,h1,h2,h3,h4,h5,h6 {
+		color: black;
+	}
+	table, pre {
+		page-break-inside: avoid;
+	}
+}
+</style>
+<title>利用説明書</title>
+
+</head>
+<body>
+<h1>利用説明書</h1>
+
+<h2>目次</h2>
+
+<ul>
+<li><p><a href="#hajimeni">第1章 はじめに</a></p>
+
+<ul>
+<li><a href="#dousagaiyou">動作環境</a></li>
+<li><a href="#kinougaiyou">機能概要</a></li>
+<li><a href="#install">インストール</a></li>
+<li><a href="#kidouhouhou">起動方法</a></li>
+</ul>
+</li>
+</ul>
+
+
+<h1></h1>
+
+<ul>
+<li><p><a href="#kinou">第2章 機能</a></p>
+
+<ul>
+<li><a href="#gamenkousei">画面構成</a></li>
+<li><a href="#openbutton">Openボタン</a></li>
+<li><a href="#viewmodebutton">ViewModeボタン</a></li>
+<li><a href="#viewdirectionbutton">ViewDirectionボタン</a></li>
+<li><a href="#viewgamen">View画面</a></li>
+<li><a href="#groupswindow">Groupsウィンドウ</a></li>
+<li><a href="#dataviewwindow">DataViewウィンドウ</a></li>
+<li><a href="#propertywindow">Propertyウィンドウ</a></li>
+</ul>
+</li>
+</ul>
+
+
+<p><br>
+<br></p>
+
+<h2><span id="hajimeni">第1章 はじめに</span></h2>
+
+<hr />
+
+<p>本書は設計解探査システムのプロトタイプ(以降, WebGL View)の操作方法について解説するものです.</p>
+
+<h3><span id="dousakankyou">動作環境</span></h3>
+
+<p>WebGL View は以下の環境で動作します.</p>
+
+<p>OS : Linux, Windows(Vista,7,8), MacOSX<br/>
+Webブラウザ: Mozilla Firefox, Google Chrome, Apple Safari</p>
+
+<h3><span id="kinougaiyou">機能概要</span></h3>
+
+<p>WebGL View の主な機能は以下の通りです.</p>
+
+<ul>
+<li>STL (バイナリ形式,アスキー形式) を読み込み, 表示します.</li>
+<li>CSV を読み込み, 選択した形式 (点, ライン) で表示します.</li>
+</ul>
+
+
+<h3><span id="install">インストール</span></h3>
+
+<h6>Node.js のインストール</h6>
+
+<p>WebGL View の動作には Node.js のインストールが必要です.<br/>
+Node.js の公式サイト <a href="http://nodejs.org">http://nodejs.org</a> から Node.js 本体をダウンロードし, インストールします.</p>
+
+<h6>WebGL View の準備</h6>
+
+<p>インストールCD からXXXXX.zipをローカルディスクにコピーし, 展開します.</p>
+
+<h3><span id="kidouhouhou">起動方法</span></h3>
+
+<h6>単体利用での起動</h6>
+
+<p>Webブラウザで index.html ファイルを開きます.</p>
+
+<h6>データベースと連携機能を利用するための起動</h6>
+
+<p>(1) terminal から以下のコマンドを実行します.  ただし, nodeにpathが通っている必要があります.</p>
+
+<pre><code>$node server.js
+</code></pre>
+
+<p>(2) ブラウザにて, localhostにアクセスします. URLは通常は以下のようになります.</p>
+
+<pre><code>http://localhost:8080
+</code></pre>
+
+<p><br>
+<br></p>
+
+<h2><span id="kinou">第2章 機能</span></h2>
+
+<hr />
+
+<h3><span id="gamenkousei">画面構成</span></h3>
+
+<p>WebGL View の画面構成は下記のとおりです.</p>
+
+<p><img src="./images/Overview.png" width="700" alt="image" /></p>
+
+<h3><span id="openbutton">Openボタン</span></h3>
+
+<p>各種ファイルをロードすることができます.<br/>
+プルダウン時に表示されるボタンの動作は以下のとおりです.</p>
+
+<ul>
+<li>STL File : STLファイル (binary, text形式) をロードします.</li>
+<li>CSV File : テキストデータをロードします. ロードすると, 後述するDataViewウィンドウに反映されます.</li>
+</ul>
+
+
+<p><img src="./images/Menu_Open.png" width="400" alt="image" /></p>
+
+<h3><span id="viewmodebutton">ViewModeボタン</span></h3>
+
+<p>View画面の透視投影, 平行投影を切り替えることができます.</p>
+
+<ul>
+<li>Perspective : 透視投影にてViewを行います.</li>
+<li>Ortho       : 平行投影にてViewを行います.</li>
+</ul>
+
+
+<p><img src="./images/Menu_ViewMode.png" width="400" alt="image" /></p>
+
+<h3><span id="viewdirectionbutton">ViewDirectionボタン</span></h3>
+
+<p>指定された軸(プレフィクスビュー)にてView画面を切り替えることができます.<br/>
+プルダウン時に表示されるボタンの動作は下記のとおりです.</p>
+
+<table>
+<thead>
+<tr>
+<th>ボタン</th>
+<th>動作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td> Front  / Z+  </td>
+<td> Z軸+方向からのビューに切り替えます.</td>
+</tr>
+<tr>
+<td> Left   / X+  </td>
+<td> X軸+方向からのビューに切り替えます.</td>
+</tr>
+<tr>
+<td> Top    / Y+  </td>
+<td> Y軸+方向からのビューに切り替えます.</td>
+</tr>
+<tr>
+<td> Back   / Z-  </td>
+<td> Z軸-方向からのビューに切り替えます.</td>
+</tr>
+<tr>
+<td> Right  / X-  </td>
+<td> X軸-方向からのビューに切り替えます.</td>
+</tr>
+<tr>
+<td> Bottom / Y-  </td>
+<td> Y軸+方向からのビューに切り替えます.</td>
+</tr>
+</tbody>
+</table>
+
+
+<p><img src="./images/Menu_ViewDirection.png" width="600" alt="image" /></p>
+
+<ul>
+<li>Front / Back ビュー</li>
+</ul>
+
+
+<p><img src="./images/Angle_FrontBack.png" width="600" alt="image" /></p>
+
+<ul>
+<li>Left / Right ビュー</li>
+</ul>
+
+
+<p><img src="./images/Angle_LeftRight.png" width="600" alt="image" /></p>
+
+<ul>
+<li>Top / Bottom ビュー</li>
+</ul>
+
+
+<p><img src="./images/Angle_TopBottom.png" width="600" alt="image" /></p>
+
+<h3><span id="viewgamen">View画面</span></h3>
+
+<p>可視化された2D, 3Dオブジェクトを表示する画面です.</p>
+
+<p>グリッドのサイズは3D空間上の単位で100 (固定) です。また, マウス操作にてオブジェクトのビューの操作を行うことができます.<br/>
+マウス操作方法を以下に示します.</p>
+
+<h6>マウス操作</h6>
+
+<table>
+<thead>
+<tr>
+<th>マウス</th>
+<th>ビュー</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>左クリックドラッグ </td>
+<td> 回転(原点)</td>
+</tr>
+<tr>
+<td>右クリックドラッグ </td>
+<td> 移動</td>
+</tr>
+<tr>
+<td>中クリックドラッグ </td>
+<td> ズーム</td>
+</tr>
+<tr>
+<td>中ホイール        </td>
+<td> ズーム</td>
+</tr>
+</tbody>
+</table>
+
+
+<p><img src="./images/Window_View.png" width="400" alt="image" /></p>
+
+<h3><span id="groupswindow">Groupsウィンドウ</span></h3>
+
+<p>Groupsウィンドウは, ロード, 追加されたオブジェクトの管理を行います.<br/>
+対象のデータは以下のとおりです.</p>
+
+<ul>
+<li>STLデータ</li>
+<li>テキスト, CSV(以降, テキストデータと記載)データ</li>
+<li>Groupデータ</li>
+</ul>
+
+
+<p>操作方法を以下に示します.</p>
+
+<ul>
+<li>チェックボックスのチェックをはずすと, オブジェクトがViewから消えます.</li>
+<li>チェックを入れると再びオブジェクトが表示されます.</li>
+<li>ゴミ箱ボタンを押下すると, オブジェクトは削除されます.<br/>
+ただし, ID0_gridは表示基準となるオブジェクトのため, 消去できません.</li>
+<li>テキストデータを押下すると, DataViewウィンドウに反映されます.</li>
+<li>STLデータ, Groupデータを押下すると, View画面に対象の3Dオブジェクトが表示され, 自動的にスナップします.</li>
+<li>GroupsタブはワンクリックでOpen/Closeできます. またドラッグでウィンドウサイズが変更できます.</li>
+</ul>
+
+
+<p><img src="./images/Window_Groups.png" alt="image" /></p>
+
+<h3><span id="dataviewwindow">DataViewウィンドウ</span></h3>
+
+<p>読み込んだテキストデータを表示し, 可視化対象の列成分の選択を行います.</p>
+
+<p>G0, G1と記載された箇所は,列の名前を表します.<br/>
+デフォルト名は G0, G1...Gn です.<br/>
+名前は変更することができ, かつ名前は重複可能です.</p>
+
+<p>列選択を行うには, NONEと記載されたプルダウンメニューを使用します.<br/>
+プルダウンにて表示される値の意味は下記のとおりです.</p>
+
+<ul>
+<li>X  :列をX軸データとして選択します.</li>
+<li>Y  :列をY軸データとして選択します.</li>
+<li>Z  :列をZ軸データとして選択します.</li>
+<li>URL:列をURLデータとして選択します.</li>
+</ul>
+
+
+<p>同じ可視化内容を重複して選択した場合は, 左側の列が優先されます.</p>
+
+<p><img src="./images/Window_DataView.png" width="700" alt="image" /></p>
+
+<h3>Rectangle Coordinate</h3>
+
+<h6>Add Pointボタン</h6>
+
+<p>選択したテキストデータのPointモデルで、直交座標での可視化を行います.</p>
+
+<h6>Add Lineボタン</h6>
+
+<p>テキストデータのLineモデルで、直交座標での可視化を行います.<br/>
+Lineモデルは現状は離散線分形式となります.</p>
+
+<h3>Spherical Coordinate</h3>
+
+<h6>Add Pointボタン</h6>
+
+<p>選択したテキストデータのPointモデルで、球座標系での可視化を行います.</p>
+
+<h6>Add Lineボタン</h6>
+
+<p>テキストデータのLineモデルで、、球座標系での可視化を行います.<br/>
+Lineモデルは現状は離散線分形式となります.</p>
+
+<p><img src="./images/GL_LINES.jpg" alt="image" /></p>
+
+<p>凡例を以下に示します.</p>
+
+<ul>
+<li>X, Y, Z, URLを選択し, Rectangle CoordinateのAdd PointにてView画面にPointモデルで可視化された3Dオブジェクトが表示されます.</li>
+</ul>
+
+
+<p><img src="./images/Data_AddPoint.png" width="700" alt="image" /></p>
+
+<ul>
+<li>X, Yを選択し, Rectangle CoordinateのAdd LineにてView画面にLineモデルで可視化された3Dオブジェクトが表示されます.</li>
+</ul>
+
+
+<p><img src="./images/Data_AddLineXY.png" width="700" alt="image" /></p>
+
+<h6>データのピック方法</h6>
+
+<p>Add Pointで生成されたデータは, マウス操作 (左クリック) にてピックすることができます.<br/>
+ピックした凡例を以下に示します.</p>
+
+<p><img src="./images/Data_Pick.png" width="700" alt="image" /></p>
+
+<h3><span id="propertywindow">Propertyウィンドウ</span></h3>
+
+<p>Groupsウィンドウで選択したオブジェクトのプロパティを表示します.</p>
+
+<p><img src="./images/Window_Property.png" width="300" alt="image" /></p>
+
+<p>設定可能なプロパティは下記のとおりです.</p>
+
+<h6>name : 名前</h6>
+
+<p>オブジェクトの名前を表します.</p>
+
+<h6>[trans] : 平行移動成分</h6>
+
+<p>左からX方向移動, Y方向移動, Z方向移動を表します.<br/>
+デフォルト値は (0, 0, 0), 単位は3DView空間座標に依存します.</p>
+
+<h6>[rotate] : 回転成分</h6>
+
+<p>左からX軸中心回転, Y軸中心回転, Z軸中心回転を表します.<br/>
+デフォルト値は (0, 0, 0), 単位はradianです.</p>
+
+<h6>[scale] : 拡大縮小成分</h6>
+
+<p>左からX方向スケール, Y方向スケール, Z方向スケールを表します.<br/>
+デフォルト値は (1, 1, 1) です.</p>
+
+<h6>[color] : カラー成分</h6>
+
+<p>左からR, G, B, A成分を表します.<br/>
+デフォルト値は (1, 1, 1, 1) です.</p>
+
+<p><img src="./images/Data_SphereColor.png" width="700" alt="image" /></p>
+
+<h6>[radius] : 半径成分</h6>
+
+<p>非STLデータの場合のみ設定可能です.<br/>
+デフォルト値は 1.0, 単位は3DView空間座標に依存します.</p>
+
+<p><img src="./images/Data_SphereRadius.png" width="700" alt="image" /></p>
+</body>
+</html>
