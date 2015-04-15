@@ -19,6 +19,7 @@
 	* [Openボタン](#openbutton)
 	* [ViewModeボタン](#viewmodebutton)
 	* [ViewDirectionボタン](#viewdirectionbutton)
+	* [Exportボタン](#exportbutton)
 	* [View画面](#viewgamen)
 	* [Groupsウィンドウ](#groupswindow)
 	* [DataViewウィンドウ](#dataviewwindow)
@@ -47,10 +48,12 @@ WebGL View の主な機能は以下の通りです.
 
 ### [インストール](id:install)
 
-###### Node.js のインストールWebGL View の動作には Node.js のインストールが必要です.  
+###### Node.js のインストール
+WebGL View の動作には Node.js のインストールが必要です.  
 Node.js の公式サイト [http://nodejs.org](http://nodejs.org) から Node.js 本体をダウンロードし, インストールします.
 
-###### WebGL View の準備インストールCD からXXXXX.zipをローカルディスクにコピーし, 展開します. 
+###### WebGL View の準備
+インストールCD からXXXXX.zipをローカルディスクにコピーし, 展開します. 
 
 
 ### [起動方法](id:kidouhouhou)
@@ -76,16 +79,17 @@ Webブラウザで index.html ファイルを開きます.
 ### [画面構成](id:gamenkousei)
 WebGL View の画面構成は下記のとおりです.
 
-![image](./images/Overview.png =700x)
+![image](./images/Overview.png)
 
-### [Openボタン](id:openbutton)
+### [Fileボタン](id:openbutton)
 各種ファイルをロードすることができます.  
 プルダウン時に表示されるボタンの動作は以下のとおりです.  
 
-* STL File : STLファイル (binary, text形式) をロードします.
-* CSV File : テキストデータをロードします. ロードすると, 後述するDataViewウィンドウに反映されます.
+* Open STL : STLファイル (binary, text形式) をロードします.
+* Open CSV : テキストデータをロードします. ロードすると, 後述するDataViewウィンドウに反映されます.
+* Open URL : URLからテキストデータをロードします. ロードすると, 後述するDataViewウィンドウに反映されます.
 
-![image](./images/Menu_Open.png =400x)
+![image](./images/Menu_Open.png)
 
 
 ### [ViewModeボタン](id:viewmodebutton)
@@ -95,7 +99,7 @@ View画面の透視投影, 平行投影を切り替えることができます.
 * Perspective : 透視投影にてViewを行います.
 * Ortho       : 平行投影にてViewを行います.
 
-![image](./images/Menu_ViewMode.png =400x)
+![image](./images/Menu_ViewMode.png)
 
 ### [ViewDirectionボタン](id:viewdirectionbutton)
 指定された軸(プレフィクスビュー)にてView画面を切り替えることができます.  
@@ -110,19 +114,25 @@ View画面の透視投影, 平行投影を切り替えることができます.
 | Right  / X-  | X軸-方向からのビューに切り替えます.
 | Bottom / Y-  | Y軸+方向からのビューに切り替えます.
 
-![image](./images/Menu_ViewDirection.png =600x)
+![image](./images/Menu_ViewDirection.png)
 
 * Front / Back ビュー
 
-![image](./images/Angle_FrontBack.png =600x)
+![image](./images/Angle_FrontBack.png)
 
 * Left / Right ビュー
  
-![image](./images/Angle_LeftRight.png =600x)
+![image](./images/Angle_LeftRight.png)
 
 * Top / Bottom ビュー
  
-![image](./images/Angle_TopBottom.png =600x)
+![image](./images/Angle_TopBottom.png)
+
+### [Export Sceneボタン](id:exportbutton)
+現在可視化されているカメラアングル、オブジェクトを、HIVEにてレンダリングできる形式でExportします.
+押下すると、.scn(シーンファイル)をダウンロードすることができます.
+
+![image](./images/Export_Button.png)
 
 ### [View画面](id:viewgamen)
 可視化された2D, 3Dオブジェクトを表示する画面です.
@@ -138,7 +148,7 @@ View画面の透視投影, 平行投影を切り替えることができます.
 |中クリックドラッグ | ズーム
 |中ホイール        | ズーム
 
-![image](./images/Window_View.png =400x)
+![image](./images/Window_View.png)
 
 ### [Groupsウィンドウ](id:groupswindow)
 Groupsウィンドウは, ロード, 追加されたオブジェクトの管理を行います.  
@@ -177,7 +187,7 @@ G0, G1と記載された箇所は,列の名前を表します.
 
 同じ可視化内容を重複して選択した場合は, 左側の列が優先されます.
 
-![image](./images/Window_DataView.png =700x)
+![image](./images/Window_DataView.png)
 
 #### Rectangle Coordinate
 
@@ -204,24 +214,24 @@ Lineモデルは現状は離散線分形式となります.
 
 * X, Y, Z, URLを選択し, Rectangle CoordinateのAdd PointにてView画面にPointモデルで可視化された3Dオブジェクトが表示されます.
 
-![image](./images/Data_AddPoint.png =700x)
+![image](./images/Data_AddPoint.png)
 
 * X, Yを選択し, Rectangle CoordinateのAdd LineにてView画面にLineモデルで可視化された3Dオブジェクトが表示されます.
 
-![image](./images/Data_AddLineXY.png =700x)
+![image](./images/Data_AddLineXY.png)
 
 
 ###### データのピック方法
 Add Pointで生成されたデータは, マウス操作 (左クリック) にてピックすることができます.  
 ピックした凡例を以下に示します.
 
-![image](./images/Data_Pick.png =700x)
+![image](./images/Data_Pick.png)
 
 
 ### [Propertyウィンドウ](id:propertywindow)
 Groupsウィンドウで選択したオブジェクトのプロパティを表示します.  
 
-![image](./images/Window_Property.png =300x)
+![image](./images/Window_Property.png)
 
 設定可能なプロパティは下記のとおりです.
 
@@ -244,13 +254,13 @@ Groupsウィンドウで選択したオブジェクトのプロパティを表�
 左からR, G, B, A成分を表します.  
 デフォルト値は (1, 1, 1, 1) です.
 
-![image](./images/Data_SphereColor.png =700x)
+![image](./images/Data_SphereColor.png)
 
 ###### [radius] : 半径成分
 非STLデータの場合のみ設定可能です.  
 デフォルト値は 1.0, 単位は3DView空間座標に依存します.
 
-![image](./images/Data_SphereRadius.png =700x)
+![image](./images/Data_SphereRadius.png)
 
 
 
