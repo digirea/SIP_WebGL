@@ -128,7 +128,7 @@ View画面の透視投影, 平行投影を切り替えることができます.
  
 ![image](./images/Angle_TopBottom.png)
 
-### [Export Sceneボタン](id:exportbutton)
+### [Exportボタン](id:exportbutton)
 現在可視化されているカメラアングル、オブジェクトを、HIVEにてレンダリングできる形式でExportします.
 押下すると、.scn(シーンファイル)をダウンロードすることができます.
 
