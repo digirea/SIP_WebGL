@@ -303,7 +303,7 @@ pre.editor-colors .markdown .link .string,
 </ul>
 </li>
 </ul>
-<h1 id="-"> </h1>
+<hr>
 <ul>
 <li><p><a href="#kinou">第2章 機能</a></p>
 <ul>
@@ -321,24 +321,23 @@ pre.editor-colors .markdown .link .string,
 </ul>
 <p><br>
 <br></p>
-<h2 id="-1-id-hajimeni-"><a href="id:hajimeni">第1章 はじめに</a></h2>
-<hr>
+<h2 id="-1-hajimeni-"><a href="#hajimeni">第1章 はじめに</a></h2>
 <p>本書は設計解探査システムのプロトタイプ(以降, WebGL View)の操作方法について解説するものです.</p>
-<h3 id="-id-dousakankyou-"><a href="id:dousakankyou">動作環境</a></h3>
+<h3 id="-dousakankyou-"><a href="#dousakankyou">動作環境</a></h3>
 <p>WebGL View は以下の環境で動作します.</p>
 <p>OS : Linux, Windows(Vista,7,8), MacOSX<br>Webブラウザ: Mozilla Firefox, Google Chrome, Apple Safari</p>
-<h3 id="-id-kinougaiyou-"><a href="id:kinougaiyou">機能概要</a></h3>
+<h3 id="-kinougaiyou-"><a href="#kinougaiyou">機能概要</a></h3>
 <p>WebGL View の主な機能は以下の通りです.</p>
 <ul>
 <li>STL (バイナリ形式,アスキー形式) を読み込み, 表示します.</li>
 <li>CSV を読み込み, 選択した形式 (点, ライン) で表示します.</li>
 </ul>
-<h3 id="-id-install-"><a href="id:install">インストール</a></h3>
+<h3 id="-install-"><a href="#install">インストール</a></h3>
 <h6 id="node-js-">Node.js のインストール</h6>
 <p>WebGL View の動作には Node.js のインストールが必要です.<br>Node.js の公式サイト <a href="http://nodejs.org"><a href="http://nodejs.org">http://nodejs.org</a></a> から Node.js 本体をダウンロードし, インストールします.</p>
 <h6 id="webgl-view-">WebGL View の準備</h6>
-<p>インストールCD からXXXXX.zipをローカルディスクにコピーし, 展開します. </p>
-<h3 id="-id-kidouhouhou-"><a href="id:kidouhouhou">起動方法</a></h3>
+<p>インストールCD からXXXXX.zipをローカルディスクにコピーし, 展開します.</p>
+<h3 id="-kidouhouhou-"><a href="#kidouhouhou">起動方法</a></h3>
 <h6 id="-">単体利用での起動</h6>
 <p>Webブラウザで index.html ファイルを開きます.</p>
 <h6 id="-">データベースと連携機能を利用するための起動</h6>
@@ -346,12 +345,12 @@ pre.editor-colors .markdown .link .string,
 <pre class="editor-colors lang-text"><div class="line"><span class="text plain"><span class="meta paragraph text"><span>$node&nbsp;server.js</span></span></span></div></pre><p>(2) ブラウザにて, localhostにアクセスします. URLは通常は以下のようになります.</p>
 <pre class="editor-colors lang-text"><div class="line"><span class="text plain"><span class="meta paragraph text"><span class="markup underline link http hyperlink"><span>http://localhost:8080</span></span></span></span></div></pre><p><br>
 <br></p>
-<h2 id="-2-id-kinou-"><a href="id:kinou">第2章 機能</a></h2>
+<h2 id="-2-kinou-"><a href="#kinou">第2章 機能</a></h2>
 <hr>
-<h3 id="-id-gamenkousei-"><a href="id:gamenkousei">画面構成</a></h3>
+<h3 id="-gamenkousei-"><a href="#gamenkousei">画面構成</a></h3>
 <p>WebGL View の画面構成は下記のとおりです.</p>
 <p><img src="C:\work\git\digirea\SIP_WebGL\doc\manual\images\Overview.png" alt="image"></p>
-<h3 id="-file-id-openbutton-"><a href="id:openbutton">Fileボタン</a></h3>
+<h3 id="-file-openbutton-"><a href="#openbutton">Fileボタン</a></h3>
 <p>各種ファイルをロードすることができます.<br>プルダウン時に表示されるボタンの動作は以下のとおりです.  </p>
 <ul>
 <li>Open STL : STLファイル (binary, text形式) をロードします.</li>
@@ -359,14 +358,14 @@ pre.editor-colors .markdown .link .string,
 <li>Open URL : URLからテキストデータをロードします. ロードすると, 後述するDataViewウィンドウに反映されます.</li>
 </ul>
 <p><img src="C:\work\git\digirea\SIP_WebGL\doc\manual\images\Menu_Open.png" alt="image"></p>
-<h3 id="-viewmode-id-viewmodebutton-"><a href="id:viewmodebutton">ViewModeボタン</a></h3>
+<h3 id="-viewmode-viewmodebutton-"><a href="#viewmodebutton">ViewModeボタン</a></h3>
 <p>View画面の透視投影, 平行投影を切り替えることができます.</p>
 <ul>
 <li>Perspective : 透視投影にてViewを行います.</li>
 <li>Ortho       : 平行投影にてViewを行います.</li>
 </ul>
 <p><img src="C:\work\git\digirea\SIP_WebGL\doc\manual\images\Menu_ViewMode.png" alt="image"></p>
-<h3 id="-viewdirection-id-viewdirectionbutton-"><a href="id:viewdirectionbutton">ViewDirectionボタン</a></h3>
+<h3 id="-viewdirection-viewdirectionbutton-"><a href="#viewdirectionbutton">ViewDirectionボタン</a></h3>
 <p>指定された軸(プレフィクスビュー)にてView画面を切り替えることができます.<br>プルダウン時に表示されるボタンの動作は下記のとおりです.</p>
 <table>
 <thead>
@@ -415,11 +414,11 @@ pre.editor-colors .markdown .link .string,
 <li>Top / Bottom ビュー</li>
 </ul>
 <p><img src="C:\work\git\digirea\SIP_WebGL\doc\manual\images\Angle_TopBottom.png" alt="image"></p>
-<h3 id="-export-id-exportbutton-"><a href="id:exportbutton">Exportボタン</a></h3>
+<h3 id="-export-exportbutton-"><a href="#exportbutton">Exportボタン</a></h3>
 <p>現在可視化されているカメラアングル、オブジェクトを、HIVEにてレンダリングできる形式でExportします.
 押下すると、.scn(シーンファイル)をダウンロードすることができます.</p>
 <p><img src="C:\work\git\digirea\SIP_WebGL\doc\manual\images\Export_Button.png" alt="image"></p>
-<h3 id="-view-id-viewgamen-"><a href="id:viewgamen">View画面</a></h3>
+<h3 id="-view-viewgamen-"><a href="#viewgamen">View画面</a></h3>
 <p>可視化された2D, 3Dオブジェクトを表示する画面です.</p>
 <p>グリッドのサイズは3D空間上の単位で100 (固定) です。また, マウス操作にてオブジェクトのビューの操作を行うことができます.<br>マウス操作方法を以下に示します.</p>
 <h6 id="-">マウス操作</h6>
@@ -450,7 +449,7 @@ pre.editor-colors .markdown .link .string,
 </tbody>
 </table>
 <p><img src="C:\work\git\digirea\SIP_WebGL\doc\manual\images\Window_View.png" alt="image"></p>
-<h3 id="-groups-id-groupswindow-"><a href="id:groupswindow">Groupsウィンドウ</a></h3>
+<h3 id="-groups-groupswindow-"><a href="#groupswindow">Groupsウィンドウ</a></h3>
 <p>Groupsウィンドウは, ロード, 追加されたオブジェクトの管理を行います.<br>対象のデータは以下のとおりです.</p>
 <ul>
 <li>STLデータ</li>
@@ -467,7 +466,7 @@ pre.editor-colors .markdown .link .string,
 <li>GroupsタブはワンクリックでOpen/Closeできます. またドラッグでウィンドウサイズが変更できます.</li>
 </ul>
 <p><img src="C:\work\git\digirea\SIP_WebGL\doc\manual\images\Window_Groups.png" alt="image"></p>
-<h3 id="-dataview-id-dataviewwindow-"><a href="id:dataviewwindow">DataViewウィンドウ</a></h3>
+<h3 id="-dataview-dataviewwindow-"><a href="#dataviewwindow">DataViewウィンドウ</a></h3>
 <p>読み込んだテキストデータを表示し, 可視化対象の列成分の選択を行います.</p>
 <p>G0, G1と記載された箇所は,列の名前を表します.<br>デフォルト名は G0, G1...Gn です.<br>名前は変更することができ, かつ名前は重複可能です.</p>
 <p>列選択を行うには, NONEと記載されたプルダウンメニューを使用します.<br>プルダウンにて表示される値の意味は下記のとおりです.</p>
@@ -502,7 +501,7 @@ pre.editor-colors .markdown .link .string,
 <h6 id="-">データのピック方法</h6>
 <p>Add Pointで生成されたデータは, マウス操作 (左クリック) にてピックすることができます.<br>ピックした凡例を以下に示します.</p>
 <p><img src="C:\work\git\digirea\SIP_WebGL\doc\manual\images\Data_Pick.png" alt="image"></p>
-<h3 id="-property-id-propertywindow-"><a href="id:propertywindow">Propertyウィンドウ</a></h3>
+<h3 id="-property-propertywindow-"><a href="#propertywindow">Propertyウィンドウ</a></h3>
 <p>Groupsウィンドウで選択したオブジェクトのプロパティを表示します.  </p>
 <p><img src="C:\work\git\digirea\SIP_WebGL\doc\manual\images\Window_Property.png" alt="image"></p>
 <p>設定可能なプロパティは下記のとおりです.</p>

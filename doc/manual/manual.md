@@ -11,7 +11,7 @@
 	* [インストール](#install)
 	* [起動方法](#kidouhouhou)
 
-# 
+---
 
 * [第2章 機能](#kinou)
 
@@ -28,35 +28,34 @@
 <br>
 <br>
 
-## [第1章 はじめに](id:hajimeni)
+## [第1章 はじめに](#hajimeni)
 
----
 本書は設計解探査システムのプロトタイプ(以降, WebGL View)の操作方法について解説するものです.
 
-### [動作環境](id:dousakankyou)
+### [動作環境](#dousakankyou)
 WebGL View は以下の環境で動作します.
 
 OS : Linux, Windows(Vista,7,8), MacOSX  
 Webブラウザ: Mozilla Firefox, Google Chrome, Apple Safari
 
 
-### [機能概要](id:kinougaiyou)
+### [機能概要](#kinougaiyou)
 WebGL View の主な機能は以下の通りです.
 
 * STL (バイナリ形式,アスキー形式) を読み込み, 表示します.
 * CSV を読み込み, 選択した形式 (点, ライン) で表示します.
 
-### [インストール](id:install)
+### [インストール](#install)
 
 ###### Node.js のインストール
 WebGL View の動作には Node.js のインストールが必要です.  
 Node.js の公式サイト [http://nodejs.org](http://nodejs.org) から Node.js 本体をダウンロードし, インストールします.
 
 ###### WebGL View の準備
-インストールCD からXXXXX.zipをローカルディスクにコピーし, 展開します. 
+インストールCD からXXXXX.zipをローカルディスクにコピーし, 展開します.
 
 
-### [起動方法](id:kidouhouhou)
+### [起動方法](#kidouhouhou)
 ###### 単体利用での起動
 
 Webブラウザで index.html ファイルを開きます.
@@ -66,22 +65,22 @@ Webブラウザで index.html ファイルを開きます.
 (1) terminal から以下のコマンドを実行します.  ただし, nodeにpathが通っている必要があります.
 
 	$node server.js
-	
+
 (2) ブラウザにて, localhostにアクセスします. URLは通常は以下のようになります.
 
 	http://localhost:8080
 
 <br>
 <br>
-## [第2章 機能](id:kinou)
+## [第2章 機能](#kinou)
 ---
 
-### [画面構成](id:gamenkousei)
+### [#画面構成](#gamenkousei)
 WebGL View の画面構成は下記のとおりです.
 
 ![image](./images/Overview.png)
 
-### [Fileボタン](id:openbutton)
+### [Fileボタン](#openbutton)
 各種ファイルをロードすることができます.  
 プルダウン時に表示されるボタンの動作は以下のとおりです.  
 
@@ -92,7 +91,7 @@ WebGL View の画面構成は下記のとおりです.
 ![image](./images/Menu_Open.png)
 
 
-### [ViewModeボタン](id:viewmodebutton)
+### [ViewModeボタン](#viewmodebutton)
 View画面の透視投影, 平行投影を切り替えることができます.
 
 
@@ -101,7 +100,7 @@ View画面の透視投影, 平行投影を切り替えることができます.
 
 ![image](./images/Menu_ViewMode.png)
 
-### [ViewDirectionボタン](id:viewdirectionbutton)
+### [ViewDirectionボタン](#viewdirectionbutton)
 指定された軸(プレフィクスビュー)にてView画面を切り替えることができます.  
 プルダウン時に表示されるボタンの動作は下記のとおりです.
 
@@ -121,20 +120,20 @@ View画面の透視投影, 平行投影を切り替えることができます.
 ![image](./images/Angle_FrontBack.png)
 
 * Left / Right ビュー
- 
+
 ![image](./images/Angle_LeftRight.png)
 
 * Top / Bottom ビュー
- 
+
 ![image](./images/Angle_TopBottom.png)
 
-### [Exportボタン](id:exportbutton)
+### [Exportボタン](#exportbutton)
 現在可視化されているカメラアングル、オブジェクトを、HIVEにてレンダリングできる形式でExportします.
 押下すると、.scn(シーンファイル)をダウンロードすることができます.
 
 ![image](./images/Export_Button.png)
 
-### [View画面](id:viewgamen)
+### [View画面](#viewgamen)
 可視化された2D, 3Dオブジェクトを表示する画面です.
 
 グリッドのサイズは3D空間上の単位で100 (固定) です。また, マウス操作にてオブジェクトのビューの操作を行うことができます.  
@@ -150,7 +149,7 @@ View画面の透視投影, 平行投影を切り替えることができます.
 
 ![image](./images/Window_View.png)
 
-### [Groupsウィンドウ](id:groupswindow)
+### [Groupsウィンドウ](#groupswindow)
 Groupsウィンドウは, ロード, 追加されたオブジェクトの管理を行います.  
 対象のデータは以下のとおりです.
 
@@ -170,7 +169,7 @@ Groupsウィンドウは, ロード, 追加されたオブジェクトの管理�
 
 ![image](./images/Window_Groups.png)
 
-### [DataViewウィンドウ](id:dataviewwindow)
+### [DataViewウィンドウ](#dataviewwindow)
 読み込んだテキストデータを表示し, 可視化対象の列成分の選択を行います.
 
 G0, G1と記載された箇所は,列の名前を表します.  
@@ -228,14 +227,14 @@ Add Pointで生成されたデータは, マウス操作 (左クリック) に�
 ![image](./images/Data_Pick.png)
 
 
-### [Propertyウィンドウ](id:propertywindow)
+### [Propertyウィンドウ](#propertywindow)
 Groupsウィンドウで選択したオブジェクトのプロパティを表示します.  
 
 ![image](./images/Window_Property.png)
 
 設定可能なプロパティは下記のとおりです.
 
-###### name : 名前 
+###### name : 名前
 オブジェクトの名前を表します.
 
 ###### [trans] : 平行移動成分
@@ -261,18 +260,3 @@ Groupsウィンドウで選択したオブジェクトのプロパティを表�
 デフォルト値は 1.0, 単位は3DView空間座標に依存します.
 
 ![image](./images/Data_SphereRadius.png)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
