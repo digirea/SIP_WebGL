@@ -261,7 +261,7 @@
 	function loadSTLInternal(dataview) {
 		var i           = 0,
 			buf,
-			stlascii_header = 'solid ',
+			stlascii_header = 'solid     ',
 			testlen;
 		buf =  new Uint16Array(stlascii_header.length);
 		for(i = 0 ; i < stlascii_header.length; i++) {
@@ -270,7 +270,7 @@
 		buf = String.fromCharCode.apply(null, buf);
 		console.log(buf);
 		
-		if(buf === stlascii_header) {
+		if( buf.match(/solid/) ) {
 			testlen = dataview.byteLength / 4;
 			for (i = 0; i < testlen; ++i) {
 				buf = dataview.getUint8(i);
