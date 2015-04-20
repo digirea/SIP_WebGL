@@ -215,7 +215,7 @@ DustBox{
 	position        :absolute;
 	margin          :5px;
 	width           :160px;
-	height          :108px;
+	height          : 96px;
 	left            :35px;
 	top             :35px;
 	background-color:rgba(55, 55, 55, 0.7);
